@@ -1,0 +1,64 @@
+name: Update BetAnalytic data
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Το GitHub Actions cron χρησιμοποιεί UTC.
+    # Εκτέλεση ανά 2 ώρες, στο λεπτό 17.
+    - cron: "17 */2 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: betanalytic-data-update
+  cancel-in-progress: false
+
+jobs:
+  update-feed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-automation.txt
+
+      - name: Install automation dependencies
+        run: >
+          python -m pip install --upgrade pip
+          && pip install -r requirements-automation.txt
+
+      - name: Update fixtures and publish static feed
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+
+          R2_BUCKET_NAME: ${{ vars.R2_BUCKET_NAME }}
+          R2_PUBLIC_BASE_URL: ${{ vars.R2_PUBLIC_BASE_URL }}
+          R2_PREFIX: ${{ vars.R2_PREFIX }}
+
+          BETANALYTIC_SYNC_SEASONS: ${{ vars.BETANALYTIC_SYNC_SEASONS }}
+          BETANALYTIC_INCLUDE_NEXT_SEASON: ${{ vars.BETANALYTIC_INCLUDE_NEXT_SEASON }}
+          BETANALYTIC_LOOKAHEAD_DAYS: ${{ vars.BETANALYTIC_LOOKAHEAD_DAYS }}
+
+        run: >
+          python automatic_update.py
+          --output-dir automation_output
+
+      - name: Keep generated files for debugging
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: betanalytic-static-feed
+          path: automation_output
+          if-no-files-found: warn
+          retention-days: 7
