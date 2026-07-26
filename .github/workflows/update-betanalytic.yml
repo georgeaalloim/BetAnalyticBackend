@@ -2,10 +2,8 @@ name: Update and publish BetAnalytic data
 
 on:
   workflow_dispatch:
-
   schedule:
-    # Εκτέλεση ανά δύο ώρες, στο λεπτό 17.
-    # Το cron του GitHub χρησιμοποιεί ώρα UTC.
+    # Ανά δύο ώρες, στο λεπτό 17. Το cron χρησιμοποιεί UTC.
     - cron: "17 */2 * * *"
 
 permissions:
@@ -39,9 +37,6 @@ jobs:
           pip install -r requirements-automation.txt
 
       - name: Update fixtures and generate predictions
-        env:
-          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
-
         run: |
           python automatic_update.py \
             --output-dir automation_output \
@@ -55,7 +50,6 @@ jobs:
 
           output_dir = Path("automation_output")
           manifest_path = output_dir / "manifest.json"
-
           base_url = (
               "https://georgeaalloim.github.io/"
               "BetAnalyticBackend"
@@ -64,9 +58,7 @@ jobs:
           manifest = json.loads(
               manifest_path.read_text(encoding="utf-8")
           )
-
           manifest["feed_url"] = f"{base_url}/feed.json"
-
           manifest_path.write_text(
               json.dumps(
                   manifest,
@@ -92,7 +84,6 @@ jobs:
           </body>
           </html>
           """
-
           (output_dir / "index.html").write_text(
               index_html,
               encoding="utf-8",
@@ -103,7 +94,6 @@ jobs:
         run: |
           python -m json.tool \
             automation_output/manifest.json > /dev/null
-
           python -m json.tool \
             automation_output/feed.json > /dev/null
 
