@@ -16,8 +16,9 @@ from ensemble_value_service import (
 from time_utils import parse_iso_datetime, to_iso_z
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 COMPLETED_STATUS = "FT"
+TRAINING_SEASON_WINDOW = 3
 
 
 @dataclass(frozen=True)
@@ -88,20 +89,21 @@ def select_training_fixtures(
     return [fixture for _, fixture in selected]
 
 
-def _load_season_fixtures(
+def _load_training_candidates(
     league_id: int,
-    season: int,
+    target_season: int,
 ) -> list[dict[str, Any]]:
+    first_season = target_season - TRAINING_SEASON_WINDOW + 1
     with get_connection() as connection:
         rows = connection.execute(
             """
             SELECT *
             FROM fixtures
             WHERE league_id = ?
-              AND season = ?
+              AND season BETWEEN ? AND ?
             ORDER BY fixture_date ASC
             """,
-            (league_id, season),
+            (league_id, first_season, target_season),
         ).fetchall()
 
     return [dict(row) for row in rows]
@@ -174,6 +176,7 @@ def _fixture_payload(
 ) -> dict[str, Any]:
     fixture_id = int(fixture["fixture_id"])
     kickoff = parse_iso_datetime(str(fixture["fixture_date"]))
+    cutoff = min(as_of, kickoff)
 
     payload: dict[str, Any] = {
         "fixture_id": fixture_id,
@@ -189,11 +192,12 @@ def _fixture_payload(
             "team_name": str(fixture["away_team_name"]),
         },
         "prediction_calculated_at": to_iso_z(as_of),
-        "training_cutoff": to_iso_z(as_of),
+        "training_cutoff": to_iso_z(cutoff),
         "training_rule": (
             "Χρησιμοποιούνται μόνο αγώνες status=FT με fixture_date "
             "αυστηρά μικρότερο από την ώρα υπολογισμού."
         ),
+        "training_season_window": TRAINING_SEASON_WINDOW,
         "training_fixtures_used": len(training_fixtures),
         "latest_training_fixture_date": (
             str(training_fixtures[-1]["fixture_date"])
@@ -256,9 +260,9 @@ def generate_static_feed(
     """
     Δημιουργεί ``feed.json`` και ``manifest.json`` για την Android εφαρμογή.
 
-    Το context κάθε σεζόν κατασκευάζεται μία φορά με τα αποτελέσματα που
-    υπήρχαν πριν από την ώρα παραγωγής. Σε κάθε επόμενο workflow run,
-    νέα τελικά αποτελέσματα μπαίνουν αυτόματα στο context.
+    Για κάθε τρέχουσα σεζόν χρησιμοποιείται κυλιόμενο ιστορικό έως τριών
+    σεζόν. Κάθε run προσθέτει αυτόματα όποια νέα αποτελέσματα είχαν
+    ολοκληρωθεί πριν από την ώρα υπολογισμού.
     """
 
     normalized_seasons = tuple(sorted(set(int(season) for season in seasons)))
@@ -274,10 +278,16 @@ def generate_static_feed(
     context_error_by_season: dict[int, str | None] = {}
     training_by_season: dict[int, list[dict[str, Any]]] = {}
 
-    for season in sorted({int(fixture["season"]) for fixture in upcoming_fixtures}):
-        season_fixtures = _load_season_fixtures(league_id, season)
+    target_seasons = sorted(
+        {int(fixture["season"]) for fixture in upcoming_fixtures}
+    )
+    for season in target_seasons:
+        candidates = _load_training_candidates(
+            league_id=league_id,
+            target_season=season,
+        )
         training_fixtures = select_training_fixtures(
-            fixtures=season_fixtures,
+            fixtures=candidates,
             cutoff=as_of,
         )
         training_by_season[season] = training_fixtures
@@ -285,7 +295,7 @@ def generate_static_feed(
         if not training_fixtures:
             context_by_season[season] = None
             context_error_by_season[season] = (
-                "Δεν υπάρχει ολοκληρωμένος αγώνας της ίδιας σεζόν "
+                "Δεν υπάρχει ολοκληρωμένος προηγούμενος αγώνας "
                 "πριν από την ώρα υπολογισμού."
             )
             continue
@@ -305,7 +315,10 @@ def generate_static_feed(
             as_of=as_of,
             context=context_by_season.get(int(fixture["season"])),
             context_error=context_error_by_season.get(int(fixture["season"])),
-            training_fixtures=training_by_season.get(int(fixture["season"]), []),
+            training_fixtures=training_by_season.get(
+                int(fixture["season"]),
+                [],
+            ),
         )
         for fixture in upcoming_fixtures
     ]
@@ -327,7 +340,8 @@ def generate_static_feed(
             )
 
     ready_count = sum(
-        fixture["prediction_status"] == "ready" for fixture in fixture_payloads
+        fixture["prediction_status"] == "ready"
+        for fixture in fixture_payloads
     )
     unavailable_count = len(fixture_payloads) - ready_count
 
@@ -343,6 +357,7 @@ def generate_static_feed(
             "baseline_weight": 0.60,
             "mle_weight": 0.40,
             "temporal_leakage_protection": True,
+            "training_season_window": TRAINING_SEASON_WINDOW,
         },
         "lookahead_days": lookahead_days,
         "sync_summary": sync_summary,
