@@ -1,6 +1,8 @@
 from math import exp, factorial
 from typing import Any
 
+from market_lines import build_total_market_lines
+
 
 DEFAULT_PRIOR_MATCHES = 2.0
 DEFAULT_DIXON_COLES_RHO = 0.0
@@ -588,6 +590,10 @@ def predict_match(
         reverse=True,
     )
 
+    total_goals_lines = build_total_market_lines(
+        score_probabilities=score_probabilities,
+    )
+
     most_likely_scores = []
 
     for score in score_probabilities[:5]:
@@ -733,6 +739,7 @@ def predict_match(
                 2,
             ),
         },
+        "total_goals_lines": total_goals_lines,
         "goals_probabilities": {
             "over_2_5": round(
                 over_2_5_probability,

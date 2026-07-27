@@ -7,6 +7,10 @@ from poisson_mle_model import (
     predict_match_mle,
 )
 from poisson_model import predict_match
+from market_lines import (
+    combine_total_market_lines,
+    select_strongest_relevant_market,
+)
 from team_analysis import (
     calculate_home_away_statistics,
 )
@@ -547,6 +551,33 @@ def predict_match_ensemble(
         )
     )
 
+    ensemble_total_goals_lines = (
+        combine_total_market_lines(
+            baseline_lines=baseline_prediction[
+                "total_goals_lines"
+            ],
+            mle_lines=mle_prediction[
+                "total_goals_lines"
+            ],
+            baseline_weight=(
+                normalized_baseline_weight
+            ),
+            mle_weight=normalized_mle_weight,
+        )
+    )
+
+    selected_total_goals_market = (
+        select_strongest_relevant_market(
+            market_lines=(
+                ensemble_total_goals_lines
+            ),
+            expected_total=(
+                expected_home_goals
+                + expected_away_goals
+            ),
+        )
+    )
+
     predicted_result = max(
         RESULT_LABELS,
         key=lambda label: (
@@ -656,6 +687,14 @@ def predict_match_ensemble(
                 2,
             ),
         },
+        "total_goals_market": {
+            "selected": (
+                selected_total_goals_market
+            ),
+            "all_lines": (
+                ensemble_total_goals_lines
+            ),
+        },
         "goals_probabilities": {
             "over_2_5": round(
                 ensemble_goals_probabilities[
@@ -727,6 +766,11 @@ def predict_match_ensemble(
                         "expected_goals"
                     ]
                 ),
+                "total_goals_lines": (
+                    baseline_prediction[
+                        "total_goals_lines"
+                    ]
+                ),
             },
             "poisson_mle": {
                 "model": (
@@ -740,6 +784,11 @@ def predict_match_ensemble(
                 "expected_goals": (
                     mle_prediction[
                         "expected_goals"
+                    ]
+                ),
+                "total_goals_lines": (
+                    mle_prediction[
+                        "total_goals_lines"
                     ]
                 ),
             },

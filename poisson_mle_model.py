@@ -6,6 +6,8 @@ from typing import Any
 import numpy as np
 from scipy.optimize import minimize
 
+from market_lines import build_total_market_lines
+
 
 DEFAULT_L2_REGULARIZATION = 1.0
 DEFAULT_MAX_GOALS = 10
@@ -378,6 +380,10 @@ def predict_match_mle(
         reverse=True,
     )
 
+    total_goals_lines = build_total_market_lines(
+        score_probabilities=score_probabilities,
+    )
+
     most_likely_scores = [
         {
             "score": f"{score['home_goals']}-{score['away_goals']}",
@@ -412,6 +418,7 @@ def predict_match_mle(
             "draw_percent": round(draw_probability * 100, 2),
             "away_win_percent": round(away_win_probability * 100, 2),
         },
+        "total_goals_lines": total_goals_lines,
         "goals_probabilities": {
             "over_2_5": round(over_2_5_probability, 8),
             "under_2_5": round(1 - over_2_5_probability, 8),
