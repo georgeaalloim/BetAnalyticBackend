@@ -10,22 +10,22 @@
   ],
   "dataset_path": "data/fixture_statistics.json",
   "eligible_completed_fixtures": 716,
-  "already_processed_fixtures": 15,
-  "missing_fixtures_considered": 5,
-  "requests_planned": 5,
-  "requests_attempted": 5,
-  "requests_completed": 5,
-  "new_records_with_corners_and_yellow_cards": 5,
+  "already_processed_fixtures": 20,
+  "missing_fixtures_considered": 20,
+  "requests_planned": 20,
+  "requests_attempted": 20,
+  "requests_completed": 20,
+  "new_records_with_corners_and_yellow_cards": 20,
   "new_records_without_complete_statistics": 0,
-  "total_records_after_merge": 20,
-  "total_records_with_complete_statistics": 19,
+  "total_records_after_merge": 40,
+  "total_records_with_complete_statistics": 39,
   "total_records_without_complete_statistics": 1,
   "plan_only": false,
   "request_delay_seconds": 8.0,
-  "estimated_minimum_runtime_minutes": 0.67,
+  "estimated_minimum_runtime_minutes": 2.67,
   "fatal_error": null,
   "warnings": [
     "Δεν χωρούν όλοι οι αγώνες στο ημερήσιο όριο. Τρέξε ξανά το workflow την επόμενη ημέρα για τους υπόλοιπους."
   ],
-  "finished_at": "2026-07-28T14:50:35Z"
+  "finished_at": "2026-07-28T14:56:07Z"
 }
