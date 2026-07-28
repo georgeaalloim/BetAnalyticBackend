@@ -95,6 +95,47 @@ def initialize_database() -> None:
 
         connection.execute(
             """
+            CREATE TABLE IF NOT EXISTS fixture_statistics (
+                fixture_id INTEGER PRIMARY KEY,
+                league_id INTEGER NOT NULL,
+                season INTEGER NOT NULL,
+                fixture_date TEXT,
+                home_team_id INTEGER NOT NULL,
+                home_team_name TEXT NOT NULL,
+                away_team_id INTEGER NOT NULL,
+                away_team_name TEXT NOT NULL,
+                home_corners INTEGER NOT NULL CHECK(home_corners >= 0),
+                away_corners INTEGER NOT NULL CHECK(away_corners >= 0),
+                home_yellow_cards INTEGER NOT NULL
+                    CHECK(home_yellow_cards >= 0),
+                away_yellow_cards INTEGER NOT NULL
+                    CHECK(away_yellow_cards >= 0),
+                home_red_cards INTEGER CHECK(home_red_cards >= 0),
+                away_red_cards INTEGER CHECK(away_red_cards >= 0),
+                source TEXT NOT NULL,
+                collected_at TEXT NOT NULL,
+                FOREIGN KEY(fixture_id)
+                    REFERENCES fixtures(fixture_id)
+                    ON UPDATE CASCADE
+                    ON DELETE CASCADE
+            )
+            """
+        )
+
+        connection.execute(
+            """
+            CREATE INDEX IF NOT EXISTS
+                idx_fixture_statistics_league_season_date
+            ON fixture_statistics (
+                league_id,
+                season,
+                fixture_date
+            )
+            """
+        )
+
+        connection.execute(
+            """
             CREATE INDEX IF NOT EXISTS
                 idx_fixtures_league_season_date
             ON fixtures (
@@ -585,3 +626,171 @@ def get_latest_odds_snapshots(
             latest_by_bookmaker[bookmaker_key] = snapshot
 
     return list(latest_by_bookmaker.values())
+
+def save_fixture_statistics(
+    records: list[dict[str, Any]],
+) -> int:
+    """
+    Αποθηκεύει πραγματικά κόρνερ και κάρτες ανά ολοκληρωμένο αγώνα.
+
+    Τα fixture IDs πρέπει να υπάρχουν ήδη στον πίνακα fixtures. Η εντολή
+    είναι idempotent: νεότερη εγγραφή του ίδιου αγώνα αντικαθιστά την παλιά.
+    """
+
+    if not records:
+        return 0
+
+    rows_to_save: list[tuple[Any, ...]] = []
+
+    required_fields = (
+        "fixture_id",
+        "league_id",
+        "season",
+        "home_team_id",
+        "home_team_name",
+        "away_team_id",
+        "away_team_name",
+        "home_corners",
+        "away_corners",
+        "home_yellow_cards",
+        "away_yellow_cards",
+        "source",
+        "collected_at",
+    )
+
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+
+        if any(record.get(field) is None for field in required_fields):
+            continue
+
+        rows_to_save.append(
+            (
+                int(record["fixture_id"]),
+                int(record["league_id"]),
+                int(record["season"]),
+                record.get("fixture_date"),
+                int(record["home_team_id"]),
+                str(record["home_team_name"]),
+                int(record["away_team_id"]),
+                str(record["away_team_name"]),
+                int(record["home_corners"]),
+                int(record["away_corners"]),
+                int(record["home_yellow_cards"]),
+                int(record["away_yellow_cards"]),
+                (
+                    int(record["home_red_cards"])
+                    if record.get("home_red_cards") is not None
+                    else None
+                ),
+                (
+                    int(record["away_red_cards"])
+                    if record.get("away_red_cards") is not None
+                    else None
+                ),
+                str(record["source"]),
+                str(record["collected_at"]),
+            )
+        )
+
+    if not rows_to_save:
+        return 0
+
+    with get_connection() as connection:
+        connection.executemany(
+            """
+            INSERT INTO fixture_statistics (
+                fixture_id,
+                league_id,
+                season,
+                fixture_date,
+                home_team_id,
+                home_team_name,
+                away_team_id,
+                away_team_name,
+                home_corners,
+                away_corners,
+                home_yellow_cards,
+                away_yellow_cards,
+                home_red_cards,
+                away_red_cards,
+                source,
+                collected_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+
+            ON CONFLICT(fixture_id) DO UPDATE SET
+                league_id = excluded.league_id,
+                season = excluded.season,
+                fixture_date = excluded.fixture_date,
+                home_team_id = excluded.home_team_id,
+                home_team_name = excluded.home_team_name,
+                away_team_id = excluded.away_team_id,
+                away_team_name = excluded.away_team_name,
+                home_corners = excluded.home_corners,
+                away_corners = excluded.away_corners,
+                home_yellow_cards = excluded.home_yellow_cards,
+                away_yellow_cards = excluded.away_yellow_cards,
+                home_red_cards = excluded.home_red_cards,
+                away_red_cards = excluded.away_red_cards,
+                source = excluded.source,
+                collected_at = excluded.collected_at
+            """,
+            rows_to_save,
+        )
+        connection.commit()
+
+    return len(rows_to_save)
+
+
+def count_fixture_statistics(
+    league_id: int | None = None,
+    season: int | None = None,
+) -> int:
+    """Μετρά τις αποθηκευμένες εγγραφές κόρνερ και καρτών."""
+
+    query = "SELECT COUNT(*) AS total FROM fixture_statistics WHERE 1 = 1"
+    parameters: list[Any] = []
+
+    if league_id is not None:
+        query += " AND league_id = ?"
+        parameters.append(int(league_id))
+
+    if season is not None:
+        query += " AND season = ?"
+        parameters.append(int(season))
+
+    with get_connection() as connection:
+        row = connection.execute(query, tuple(parameters)).fetchone()
+
+    return int(row["total"]) if row is not None else 0
+
+
+def get_fixture_statistics(
+    league_id: int,
+    seasons: tuple[int, ...] | None = None,
+) -> list[dict[str, Any]]:
+    """
+    Επιστρέφει ιστορικές εγγραφές κόρνερ και καρτών σε χρονολογική σειρά.
+    """
+
+    query = """
+        SELECT *
+        FROM fixture_statistics
+        WHERE league_id = ?
+    """
+    parameters: list[Any] = [int(league_id)]
+
+    if seasons:
+        placeholders = ",".join("?" for _ in seasons)
+        query += f" AND season IN ({placeholders})"
+        parameters.extend(int(item) for item in seasons)
+
+    query += " ORDER BY fixture_date ASC, fixture_id ASC"
+
+    with get_connection() as connection:
+        rows = connection.execute(query, tuple(parameters)).fetchall()
+
+    return [dict(row) for row in rows]
+

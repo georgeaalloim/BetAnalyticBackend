@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 
 from automation_config import AutomationConfig
 from database import initialize_database
+from match_statistics import import_statistics_dataset
 from fixtur_es_source import (
     fetch_super_league_fixtures,
     replace_source_fixtures,
@@ -87,6 +88,7 @@ def main() -> int:
     )
 
     initialize_database()
+    statistics_seed_summary = import_statistics_dataset()
 
     if args.skip_sync:
         sync_summary: dict[str, Any] = {
@@ -117,6 +119,7 @@ def main() -> int:
     if not seasons:
         raise RuntimeError("Η βάση δεν περιέχει καμία σεζόν.")
 
+    sync_summary["statistics_seed"] = statistics_seed_summary
     sync_summary["finished_at"] = to_iso_z(utc_now())
 
     generated = generate_static_feed(
