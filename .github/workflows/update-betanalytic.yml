@@ -5,6 +5,11 @@ on:
   schedule:
     # Ανά δύο ώρες, στο λεπτό 17. Το cron χρησιμοποιεί UTC.
     - cron: "17 */2 * * *"
+  workflow_run:
+    workflows:
+      - Sync free match history
+    types:
+      - completed
 
 permissions:
   contents: read
@@ -17,8 +22,16 @@ concurrency:
 
 jobs:
   build:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 25
+
+    env:
+      BETANALYTIC_LOOKAHEAD_DAYS: ${{ vars.BETANALYTIC_LOOKAHEAD_DAYS }}
+      # Προαιρετικό δωρεάν key. Αν λείπει, το workflow συνεχίζει κανονικά.
+      API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
 
     steps:
       - name: Checkout repository
@@ -36,15 +49,94 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-automation.txt
 
-      - name: Run automatic-market tests
+      - name: Run tests
         run: |
           python -m unittest discover -p "test_*.py" -v
 
-      - name: Update fixtures, statistics and predictions
+      - name: Update free fixtures, statistics and predictions
         run: |
           python automatic_update.py \
             --output-dir automation_output \
             --skip-upload
+
+      - name: Validate generated feed semantics
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import datetime
+          from pathlib import Path
+
+          feed_path = Path("automation_output/feed.json")
+          manifest_path = Path("automation_output/manifest.json")
+          feed = json.loads(feed_path.read_text(encoding="utf-8"))
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+          fixture_summary = feed.get("sync_summary", {}).get("fixtures", {})
+          actual_source = str(fixture_summary.get("source_key") or "")
+          if actual_source != "free_cross_checked_schedule":
+              raise SystemExit(
+                  "Unexpected fixture source: " + (actual_source or "missing")
+              )
+
+          automatic_mode = feed.get("sync_summary", {}).get("automatic_mode", {})
+          if automatic_mode.get("paid_api_required") is not False:
+              raise SystemExit("The feed must not require a paid API.")
+          if automatic_mode.get("api_secret_required") is not False:
+              raise SystemExit("The feed must not require an API secret.")
+          if automatic_mode.get("optional_free_api_supported") is not True:
+              raise SystemExit("Optional free API verification is not declared.")
+          if automatic_mode.get("superleague_scraping") is not False:
+              raise SystemExit("Super League website scraping must remain disabled.")
+
+          fixtures = [
+              fixture
+              for season in feed.get("seasons", [])
+              for fixture in season.get("fixtures", [])
+          ]
+          if int(feed.get("fixtures_count", -1)) != len(fixtures):
+              raise SystemExit("fixtures_count does not match the fixtures array.")
+
+          ready = sum(
+              fixture.get("prediction_status") == "ready"
+              for fixture in fixtures
+          )
+          unavailable = sum(
+              fixture.get("prediction_status") == "unavailable"
+              for fixture in fixtures
+          )
+          if ready != int(feed.get("ready_predictions", -1)):
+              raise SystemExit("ready_predictions count mismatch.")
+          if unavailable != int(feed.get("unavailable_predictions", -1)):
+              raise SystemExit("unavailable_predictions count mismatch.")
+          if ready + unavailable != len(fixtures):
+              raise SystemExit("Unexpected prediction_status in feed.")
+
+          for fixture in fixtures:
+              datetime.fromisoformat(
+                  str(fixture["fixture_date"]).replace("Z", "+00:00")
+              )
+              schedule_source = str(fixture.get("schedule_source") or "")
+              lowered = schedule_source.lower()
+              if "slgr" in lowered or "super league official" in lowered:
+                  raise SystemExit("Forbidden Super League scraping source found.")
+              if fixture.get("kickoff_time_confirmed"):
+                  if "verified date and time" not in lowered:
+                      raise SystemExit(
+                          "A confirmed kickoff was not verified by two free sources: "
+                          + str(fixture.get("fixture_id"))
+                      )
+
+          if manifest.get("feed_sha256") is None:
+              raise SystemExit("manifest.json does not contain feed_sha256.")
+
+          print(
+              "Feed validation OK:",
+              len(fixtures),
+              "fixtures,",
+              ready,
+              "ready predictions",
+          )
+          PY
 
       - name: Prepare GitHub Pages files
         run: |
@@ -54,21 +146,12 @@ jobs:
 
           output_dir = Path("automation_output")
           manifest_path = output_dir / "manifest.json"
-          base_url = (
-              "https://georgeaalloim.github.io/"
-              "BetAnalyticBackend"
-          )
+          base_url = "https://georgeaalloim.github.io/BetAnalyticBackend"
 
-          manifest = json.loads(
-              manifest_path.read_text(encoding="utf-8")
-          )
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
           manifest["feed_url"] = f"{base_url}/feed.json"
           manifest_path.write_text(
-              json.dumps(
-                  manifest,
-                  ensure_ascii=False,
-                  indent=2,
-              ) + "\n",
+              json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
               encoding="utf-8",
           )
 
@@ -76,30 +159,24 @@ jobs:
           <html lang="el">
           <head>
               <meta charset="utf-8">
-              <meta name="viewport"
-                    content="width=device-width, initial-scale=1">
+              <meta name="viewport" content="width=device-width, initial-scale=1">
               <title>BetAnalytic Data</title>
           </head>
           <body>
               <h1>BetAnalytic</h1>
-              <p>Το αυτόματο feed λειτουργεί.</p>
+              <p>Το δωρεάν αυτόματο feed λειτουργεί.</p>
               <p><a href="manifest.json">manifest.json</a></p>
               <p><a href="feed.json">feed.json</a></p>
           </body>
           </html>
           """
-          (output_dir / "index.html").write_text(
-              index_html,
-              encoding="utf-8",
-          )
+          (output_dir / "index.html").write_text(index_html, encoding="utf-8")
           PY
 
       - name: Validate generated JSON
         run: |
-          python -m json.tool \
-            automation_output/manifest.json > /dev/null
-          python -m json.tool \
-            automation_output/feed.json > /dev/null
+          python -m json.tool automation_output/manifest.json > /dev/null
+          python -m json.tool automation_output/feed.json > /dev/null
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
