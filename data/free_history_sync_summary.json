@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "generated_at": "2026-07-28T17:45:48Z",
+  "generated_at": "2026-07-28T18:17:52Z",
   "seasons": [
     2022,
     2023,
@@ -10,7 +10,7 @@
   "fixtures_in_feed": 0,
   "ready_predictions": 0,
   "unavailable_predictions": 0,
-  "feed_sha256": "c5ee5a50468b07c3628e31031d1aa9031ae6c2a86819f2ad540e030dc8301bdc",
+  "feed_sha256": "108ba1781923a83b6e28372d92758ace836471b697b312d68146e713182df645",
   "feed_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/feed.json",
   "manifest_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/manifest.json",
   "sync_summary": {
@@ -40,13 +40,13 @@
       ],
       "csv_rows_loaded": 709,
       "csv_rows_with_complete_corners_and_cards": 708,
-      "matched_existing_fixtures": 438,
-      "inserted_new_fixtures": 271,
+      "matched_existing_fixtures": 709,
+      "inserted_new_fixtures": 0,
       "fixtures_saved": 709,
       "warnings": [
         "Δεν έχει δημοσιευτεί ακόμη CSV για τη σεζόν 2026."
       ],
-      "records_before_merge": 40,
+      "records_before_merge": 749,
       "records_received": 709,
       "records_after_merge": 749,
       "records_with_complete_statistics": 747,
@@ -63,6 +63,6 @@
       "future_detailed_season_detection": true,
       "description": "Κάθε run διασταυρώνει δωρεάν το πρόγραμμα, χρησιμοποιώντας το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει τα δωρεάν CSV αποτελεσμάτων/στατιστικών. Οι νέοι ολοκληρωμένοι αγώνες χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό χρονικό cutoff."
     },
-    "finished_at": "2026-07-28T17:45:49Z"
+    "finished_at": "2026-07-28T18:17:54Z"
   }
 }
