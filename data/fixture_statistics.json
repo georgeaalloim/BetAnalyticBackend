@@ -1,7 +1,7 @@
 {
-  "schema_version": 2,
-  "source": "API-Football",
-  "updated_at": "2026-07-28T14:53:34Z",
+  "schema_version": 3,
+  "source": "Mixed providers",
+  "updated_at": "2026-07-28T16:53:12Z",
   "fixtures_count": 40,
   "available_statistics_count": 39,
   "unavailable_statistics_count": 1,
