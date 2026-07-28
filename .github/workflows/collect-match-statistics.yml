@@ -1,38 +1,29 @@
-name: Collect corners and cards history
+name: Sync free match history
 
 on:
   workflow_dispatch:
-    inputs:
-      seasons:
-        description: "Σεζόν API-Football, χωρισμένες με κόμμα"
-        required: true
-        default: "2022,2023,2024"
-      max_requests:
-        description: "Αγώνες/API requests σε αυτή την εκτέλεση (Free: έως 85)"
-        required: true
-        default: "85"
-      request_delay_seconds:
-        description: "Παύση μεταξύ requests σε δευτερόλεπτα (Free: 8)"
-        required: true
-        default: "8"
+  schedule:
+    # Καθημερινά στις 03:37 UTC. Χωρίς API key και χωρίς πληρωμένη υπηρεσία.
+    - cron: "37 3 * * *"
 
 permissions:
   contents: write
 
 concurrency:
-  group: betanalytic-statistics-collector
+  group: betanalytic-free-history
   cancel-in-progress: false
 
 jobs:
-  collect:
+  sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 25
 
     steps:
-      - name: Checkout repository
+      - name: Checkout main branch
         uses: actions/checkout@v6
         with:
           ref: main
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -46,50 +37,73 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-automation.txt
 
-      - name: Collect completed-match statistics
-        id: collector
-        continue-on-error: true
-        env:
-          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+      - name: Run tests
         run: |
-          python statistics_collector.py \
-            --seasons "${{ inputs.seasons }}" \
-            --max-requests "${{ inputs.max_requests }}" \
-            --request-delay-seconds "${{ inputs.request_delay_seconds }}" \
-            --dataset data/fixture_statistics.json \
-            --summary-output data/statistics_collection_summary.json
+          python -m unittest discover -p "test_*.py" -v
 
-      - name: Validate JSON files
-        if: always()
+      - name: Update free historical results and statistics
+        run: |
+          mkdir -p data automation_output
+          python automatic_update.py \
+            --output-dir automation_output \
+            --skip-sync \
+            --skip-upload \
+            | tee data/free_history_sync_summary.json
+
+      - name: Validate persisted files
         run: |
           python -m json.tool data/fixture_statistics.json > /dev/null
-          python -m json.tool data/statistics_collection_summary.json > /dev/null
+          python -m json.tool data/free_history_sync_summary.json > /dev/null
+          python - <<'PY'
+          import sqlite3
 
-      - name: Commit collected statistics
-        if: always()
+          connection = sqlite3.connect("betanalytic.db")
+          try:
+              fixture_count = connection.execute(
+                  "SELECT COUNT(*) FROM fixtures"
+              ).fetchone()[0]
+              stats_count = connection.execute(
+                  "SELECT COUNT(*) FROM fixture_statistics"
+              ).fetchone()[0]
+          finally:
+              connection.close()
+
+          if fixture_count <= 0:
+              raise SystemExit("The database contains no fixtures.")
+          print("SQLite validation OK:", fixture_count, "fixtures,", stats_count, "statistics")
+          PY
+
+      - name: Commit free history updates
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/fixture_statistics.json data/statistics_collection_summary.json
+          git add \
+            betanalytic.db \
+            data/fixture_statistics.json \
+            data/free_history_sync_summary.json
 
           if git diff --cached --quiet; then
-            echo "No new statistics to commit."
+            echo "No new free historical data to commit."
             exit 0
           fi
 
-          git commit -m "Update corners and cards history"
-          git push origin HEAD:main
+          git commit -m "Update free match history"
 
-      - name: Upload collection summary
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "Push attempt ${attempt} failed; retrying."
+            sleep $((attempt * 5))
+          done
+
+          echo "Could not push free history after three attempts."
+          exit 1
+
+      - name: Upload sync summary
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: corners-cards-collection-summary
-          path: data/statistics_collection_summary.json
-          if-no-files-found: warn
-
-      - name: Fail workflow when collector reported a fatal API error
-        if: steps.collector.outcome == 'failure'
-        run: |
-          echo "The collector saved its partial data and summary, but the API returned a fatal error."
-          exit 1
+          name: free-history-sync-summary
+          path: data/free_history_sync_summary.json
+          if-no-files-found: error
