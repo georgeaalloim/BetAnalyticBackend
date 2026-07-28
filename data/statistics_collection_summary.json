@@ -1,5 +1,5 @@
 {
-  "status": "ok",
+  "status": "partial",
   "source": "API-Football /fixtures/statistics?fixture=...",
   "collection_mode": "one fixture per request (Free-plan compatible)",
   "league_id": 197,
@@ -10,20 +10,21 @@
   ],
   "dataset_path": "data/fixture_statistics.json",
   "eligible_completed_fixtures": 716,
-  "already_processed_fixtures": 0,
-  "missing_fixtures_considered": 5,
-  "requests_planned": 5,
-  "requests_attempted": 5,
-  "requests_completed": 5,
-  "new_records_with_corners_and_yellow_cards": 5,
-  "new_records_without_complete_statistics": 0,
-  "total_records_after_merge": 5,
-  "total_records_with_complete_statistics": 5,
-  "total_records_without_complete_statistics": 0,
+  "already_processed_fixtures": 5,
+  "missing_fixtures_considered": 85,
+  "requests_planned": 85,
+  "requests_attempted": 11,
+  "requests_completed": 10,
+  "new_records_with_corners_and_yellow_cards": 9,
+  "new_records_without_complete_statistics": 1,
+  "total_records_after_merge": 15,
+  "total_records_with_complete_statistics": 14,
+  "total_records_without_complete_statistics": 1,
   "plan_only": false,
-  "fatal_error": null,
+  "fatal_error": "429 Client Error: Too Many Requests for url: https://v3.football.api-sports.io/fixtures/statistics?fixture=923717",
   "warnings": [
-    "Δεν χωρούν όλοι οι αγώνες στο ημερήσιο όριο. Τρέξε ξανά το workflow την επόμενη ημέρα για τους υπόλοιπους."
+    "Δεν χωρούν όλοι οι αγώνες στο ημερήσιο όριο. Τρέξε ξανά το workflow την επόμενη ημέρα για τους υπόλοιπους.",
+    "Fixture 923717: 429 Client Error: Too Many Requests for url: https://v3.football.api-sports.io/fixtures/statistics?fixture=923717"
   ],
-  "finished_at": "2026-07-28T14:36:31Z"
+  "finished_at": "2026-07-28T14:39:03Z"
 }
