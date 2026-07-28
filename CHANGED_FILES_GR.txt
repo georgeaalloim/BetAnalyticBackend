@@ -1,0 +1,16 @@
+ΚΥΡΙΑ ΝΕΑ/ΑΛΛΑΓΜΕΝΑ ΑΡΧΕΙΑ
+
+- automatic_update.py
+- free_schedule_source.py
+- openfootball_source.py
+- api_football_free_source.py
+- football_data_source.py
+- fixtur_es_source.py
+- test_free_schedule_source.py
+- test_openfootball_source.py
+- test_api_football_free_source.py
+- .github/workflows/update-betanalytic.yml
+- .github/workflows/collect-match-statistics.yml
+- README_FREE_AUTOMATION_GR.md
+- SOURCE_LICENSES_AND_LIMITS_GR.md
+- ANDROID_FEED_RULE_GR.md

@@ -439,6 +439,20 @@ def predict_match_ensemble(
             "fitted_mle_model."
         )
 
+    baseline_team_ids = {
+        int(team["team_id"])
+        for team in context["baseline_analysis"].get("teams", [])
+    }
+    mle_team_ids = {
+        int(team["team_id"])
+        for team in context["fitted_mle_model"].get("teams", [])
+    }
+    cold_start_team_ids = sorted(
+        team_id
+        for team_id in (int(home_team_id), int(away_team_id))
+        if team_id not in baseline_team_ids or team_id not in mle_team_ids
+    )
+
     baseline_prediction = predict_match(
         analysis=context[
             "baseline_analysis"
@@ -591,6 +605,20 @@ def predict_match_ensemble(
         "model": (
             "Probability Ensemble v0.5"
         ),
+        "data_quality": {
+            "level": (
+                "limited"
+                if cold_start_team_ids
+                else "standard"
+            ),
+            "cold_start_team_ids": cold_start_team_ids,
+            "note": (
+                "Χρησιμοποιήθηκε ουδέτερο prior της λίγκας για ομάδα χωρίς "
+                "ιστορικό Super League."
+                if cold_start_team_ids
+                else None
+            ),
+        },
         "fixtures_used": context.get(
             "fixtures_used"
         ),

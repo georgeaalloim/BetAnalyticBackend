@@ -40,6 +40,7 @@ SYNTHETIC_TEAM_ID_SPAN = 150_000_000
 TEAM_ALIASES: dict[str, tuple[int, str]] = {
     # AEK
     "aek": (575, "AEK Athens FC"),
+    "aek athen": (575, "AEK Athens FC"),
     "aek athene": (575, "AEK Athens FC"),
     "aek athens": (575, "AEK Athens FC"),
     "aek athens fc": (575, "AEK Athens FC"),
@@ -47,6 +48,7 @@ TEAM_ALIASES: dict[str, tuple[int, str]] = {
     "αεκ": (575, "AEK Athens FC"),
     # Aris
     "aris": (1123, "Aris Thessalonikis"),
+    "aris saloniki": (1123, "Aris Thessalonikis"),
     "aris thessalonikis": (1123, "Aris Thessalonikis"),
     "αρης": (1123, "Aris Thessalonikis"),
     # Asteras
@@ -74,6 +76,7 @@ TEAM_ALIASES: dict[str, tuple[int, str]] = {
     "καλλιθεα": (2095, "Kallithea"),
     "kifisia": (5050, "Kifisia"),
     "ae kifisia": (5050, "Kifisia"),
+    "ae kifisias": (5050, "Kifisia"),
     "α ε κηφισια": (5050, "Kifisia"),
     "κηφισια": (5050, "Kifisia"),
     "ionikos": (7513, "Ionikos"),
@@ -83,6 +86,7 @@ TEAM_ALIASES: dict[str, tuple[int, str]] = {
     "πας λαμια": (956, "Lamia"),
     "larissa": (951, "Larissa"),
     "ael": (951, "Larissa"),
+    "ae larissa": (951, "Larissa"),
     "ael larissa": (951, "Larissa"),
     "ael novibet": (951, "Larissa"),
     "αελ": (951, "Larissa"),
@@ -91,6 +95,7 @@ TEAM_ALIASES: dict[str, tuple[int, str]] = {
     "λεβαδειακος": (957, "Levadiakos"),
     "ofi": (1124, "OFI"),
     "ofi crete": (1124, "OFI"),
+    "ofi heraklion": (1124, "OFI"),
     "ο φ η": (1124, "OFI"),
     "οφη": (1124, "OFI"),
     "olympiakos": (553, "Olympiakos Piraeus"),
@@ -100,6 +105,7 @@ TEAM_ALIASES: dict[str, tuple[int, str]] = {
     "ολυμπιακος σ φ π": (553, "Olympiakos Piraeus"),
     "paok": (619, "PAOK"),
     "paok salonika": (619, "PAOK"),
+    "paok saloniki": (619, "PAOK"),
     "π α ο κ": (619, "PAOK"),
     "παοκ": (619, "PAOK"),
     "pas giannina": (950, "PAS Giannina"),
@@ -162,11 +168,17 @@ def _stable_positive_id(text: str, minimum: int, span: int) -> int:
     return minimum + checksum % span
 
 
+_NORMALIZED_TEAM_ALIASES = {
+    _normalize_team_key(alias): value
+    for alias, value in TEAM_ALIASES.items()
+}
+
+
 def resolve_team(name: str) -> tuple[int, str]:
     cleaned = _clean_text(name)
     key = _normalize_team_key(cleaned)
-    if key in TEAM_ALIASES:
-        return TEAM_ALIASES[key]
+    if key in _NORMALIZED_TEAM_ALIASES:
+        return _NORMALIZED_TEAM_ALIASES[key]
 
     return (
         _stable_positive_id(

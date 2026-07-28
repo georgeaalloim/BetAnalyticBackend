@@ -96,6 +96,8 @@ def dixon_coles_correction(
 def find_team(
     teams: list[dict[str, Any]],
     team_id: int,
+    *,
+    allow_neutral_fallback: bool = False,
 ) -> dict[str, Any]:
     """
     Αναζητά μία ομάδα με βάση το μοναδικό team_id.
@@ -104,6 +106,20 @@ def find_team(
     for team in teams:
         if team["team_id"] == team_id:
             return team
+
+    if allow_neutral_fallback:
+        empty_venue = {
+            "matches": 0.0,
+            "goals_for": 0.0,
+            "goals_against": 0.0,
+        }
+        return {
+            "team_id": int(team_id),
+            "team_name": f"team_id={team_id}",
+            "home": dict(empty_venue),
+            "away": dict(empty_venue),
+            "cold_start": True,
+        }
 
     raise ValueError(
         f"Δεν βρέθηκε ομάδα με team_id={team_id}."
@@ -238,11 +254,13 @@ def calculate_team_strengths(
     home_team = find_team(
         teams=teams,
         team_id=home_team_id,
+        allow_neutral_fallback=True,
     )
 
     away_team = find_team(
         teams=teams,
         team_id=away_team_id,
+        allow_neutral_fallback=True,
     )
 
     average_home_goals, average_away_goals = (
@@ -261,18 +279,6 @@ def calculate_team_strengths(
     away_matches = float(
         away_statistics["matches"]
     )
-
-    if home_matches <= 0:
-        raise ValueError(
-            "Δεν υπάρχουν εντός έδρας δεδομένα "
-            f"για την ομάδα {home_team['team_name']}."
-        )
-
-    if away_matches <= 0:
-        raise ValueError(
-            "Δεν υπάρχουν εκτός έδρας δεδομένα "
-            f"για την ομάδα {away_team['team_name']}."
-        )
 
     smoothed_home_goals_for = (
         calculate_smoothed_average(
@@ -363,29 +369,29 @@ def calculate_team_strengths(
         },
         "raw_goal_rates": {
             "home_goals_for_per_match": (
-                float(home_statistics["goals_for"])
-                / home_matches
+                float(home_statistics["goals_for"]) / home_matches
+                if home_matches > 0
+                else average_home_goals
             ),
             "home_goals_against_per_match": (
-                float(
-                    home_statistics[
-                        "goals_against"
-                    ]
-                )
-                / home_matches
+                float(home_statistics["goals_against"]) / home_matches
+                if home_matches > 0
+                else average_away_goals
             ),
             "away_goals_for_per_match": (
-                float(away_statistics["goals_for"])
-                / away_matches
+                float(away_statistics["goals_for"]) / away_matches
+                if away_matches > 0
+                else average_away_goals
             ),
             "away_goals_against_per_match": (
-                float(
-                    away_statistics[
-                        "goals_against"
-                    ]
-                )
-                / away_matches
+                float(away_statistics["goals_against"]) / away_matches
+                if away_matches > 0
+                else average_home_goals
             ),
+        },
+        "cold_start": {
+            "home": home_matches <= 0,
+            "away": away_matches <= 0,
         },
         "smoothed_goal_rates": {
             "home_goals_for_per_match": (
@@ -655,6 +661,15 @@ def predict_match(
         "away_team": {
             "team_id": away_team["team_id"],
             "team_name": away_team["team_name"],
+        },
+        "data_quality": {
+            "level": (
+                "limited"
+                if any(strength_analysis["cold_start"].values())
+                else "standard"
+            ),
+            "cold_start_home": bool(strength_analysis["cold_start"]["home"]),
+            "cold_start_away": bool(strength_analysis["cold_start"]["away"]),
         },
         "league_averages": {
             "home_goals_per_match": round(

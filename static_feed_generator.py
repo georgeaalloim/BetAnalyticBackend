@@ -262,6 +262,16 @@ def _fixture_payload(
             home_team_id=home_team_id,
             away_team_id=away_team_id,
         )
+        # Σε cold-start πρόβλεψη το μοντέλο γνωρίζει μόνο το team_id.
+        # Το feed διατηρεί πάντα τα κανονικά ονόματα του προγράμματος.
+        prediction["home_team"] = {
+            "team_id": home_team_id,
+            "team_name": str(fixture["home_team_name"]),
+        }
+        prediction["away_team"] = {
+            "team_id": away_team_id,
+            "team_name": str(fixture["away_team_name"]),
+        }
         prediction["derived_scoring_probabilities"] = _derive_scoring_probabilities(
             prediction
         )

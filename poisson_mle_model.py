@@ -284,7 +284,13 @@ def _find_team_rating(
         if int(team["team_id"]) == int(team_id):
             return team
 
-    raise ValueError(f"Η ομάδα με team_id={team_id} δεν υπάρχει στο μοντέλο.")
+    return {
+        "team_id": int(team_id),
+        "team_name": f"team_id={team_id}",
+        "attack_rating": 0.0,
+        "defence_rating": 0.0,
+        "cold_start": True,
+    }
 
 
 def predict_match_mle(
@@ -404,6 +410,16 @@ def predict_match_mle(
         "away_team": {
             "team_id": int(away_team["team_id"]),
             "team_name": str(away_team["team_name"]),
+        },
+        "data_quality": {
+            "level": (
+                "limited"
+                if bool(home_team.get("cold_start"))
+                or bool(away_team.get("cold_start"))
+                else "standard"
+            ),
+            "cold_start_home": bool(home_team.get("cold_start")),
+            "cold_start_away": bool(away_team.get("cold_start")),
         },
         "expected_goals": {
             "home": round(expected_home_goals, 3),

@@ -2,19 +2,29 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+from dataclasses import replace
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from dotenv import load_dotenv
 
+from api_football_free_source import fetch_api_football_fixtures
 from automation_config import AutomationConfig
 from database import initialize_database, save_fixture_statistics
-from fixtur_es_source import fetch_super_league_fixtures, replace_source_fixtures
+from fixtur_es_source import (
+    fetch_super_league_fixtures,
+    replace_source_fixtures,
+    season_from_local_date,
+)
 from football_data_source import (
+    FootballDataResult,
     fetch_football_data,
     reconcile_and_save_football_data,
 )
+from free_schedule_source import merge_free_schedule_sources
 from match_statistics import (
     DEFAULT_DATASET_PATH,
     has_complete_statistics,
@@ -23,18 +33,22 @@ from match_statistics import (
     write_statistics_dataset,
 )
 from static_feed_generator import generate_static_feed
+from openfootball_source import fetch_openfootball_fixtures
 from time_utils import parse_iso_datetime, to_iso_z, utc_now
 
 
 load_dotenv()
+ATHENS_TZ = ZoneInfo("Europe/Athens")
 DETAILED_STATS_SEASON_WINDOW = 4
 
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Ενημερώνει αυτόματα πρόγραμμα/αποτελέσματα από Fixtur.es, "
-            "αναλυτικά στατιστικά από Football-Data και παράγει το feed."
+            "Ενημερώνει δωρεάν το πρόγραμμα με διασταύρωση Fixtur.es, "
+            "OpenFootball, Football-Data.co.uk και προαιρετικά το δωρεάν "
+            "API-Football, ενημερώνει αποτελέσματα/"
+            "κόρνερ/κάρτες από Football-Data και παράγει το feed."
         )
     )
     parser.add_argument("--output-dir", default="automation_output")
@@ -61,12 +75,23 @@ def _database_seasons() -> tuple[int, ...]:
     return tuple(int(row["season"]) for row in rows)
 
 
-def _automatic_detailed_seasons(database_seasons: tuple[int, ...]) -> tuple[int, ...]:
-    if not database_seasons:
-        return ()
-    latest = max(database_seasons)
+def _automatic_detailed_seasons(
+    database_seasons: tuple[int, ...],
+    *,
+    as_of: datetime,
+) -> tuple[int, ...]:
+    current = season_from_local_date(as_of.astimezone(ATHENS_TZ).date())
+    latest = max((*database_seasons, current)) if database_seasons else current
     first = latest - DETAILED_STATS_SEASON_WINDOW + 1
     return tuple(range(first, latest + 1))
+
+
+def _schedule_verification_seasons(as_of: datetime) -> tuple[int, ...]:
+    current = season_from_local_date(as_of.astimezone(ATHENS_TZ).date())
+    # Only the active and next season are schedule-synced. Older completed
+    # seasons come from the historical database/Football-Data, preventing
+    # duplicate historical matches from different fixture IDs.
+    return (current, current + 1)
 
 
 def _merge_and_save_statistics(
@@ -89,6 +114,17 @@ def _merge_and_save_statistics(
     }
 
 
+def _completed_only(result: FootballDataResult) -> FootballDataResult:
+    fixtures = [
+        payload
+        for payload in result.fixtures
+        if str((payload.get("fixture", {}).get("status") or {}).get("short") or "")
+        .upper()
+        == "FT"
+    ]
+    return replace(result, fixtures=fixtures)
+
+
 def main() -> int:
     args = _parse_args()
     config = AutomationConfig.from_environment(
@@ -99,25 +135,102 @@ def main() -> int:
     as_of: datetime = parse_iso_datetime(args.as_of) if args.as_of else utc_now()
 
     initialize_database()
+    database_seasons_before = _database_seasons()
+    detailed_seasons = _automatic_detailed_seasons(
+        database_seasons_before,
+        as_of=as_of,
+    )
+
+    # Football-Data is used both as a free cross-check for the schedule and as
+    # the automatic source for completed results/corners/cards.
+    football_data: FootballDataResult | None = None
+    if not (args.skip_sync and args.skip_detailed_stats):
+        football_data = fetch_football_data(seasons=detailed_seasons, as_of=as_of)
+
     sync_summary: dict[str, Any] = {}
 
     if args.skip_sync:
-        sync_summary["fixtures"] = {"source": "local-database", "skipped": True}
+        sync_summary["fixtures"] = {
+            "source": "local-database",
+            "source_key": "local_database",
+            "skipped": True,
+        }
     else:
-        source_result = fetch_super_league_fixtures(as_of=as_of)
-        processed = replace_source_fixtures(source_result.fixtures)
+        fixtur_es = fetch_super_league_fixtures(as_of=as_of)
+        verification_seasons = _schedule_verification_seasons(as_of)
+        openfootball = fetch_openfootball_fixtures(
+            seasons=verification_seasons,
+            as_of=as_of,
+        )
+        api_football = fetch_api_football_fixtures(
+            seasons=verification_seasons,
+            api_key=os.getenv("API_FOOTBALL_KEY"),
+        )
+        allowed_schedule_seasons = set(verification_seasons)
+        fixtur_schedule = [
+            item
+            for item in fixtur_es.fixtures
+            if int(item["league"]["season"]) in allowed_schedule_seasons
+        ]
+        football_fixtures = [
+            item
+            for item in (football_data.fixtures if football_data else [])
+            if int(item["league"]["season"]) in allowed_schedule_seasons
+        ]
+        merged_schedule = merge_free_schedule_sources(
+            fixtur_es_fixtures=fixtur_schedule,
+            openfootball_fixtures=openfootball.fixtures,
+            football_data_fixtures=football_fixtures,
+            api_football_fixtures=api_football.fixtures,
+            as_of=as_of,
+        )
+        if not merged_schedule.fixtures:
+            raise RuntimeError(
+                "Καμία δωρεάν πηγή δεν επέστρεψε πρόγραμμα για την ενεργή "
+                "ή την επόμενη σεζόν. Το workflow σταμάτησε για να μη "
+                "δημοσιευτεί παλιό ή κενό πρόγραμμα."
+            )
+        processed = replace_source_fixtures(merged_schedule.fixtures)
         source_seasons = sorted(
-            {int(item["league"]["season"]) for item in source_result.fixtures}
+            {
+                int(item["league"]["season"])
+                for item in merged_schedule.fixtures
+            }
         )
         sync_summary["fixtures"] = {
-            "source": "Fixtur.es calendar feed",
+            "source": (
+                "Free cross-checked schedule: Fixtur.es + OpenFootball CC0 + "
+                "Football-Data.co.uk + optional API-Football Free"
+            ),
+            "source_key": "free_cross_checked_schedule",
             "status": "ok",
-            "received": len(source_result.fixtures),
+            "received": len(merged_schedule.fixtures),
             "processed": processed,
             "source_seasons": source_seasons,
-            "pages_checked": source_result.pages_checked,
-            "calendar_feeds_used": source_result.calendar_urls,
-            "warnings": source_result.warnings,
+            "verification_counts": merged_schedule.verification_counts,
+            "source_counts": merged_schedule.source_counts,
+            "fixtur_es_pages_checked": fixtur_es.pages_checked,
+            "fixtur_es_calendars_used": fixtur_es.calendar_urls,
+            "openfootball_seasons_requested": openfootball.seasons_requested,
+            "openfootball_seasons_loaded": openfootball.seasons_loaded,
+            "openfootball_urls_loaded": openfootball.urls_loaded,
+            "api_football_free_enabled": api_football.enabled,
+            "api_football_free_seasons_requested": api_football.seasons_requested,
+            "api_football_free_seasons_loaded": api_football.seasons_loaded,
+            "api_football_free_requests_used": api_football.requests_used,
+            "api_football_free_quota_remaining": api_football.quota_remaining,
+            "warnings": [
+                *fixtur_es.warnings,
+                *openfootball.warnings,
+                *api_football.warnings,
+                *merged_schedule.warnings,
+            ],
+            "safety_rule": (
+                "Η ώρα χαρακτηρίζεται επιβεβαιωμένη μόνο όταν τουλάχιστον "
+                "δύο δωρεάν πηγές συμφωνούν στην ίδια ημερομηνία και σε ώρα "
+                "με απόκλιση έως 30 λεπτά. Διαφορετικά η εφαρμογή πρέπει να "
+                "εμφανίζει «Ώρα προς επιβεβαίωση»."
+            ),
         }
 
     database_seasons = _database_seasons()
@@ -137,12 +250,17 @@ def main() -> int:
             **statistics_summary,
         }
     else:
-        detailed_seasons = _automatic_detailed_seasons(database_seasons)
-        football_data = fetch_football_data(seasons=detailed_seasons, as_of=as_of)
-        reconciled = reconcile_and_save_football_data(football_data)
+        if football_data is None:
+            football_data = fetch_football_data(
+                seasons=detailed_seasons,
+                as_of=as_of,
+            )
+        # Only completed Football-Data matches are persisted here. Future
+        # kickoff times are controlled by the multi-source verification above.
+        reconciled = reconcile_and_save_football_data(_completed_only(football_data))
         statistics_summary = _merge_and_save_statistics(reconciled.statistics)
         sync_summary["detailed_statistics"] = {
-            "source": "Football-Data.co.uk CSV + committed API-Football seed",
+            "source": "Football-Data.co.uk CSV (free; no API key)",
             "status": "ok" if football_data.seasons_loaded else "fallback",
             "seasons_requested": football_data.seasons_requested,
             "seasons_loaded": football_data.seasons_loaded,
@@ -161,12 +279,21 @@ def main() -> int:
     seasons = _database_seasons()
     sync_summary["automatic_mode"] = {
         "enabled": True,
+        "paid_api_required": False,
+        "api_secret_required": False,
+        "optional_free_api_supported": True,
+        "optional_free_api_enabled": bool(os.getenv("API_FOOTBALL_KEY", "").strip()),
+        "superleague_scraping": False,
         "manual_schedule_overrides": False,
         "future_detailed_season_detection": True,
         "description": (
-            "Κάθε run ξαναδιαβάζει το πρόγραμμα, τα αποτελέσματα και τα "
-            "διαθέσιμα CSV στατιστικών. Νέοι ολοκληρωμένοι αγώνες μπαίνουν "
-            "αυτόματα στα επόμενα μοντέλα με αυστηρό χρονικό cutoff."
+            "Κάθε run διασταυρώνει δωρεάν το πρόγραμμα, χρησιμοποιώντας "
+            "το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει "
+            "οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει "
+            "τα δωρεάν CSV "
+            "αποτελεσμάτων/στατιστικών. Οι νέοι ολοκληρωμένοι αγώνες "
+            "χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό "
+            "χρονικό cutoff."
         ),
     }
     sync_summary["finished_at"] = to_iso_z(utc_now())

@@ -1,11 +1,16 @@
-ΑΝΕΒΑΣΜΑ ΣΤΟ GITHUB
+BETANALYTIC — ΑΝΕΒΑΣΜΑ ΝΕΑΣ ΔΩΡΕΑΝ ΕΚΔΟΣΗΣ
 
-1. Αποσυμπίεσε το ZIP.
-2. Στο repository πάτησε Add file -> Upload files.
-3. Ανέβασε τα αρχεία και τους φακέλους που βρίσκονται ΜΕΣΑ στο ZIP.
-4. Το workflow πρέπει να καταλήξει ακριβώς εδώ:
-   .github/workflows/update-betanalytic.yml
-5. Πάτησε Commit changes.
-6. Μετά: Actions -> Update and publish BetAnalytic data -> Run workflow -> main.
+1. Κράτησε αντίγραφο ασφαλείας του υπάρχοντος repository.
+2. Διέγραψε τα παλιά αρχεία από το root, εκτός αν θέλεις να κρατήσεις Git history.
+3. Ανέβασε ΟΛΑ τα περιεχόμενα του BetAnalyticBackend-FREE-crosschecked.zip.
+4. Κάνε commit στο branch main.
+5. GitHub → Settings → Pages → Source: GitHub Actions.
+6. Προαιρετικά:
+   Settings → Secrets and variables → Actions → New repository secret
+   Name: API_FOOTBALL_KEY
+   Value: δωρεάν API-Football key
+7. Actions → Sync free match history → Run workflow.
+8. Actions → Update and publish BetAnalytic data → Run workflow.
+9. Έλεγξε το feed.json και τις ενδείξεις kickoff_time_confirmed.
 
-Δεν χρειάζεται να τρέχεις πλέον χειροκίνητα τον collector για να λειτουργούν τα κόρνερ/οι κάρτες. Ο collector API-Football παραμένει μόνο προαιρετικό συμπλήρωμα.
+Δεν χρειάζεται καμία πληρωμένη συνδρομή.

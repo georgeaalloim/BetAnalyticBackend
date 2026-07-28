@@ -395,7 +395,17 @@ def reconcile_and_save_football_data(
         if existing is not None:
             canonical_id = int(existing["fixture_id"])
             fixture["id"] = canonical_id
-            canonical_date[canonical_id] = str(existing.get("fixture_date") or "")
+            # A completed Football-Data row may contain a more accurate kickoff
+            # than an earlier date-only schedule record. Keep the existing date
+            # only when it was already confirmed and the incoming row is not.
+            existing_confirmed = bool(existing.get("kickoff_time_confirmed"))
+            incoming_confirmed = bool(fixture.get("time_confirmed"))
+            if existing_confirmed and not incoming_confirmed:
+                canonical_date[canonical_id] = str(
+                    existing.get("fixture_date") or fixture.get("date") or ""
+                )
+            else:
+                canonical_date[canonical_id] = str(fixture.get("date") or "")
             matched += 1
         else:
             canonical_id = external_id

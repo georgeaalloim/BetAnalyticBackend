@@ -1,0 +1,10 @@
+ΑΣΦΑΛΗΣ ΕΚΔΟΣΗ — ΧΩΡΙΣ SCRAPING SUPER LEAGUE
+
+Το repository δεν περιέχει κώδικα που διαβάζει αυτόματα το slgr.gr.
+Το αυτόματο πρόγραμμα χρησιμοποιεί:
+- Fixtur.es calendar feed
+- OpenFootball CC0/public-domain dataset
+- Football-Data.co.uk CSV
+- προαιρετικά API-Football Free μόνο ως επιπλέον διασταύρωση
+
+Η ώρα εμφανίζεται ως επιβεβαιωμένη μόνο μετά από συμφωνία δύο δωρεάν πηγών.

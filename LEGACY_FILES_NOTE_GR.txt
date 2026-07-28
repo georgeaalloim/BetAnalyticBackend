@@ -1,0 +1,12 @@
+Ορισμένα παλιά αρχεία του repository (π.χ. football_api.py, odds_service.py,
+statistics_collector.py) παραμένουν για συμβατότητα με παλιές χειροκίνητες
+λειτουργίες. Δεν καλούνται από τα δύο ενεργά GitHub Actions workflows.
+
+Η νέα αυτόματη ροή ορίζεται από:
+- automatic_update.py
+- free_schedule_source.py
+- openfootball_source.py
+- api_football_free_source.py
+- football_data_source.py
+- fixtur_es_source.py
+- .github/workflows/*.yml
