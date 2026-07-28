@@ -3,6 +3,7 @@ from __future__ import annotations
 import html
 import re
 import zlib
+import unicodedata
 from dataclasses import dataclass
 from datetime import date, datetime, time, timedelta, timezone
 from typing import Any, Iterable
@@ -37,29 +38,88 @@ SYNTHETIC_TEAM_ID_SPAN = 150_000_000
 # η ιστορική βάση του API-Football. Έτσι το μοντέλο αναγνωρίζει τις
 # ίδιες ομάδες σε διαφορετικές πηγές δεδομένων.
 TEAM_ALIASES: dict[str, tuple[int, str]] = {
+    # AEK
+    "aek": (575, "AEK Athens FC"),
     "aek athene": (575, "AEK Athens FC"),
     "aek athens": (575, "AEK Athens FC"),
     "aek athens fc": (575, "AEK Athens FC"),
+    "α ε κ": (575, "AEK Athens FC"),
+    "αεκ": (575, "AEK Athens FC"),
+    # Aris
     "aris": (1123, "Aris Thessalonikis"),
     "aris thessalonikis": (1123, "Aris Thessalonikis"),
+    "αρης": (1123, "Aris Thessalonikis"),
+    # Asteras
+    "asteras aktor": (955, "Asteras Tripolis"),
     "asteras tripolis": (955, "Asteras Tripolis"),
+    "αστερας aktor": (955, "Asteras Tripolis"),
+    "αστερας τριπολης": (955, "Asteras Tripolis"),
+    # Atromitos
     "atromitos": (12260, "Atromitos"),
+    "atromitos ath": (12260, "Atromitos"),
     "atromitos athens": (12260, "Atromitos"),
+    "ατρομητος": (12260, "Atromitos"),
+    "ατρομητος αθηνων": (12260, "Atromitos"),
+    # Other clubs
+    "iraklis": (1026357653, "Iraklis 1908"),
+    "iraklis 1908": (1026357653, "Iraklis 1908"),
+    "pot iraklis": (1026357653, "Iraklis 1908"),
+    "π ο τ ηρακλης": (1026357653, "Iraklis 1908"),
+    "ηρακλης": (1026357653, "Iraklis 1908"),
+    "kalamata": (1068316644, "Kalamata"),
+    "καλαματα": (1068316644, "Kalamata"),
     "kallithea": (2095, "Kallithea"),
+    "athens kallithea": (2095, "Kallithea"),
+    "athens kallithea fc": (2095, "Kallithea"),
+    "καλλιθεα": (2095, "Kallithea"),
     "kifisia": (5050, "Kifisia"),
+    "ae kifisia": (5050, "Kifisia"),
+    "α ε κηφισια": (5050, "Kifisia"),
+    "κηφισια": (5050, "Kifisia"),
+    "ionikos": (7513, "Ionikos"),
+    "ionikos nikeas": (7513, "Ionikos"),
+    "ιωνικος": (7513, "Ionikos"),
     "lamia": (956, "Lamia"),
+    "πας λαμια": (956, "Lamia"),
     "larissa": (951, "Larissa"),
+    "ael": (951, "Larissa"),
     "ael larissa": (951, "Larissa"),
+    "ael novibet": (951, "Larissa"),
+    "αελ": (951, "Larissa"),
+    "αελ novibet": (951, "Larissa"),
     "levadiakos": (957, "Levadiakos"),
+    "λεβαδειακος": (957, "Levadiakos"),
     "ofi": (1124, "OFI"),
+    "ofi crete": (1124, "OFI"),
+    "ο φ η": (1124, "OFI"),
+    "οφη": (1124, "OFI"),
+    "olympiakos": (553, "Olympiakos Piraeus"),
     "olympiakos piraeus": (553, "Olympiakos Piraeus"),
-    "olympiakos piraeus": (553, "Olympiakos Piraeus"),
+    "olympiacos": (553, "Olympiakos Piraeus"),
+    "ολυμπιακος": (553, "Olympiakos Piraeus"),
+    "ολυμπιακος σ φ π": (553, "Olympiakos Piraeus"),
     "paok": (619, "PAOK"),
     "paok salonika": (619, "PAOK"),
+    "π α ο κ": (619, "PAOK"),
+    "παοκ": (619, "PAOK"),
+    "pas giannina": (950, "PAS Giannina"),
+    "giannina": (950, "PAS Giannina"),
+    "πας γιαννινα": (950, "PAS Giannina"),
     "panathinaikos": (617, "Panathinaikos"),
+    "panathinaikos ao": (617, "Panathinaikos"),
+    "παναθηναικος": (617, "Panathinaikos"),
+    "παναθηναικος α ο": (617, "Panathinaikos"),
     "panetolikos": (949, "Panetolikos"),
+    "παναιτωλικος": (949, "Panetolikos"),
     "panserraikos": (2099, "Panserraikos"),
+    "panserraikos 1946": (2099, "Panserraikos"),
+    "πανσερραικος": (2099, "Panserraikos"),
+    "πανσερραικος 1946": (2099, "Panserraikos"),
+    "volos": (2110, "Volos NFC"),
     "volos nfc": (2110, "Volos NFC"),
+    "volos nps": (2110, "Volos NFC"),
+    "βολος": (2110, "Volos NFC"),
+    "βολος ν π σ": (2110, "Volos NFC"),
 }
 
 _SCORE_PATTERN = re.compile(
@@ -85,8 +145,15 @@ def _clean_text(value: Any) -> str:
 
 def _normalize_team_key(name: str) -> str:
     value = _clean_text(name).casefold()
-    value = value.replace("fc", " ")
-    value = re.sub(r"[^a-z0-9ά-ώα-ω]+", " ", value)
+    # Αφαιρούμε τόνους, τελείες και εταιρικά/ποδοσφαιρικά επιθήματα ώστε
+    # οι ίδιες ομάδες να ταυτίζονται μεταξύ διαφορετικών πηγών.
+    value = "".join(
+        character
+        for character in unicodedata.normalize("NFD", value)
+        if unicodedata.category(character) != "Mn"
+    )
+    value = re.sub(r"\b(f\.?c\.?|p\.?a\.?e\.?)\b", " ", value)
+    value = re.sub(r"[^a-z0-9α-ω]+", " ", value)
     return _SPACE_PATTERN.sub(" ", value).strip()
 
 
@@ -254,6 +321,8 @@ def _to_api_fixture(
             ),
             "date": kickoff_utc.isoformat(),
             "status": {"short": status},
+            "time_confirmed": not date_only,
+            "source": "Fixtur.es calendar feed",
         },
         "league": {
             "id": LEAGUE_ID,

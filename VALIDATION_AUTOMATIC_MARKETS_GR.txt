@@ -1,0 +1,11 @@
+BetAnalytic automatic count markets validation
+
+Local checks completed:
+- Python compilation of all changed Python files
+- 11 unittest checks passed
+- Football-Data CSV parsing tested with goals, corners, cards, shots and fouls
+- Fixture reconciliation tested against an existing canonical fixture ID
+- Dynamic relevant-line selection tested for corners and yellow cards
+- Strict walk-forward backtest function tested
+- Full static-feed integration tested with ready goals, corners and cards
+- No live CSV request was executed from the local container; the GitHub Action performs the real network verification

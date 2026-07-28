@@ -9,52 +9,40 @@ from typing import Any
 from dotenv import load_dotenv
 
 from automation_config import AutomationConfig
-from database import initialize_database
-from match_statistics import import_statistics_dataset
-from fixtur_es_source import (
-    fetch_super_league_fixtures,
-    replace_source_fixtures,
+from database import initialize_database, save_fixture_statistics
+from fixtur_es_source import fetch_super_league_fixtures, replace_source_fixtures
+from football_data_source import (
+    fetch_football_data,
+    reconcile_and_save_football_data,
+)
+from match_statistics import (
+    DEFAULT_DATASET_PATH,
+    has_complete_statistics,
+    load_statistics_dataset,
+    merge_statistics_records,
+    write_statistics_dataset,
 )
 from static_feed_generator import generate_static_feed
 from time_utils import parse_iso_datetime, to_iso_z, utc_now
 
 
 load_dotenv()
+DETAILED_STATS_SEASON_WINDOW = 4
 
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Ενημερώνει αγώνες από το Fixtur.es, υπολογίζει προβλέψεις "
-            "χωρίς temporal leakage και παράγει στατικό JSON feed."
+            "Ενημερώνει αυτόματα πρόγραμμα/αποτελέσματα από Fixtur.es, "
+            "αναλυτικά στατιστικά από Football-Data και παράγει το feed."
         )
     )
-    parser.add_argument(
-        "--output-dir",
-        default="automation_output",
-        help="Φάκελος παραγωγής των feed.json και manifest.json.",
-    )
-    parser.add_argument(
-        "--lookahead-days",
-        type=int,
-        default=None,
-        help="Πόσες ημέρες επερχόμενων αγώνων θα μπουν στο feed.",
-    )
-    parser.add_argument(
-        "--as-of",
-        default=None,
-        help="ISO UTC ώρα υπολογισμού για ελεγχόμενη δοκιμή.",
-    )
-    parser.add_argument(
-        "--skip-sync",
-        action="store_true",
-        help="Χρησιμοποιεί μόνο την υπάρχουσα τοπική βάση.",
-    )
-    parser.add_argument(
-        "--skip-upload",
-        action="store_true",
-        help="Συμβατότητα με το workflow του GitHub Pages.",
-    )
+    parser.add_argument("--output-dir", default="automation_output")
+    parser.add_argument("--lookahead-days", type=int, default=None)
+    parser.add_argument("--as-of", default=None)
+    parser.add_argument("--skip-sync", action="store_true")
+    parser.add_argument("--skip-detailed-stats", action="store_true")
+    parser.add_argument("--skip-upload", action="store_true")
     return parser.parse_args()
 
 
@@ -70,8 +58,35 @@ def _database_seasons() -> tuple[int, ...]:
             ORDER BY season ASC
             """
         ).fetchall()
-
     return tuple(int(row["season"]) for row in rows)
+
+
+def _automatic_detailed_seasons(database_seasons: tuple[int, ...]) -> tuple[int, ...]:
+    if not database_seasons:
+        return ()
+    latest = max(database_seasons)
+    first = latest - DETAILED_STATS_SEASON_WINDOW + 1
+    return tuple(range(first, latest + 1))
+
+
+def _merge_and_save_statistics(
+    new_records: list[dict[str, Any]],
+) -> dict[str, int]:
+    dataset = load_statistics_dataset(DEFAULT_DATASET_PATH)
+    existing = [
+        item for item in dataset.get("fixtures", []) if isinstance(item, dict)
+    ]
+    merged = merge_statistics_records(existing, new_records)
+    write_statistics_dataset(merged, DEFAULT_DATASET_PATH)
+    complete = [item for item in merged if has_complete_statistics(item)]
+    saved = save_fixture_statistics(complete)
+    return {
+        "records_before_merge": len(existing),
+        "records_received": len(new_records),
+        "records_after_merge": len(merged),
+        "records_with_complete_statistics": len(complete),
+        "records_saved_to_sqlite": saved,
+    }
 
 
 def main() -> int:
@@ -81,30 +96,20 @@ def main() -> int:
         sync_seasons_override="auto",
         lookahead_days_override=args.lookahead_days,
     )
-    as_of: datetime = (
-        parse_iso_datetime(args.as_of)
-        if args.as_of
-        else utc_now()
-    )
+    as_of: datetime = parse_iso_datetime(args.as_of) if args.as_of else utc_now()
 
     initialize_database()
-    statistics_seed_summary = import_statistics_dataset()
+    sync_summary: dict[str, Any] = {}
 
     if args.skip_sync:
-        sync_summary: dict[str, Any] = {
-            "source": "local-database",
-            "skipped": True,
-        }
+        sync_summary["fixtures"] = {"source": "local-database", "skipped": True}
     else:
         source_result = fetch_super_league_fixtures(as_of=as_of)
         processed = replace_source_fixtures(source_result.fixtures)
         source_seasons = sorted(
-            {
-                int(item["league"]["season"])
-                for item in source_result.fixtures
-            }
+            {int(item["league"]["season"]) for item in source_result.fixtures}
         )
-        sync_summary = {
+        sync_summary["fixtures"] = {
             "source": "Fixtur.es calendar feed",
             "status": "ok",
             "received": len(source_result.fixtures),
@@ -115,11 +120,55 @@ def main() -> int:
             "warnings": source_result.warnings,
         }
 
-    seasons = _database_seasons()
-    if not seasons:
+    database_seasons = _database_seasons()
+    if not database_seasons:
         raise RuntimeError("Η βάση δεν περιέχει καμία σεζόν.")
 
-    sync_summary["statistics_seed"] = statistics_seed_summary
+    if args.skip_detailed_stats:
+        dataset = load_statistics_dataset(DEFAULT_DATASET_PATH)
+        existing_records = [
+            item for item in dataset.get("fixtures", []) if isinstance(item, dict)
+        ]
+        statistics_summary = _merge_and_save_statistics([])
+        sync_summary["detailed_statistics"] = {
+            "source": "committed dataset only",
+            "skipped": True,
+            "records_in_dataset": len(existing_records),
+            **statistics_summary,
+        }
+    else:
+        detailed_seasons = _automatic_detailed_seasons(database_seasons)
+        football_data = fetch_football_data(seasons=detailed_seasons, as_of=as_of)
+        reconciled = reconcile_and_save_football_data(football_data)
+        statistics_summary = _merge_and_save_statistics(reconciled.statistics)
+        sync_summary["detailed_statistics"] = {
+            "source": "Football-Data.co.uk CSV + committed API-Football seed",
+            "status": "ok" if football_data.seasons_loaded else "fallback",
+            "seasons_requested": football_data.seasons_requested,
+            "seasons_loaded": football_data.seasons_loaded,
+            "urls_loaded": football_data.urls_loaded,
+            "csv_rows_loaded": football_data.rows_loaded,
+            "csv_rows_with_complete_corners_and_cards": (
+                football_data.complete_statistics_rows
+            ),
+            "matched_existing_fixtures": reconciled.matched_existing_fixtures,
+            "inserted_new_fixtures": reconciled.inserted_new_fixtures,
+            "fixtures_saved": reconciled.fixtures_saved,
+            "warnings": football_data.warnings,
+            **statistics_summary,
+        }
+
+    seasons = _database_seasons()
+    sync_summary["automatic_mode"] = {
+        "enabled": True,
+        "manual_schedule_overrides": False,
+        "future_detailed_season_detection": True,
+        "description": (
+            "Κάθε run ξαναδιαβάζει το πρόγραμμα, τα αποτελέσματα και τα "
+            "διαθέσιμα CSV στατιστικών. Νέοι ολοκληρωμένοι αγώνες μπαίνουν "
+            "αυτόματα στα επόμενα μοντέλα με αυστηρό χρονικό cutoff."
+        ),
+    }
     sync_summary["finished_at"] = to_iso_z(utc_now())
 
     generated = generate_static_feed(

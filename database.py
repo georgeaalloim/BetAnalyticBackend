@@ -28,16 +28,45 @@ ODDS_SNAPSHOT_COLUMNS = (
 )
 
 
-def get_connection() -> sqlite3.Connection:
-    """
-    Ανοίγει σύνδεση με τη βάση δεδομένων SQLite.
-    """
+class _ClosingConnection(sqlite3.Connection):
+    """SQLite connection που κλείνει πραγματικά στο τέλος του with block."""
 
-    connection = sqlite3.connect(DATABASE_PATH)
+    def __exit__(self, exc_type: Any, exc_value: Any, traceback: Any) -> bool:
+        try:
+            return bool(super().__exit__(exc_type, exc_value, traceback))
+        finally:
+            self.close()
+
+
+def get_connection() -> sqlite3.Connection:
+    """Ανοίγει σύνδεση SQLite με foreign keys και ασφαλές κλείσιμο."""
+
+    connection = sqlite3.connect(
+        DATABASE_PATH,
+        factory=_ClosingConnection,
+    )
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA foreign_keys = ON")
-
     return connection
+
+
+def _ensure_columns(
+    connection: sqlite3.Connection,
+    table_name: str,
+    columns: dict[str, str],
+) -> None:
+    existing = {
+        str(row["name"])
+        for row in connection.execute(
+            f"PRAGMA table_info({table_name})"
+        ).fetchall()
+    }
+    for column_name, definition in columns.items():
+        if column_name not in existing:
+            connection.execute(
+                f"ALTER TABLE {table_name} ADD COLUMN "
+                f"{column_name} {definition}"
+            )
 
 
 def initialize_database() -> None:
@@ -60,7 +89,9 @@ def initialize_database() -> None:
                 away_team_id INTEGER NOT NULL,
                 away_team_name TEXT NOT NULL,
                 home_goals INTEGER,
-                away_goals INTEGER
+                away_goals INTEGER,
+                kickoff_time_confirmed INTEGER NOT NULL DEFAULT 0,
+                schedule_source TEXT
             )
             """
         )
@@ -112,6 +143,15 @@ def initialize_database() -> None:
                     CHECK(away_yellow_cards >= 0),
                 home_red_cards INTEGER CHECK(home_red_cards >= 0),
                 away_red_cards INTEGER CHECK(away_red_cards >= 0),
+                home_total_shots INTEGER CHECK(home_total_shots >= 0),
+                away_total_shots INTEGER CHECK(away_total_shots >= 0),
+                home_shots_on_target INTEGER CHECK(home_shots_on_target >= 0),
+                away_shots_on_target INTEGER CHECK(away_shots_on_target >= 0),
+                home_fouls INTEGER CHECK(home_fouls >= 0),
+                away_fouls INTEGER CHECK(away_fouls >= 0),
+                home_offsides INTEGER CHECK(home_offsides >= 0),
+                away_offsides INTEGER CHECK(away_offsides >= 0),
+                referee TEXT,
                 source TEXT NOT NULL,
                 collected_at TEXT NOT NULL,
                 FOREIGN KEY(fixture_id)
@@ -119,6 +159,47 @@ def initialize_database() -> None:
                     ON UPDATE CASCADE
                     ON DELETE CASCADE
             )
+            """
+        )
+
+        _ensure_columns(
+            connection,
+            "fixtures",
+            {
+                "kickoff_time_confirmed": "INTEGER NOT NULL DEFAULT 0",
+                "schedule_source": "TEXT",
+            },
+        )
+        _ensure_columns(
+            connection,
+            "fixture_statistics",
+            {
+                "home_total_shots": "INTEGER CHECK(home_total_shots >= 0)",
+                "away_total_shots": "INTEGER CHECK(away_total_shots >= 0)",
+                "home_shots_on_target": "INTEGER CHECK(home_shots_on_target >= 0)",
+                "away_shots_on_target": "INTEGER CHECK(away_shots_on_target >= 0)",
+                "home_fouls": "INTEGER CHECK(home_fouls >= 0)",
+                "away_fouls": "INTEGER CHECK(away_fouls >= 0)",
+                "home_offsides": "INTEGER CHECK(home_offsides >= 0)",
+                "away_offsides": "INTEGER CHECK(away_offsides >= 0)",
+                "referee": "TEXT",
+            },
+        )
+
+        # Οι ιστορικές εγγραφές που προϋπήρχαν της νέας στήλης έχουν
+        # πραγματική ώρα από την παλιά πηγή. Τις χαρακτηρίζουμε επιβεβαιωμένες
+        # ώστε ένα CSV χωρίς ώρα να μην αντικαταστήσει το ακριβές kickoff.
+        connection.execute(
+            """
+            UPDATE fixtures
+            SET kickoff_time_confirmed = 1,
+                schedule_source = COALESCE(
+                    schedule_source,
+                    'legacy historical source'
+                )
+            WHERE status = 'FT'
+              AND fixture_date IS NOT NULL
+              AND kickoff_time_confirmed = 0
             """
         )
 
@@ -227,6 +308,8 @@ def save_fixtures(
                 away_team_name,
                 goals.get("home"),
                 goals.get("away"),
+                1 if bool(fixture.get("time_confirmed")) else 0,
+                str(fixture.get("source") or "") or None,
             )
         )
 
@@ -247,21 +330,50 @@ def save_fixtures(
                 away_team_id,
                 away_team_name,
                 home_goals,
-                away_goals
+                away_goals,
+                kickoff_time_confirmed,
+                schedule_source
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 
             ON CONFLICT(fixture_id) DO UPDATE SET
                 league_id = excluded.league_id,
                 season = excluded.season,
-                fixture_date = excluded.fixture_date,
-                status = excluded.status,
+                status = CASE
+                    WHEN excluded.status = 'FT' THEN 'FT'
+                    WHEN fixtures.status = 'FT' THEN fixtures.status
+                    ELSE excluded.status
+                END,
                 home_team_id = excluded.home_team_id,
                 home_team_name = excluded.home_team_name,
                 away_team_id = excluded.away_team_id,
                 away_team_name = excluded.away_team_name,
-                home_goals = excluded.home_goals,
-                away_goals = excluded.away_goals
+                home_goals = CASE
+                    WHEN excluded.home_goals IS NOT NULL
+                    THEN excluded.home_goals
+                    ELSE fixtures.home_goals
+                END,
+                away_goals = CASE
+                    WHEN excluded.away_goals IS NOT NULL
+                    THEN excluded.away_goals
+                    ELSE fixtures.away_goals
+                END,
+                fixture_date = CASE
+                    WHEN excluded.kickoff_time_confirmed = 1
+                      OR fixtures.kickoff_time_confirmed = 0
+                    THEN excluded.fixture_date
+                    ELSE fixtures.fixture_date
+                END,
+                kickoff_time_confirmed = MAX(
+                    fixtures.kickoff_time_confirmed,
+                    excluded.kickoff_time_confirmed
+                ),
+                schedule_source = CASE
+                    WHEN excluded.kickoff_time_confirmed = 1
+                      OR excluded.home_goals IS NOT NULL
+                    THEN excluded.schedule_source
+                    ELSE COALESCE(fixtures.schedule_source, excluded.schedule_source)
+                END
             """,
             rows_to_save,
         )
@@ -627,6 +739,12 @@ def get_latest_odds_snapshots(
 
     return list(latest_by_bookmaker.values())
 
+def _optional_int(value: Any) -> int | None:
+    if value is None or value == "":
+        return None
+    return int(value)
+
+
 def save_fixture_statistics(
     records: list[dict[str, Any]],
 ) -> int:
@@ -689,6 +807,15 @@ def save_fixture_statistics(
                     if record.get("away_red_cards") is not None
                     else None
                 ),
+                _optional_int(record.get("home_total_shots")),
+                _optional_int(record.get("away_total_shots")),
+                _optional_int(record.get("home_shots_on_target")),
+                _optional_int(record.get("away_shots_on_target")),
+                _optional_int(record.get("home_fouls")),
+                _optional_int(record.get("away_fouls")),
+                _optional_int(record.get("home_offsides")),
+                _optional_int(record.get("away_offsides")),
+                (str(record.get("referee")) if record.get("referee") else None),
                 str(record["source"]),
                 str(record["collected_at"]),
             )
@@ -715,10 +842,19 @@ def save_fixture_statistics(
                 away_yellow_cards,
                 home_red_cards,
                 away_red_cards,
+                home_total_shots,
+                away_total_shots,
+                home_shots_on_target,
+                away_shots_on_target,
+                home_fouls,
+                away_fouls,
+                home_offsides,
+                away_offsides,
+                referee,
                 source,
                 collected_at
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 
             ON CONFLICT(fixture_id) DO UPDATE SET
                 league_id = excluded.league_id,
@@ -732,8 +868,17 @@ def save_fixture_statistics(
                 away_corners = excluded.away_corners,
                 home_yellow_cards = excluded.home_yellow_cards,
                 away_yellow_cards = excluded.away_yellow_cards,
-                home_red_cards = excluded.home_red_cards,
-                away_red_cards = excluded.away_red_cards,
+                home_red_cards = COALESCE(excluded.home_red_cards, fixture_statistics.home_red_cards),
+                away_red_cards = COALESCE(excluded.away_red_cards, fixture_statistics.away_red_cards),
+                home_total_shots = COALESCE(excluded.home_total_shots, fixture_statistics.home_total_shots),
+                away_total_shots = COALESCE(excluded.away_total_shots, fixture_statistics.away_total_shots),
+                home_shots_on_target = COALESCE(excluded.home_shots_on_target, fixture_statistics.home_shots_on_target),
+                away_shots_on_target = COALESCE(excluded.away_shots_on_target, fixture_statistics.away_shots_on_target),
+                home_fouls = COALESCE(excluded.home_fouls, fixture_statistics.home_fouls),
+                away_fouls = COALESCE(excluded.away_fouls, fixture_statistics.away_fouls),
+                home_offsides = COALESCE(excluded.home_offsides, fixture_statistics.home_offsides),
+                away_offsides = COALESCE(excluded.away_offsides, fixture_statistics.away_offsides),
+                referee = COALESCE(excluded.referee, fixture_statistics.referee),
                 source = excluded.source,
                 collected_at = excluded.collected_at
             """,

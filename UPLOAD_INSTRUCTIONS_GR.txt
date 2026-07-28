@@ -1,0 +1,11 @@
+ΑΝΕΒΑΣΜΑ ΣΤΟ GITHUB
+
+1. Αποσυμπίεσε το ZIP.
+2. Στο repository πάτησε Add file -> Upload files.
+3. Ανέβασε τα αρχεία και τους φακέλους που βρίσκονται ΜΕΣΑ στο ZIP.
+4. Το workflow πρέπει να καταλήξει ακριβώς εδώ:
+   .github/workflows/update-betanalytic.yml
+5. Πάτησε Commit changes.
+6. Μετά: Actions -> Update and publish BetAnalytic data -> Run workflow -> main.
+
+Δεν χρειάζεται να τρέχεις πλέον χειροκίνητα τον collector για να λειτουργούν τα κόρνερ/οι κάρτες. Ο collector API-Football παραμένει μόνο προαιρετικό συμπλήρωμα.
