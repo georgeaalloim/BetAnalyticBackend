@@ -8,9 +8,13 @@ on:
         required: true
         default: "2022,2023,2024"
       max_requests:
-        description: "Αγώνες/API requests σε αυτή την εκτέλεση (Free: προτείνεται 85)"
+        description: "Αγώνες/API requests σε αυτή την εκτέλεση (Free: έως 85)"
         required: true
         default: "85"
+      request_delay_seconds:
+        description: "Παύση μεταξύ requests σε δευτερόλεπτα (Free: 8)"
+        required: true
+        default: "8"
 
 permissions:
   contents: write
@@ -51,6 +55,7 @@ jobs:
           python statistics_collector.py \
             --seasons "${{ inputs.seasons }}" \
             --max-requests "${{ inputs.max_requests }}" \
+            --request-delay-seconds "${{ inputs.request_delay_seconds }}" \
             --dataset data/fixture_statistics.json \
             --summary-output data/statistics_collection_summary.json
 
