@@ -51,6 +51,32 @@ class FreeScheduleSourceTests(unittest.TestCase):
         self.assertTrue(merged["fixture"]["time_confirmed"])
         self.assertEqual(merged["fixture"]["verification"], "time_verified")
 
+    def test_date_only_second_source_allows_reported_time(self) -> None:
+        result = merge_free_schedule_sources(
+            fixtur_es_fixtures=[
+                fixture("Fixtur.es", "2026-08-22T17:00:00+00:00")
+            ],
+            openfootball_fixtures=[
+                fixture(
+                    "OpenFootball CC0",
+                    "2026-08-22T09:00:00+00:00",
+                    confirmed=False,
+                )
+            ],
+            football_data_fixtures=[],
+            as_of=self.as_of,
+        )
+        merged = result.fixtures[0]
+        self.assertTrue(merged["fixture"]["time_confirmed"])
+        self.assertEqual(
+            merged["fixture"]["verification"],
+            "date_verified_time_reported",
+        )
+        self.assertEqual(
+            merged["fixture"]["date"],
+            "2026-08-22T17:00:00+00:00",
+        )
+
     def test_single_source_hides_time(self) -> None:
         result = merge_free_schedule_sources(
             fixtur_es_fixtures=[fixture("Fixtur.es", "2026-08-22T17:00:00+00:00")],

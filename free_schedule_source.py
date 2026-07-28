@@ -127,21 +127,35 @@ def _technical_kickoff(consensus_date: date, candidates: list[_Candidate]) -> da
 def _verified_kickoff(
     consensus_date: date,
     candidates: list[_Candidate],
-) -> tuple[datetime, bool]:
+    *,
+    date_verified: bool,
+) -> tuple[datetime, bool, str]:
+    """Select a safe, displayable kickoff time.
+
+    Two timed sources that agree remain the strongest case.  A single source
+    with an explicit time is also displayable when a second independent
+    source confirms the match date.  This avoids hiding every kickoff merely
+    because date-only datasets do not publish hours.
+    """
     exact = [
         item.kickoff_local
         for item in candidates
         if item.local_date == consensus_date and item.time_confirmed
     ]
-    if len(exact) < 2:
-        return _technical_kickoff(consensus_date, candidates), False
+    if not exact:
+        return _technical_kickoff(consensus_date, candidates), False, "none"
 
     timestamps = sorted(item.timestamp() for item in exact)
     spread_minutes = (timestamps[-1] - timestamps[0]) / 60.0
     if spread_minutes > MAX_TIME_DIFFERENCE_MINUTES:
-        return _technical_kickoff(consensus_date, candidates), False
+        return _technical_kickoff(consensus_date, candidates), False, "conflict"
 
-    return datetime.fromtimestamp(median(timestamps), tz=ATHENS_TZ), True
+    selected = datetime.fromtimestamp(median(timestamps), tz=ATHENS_TZ)
+    if len(exact) >= 2:
+        return selected, True, "cross_checked"
+    if date_verified:
+        return selected, True, "date_checked_single_time"
+    return selected, False, "single_source"
 
 
 def _select_result(candidates: list[_Candidate]) -> tuple[str, int | None, int | None]:
@@ -168,10 +182,15 @@ def _verification_label(
     *,
     date_verified: bool,
     time_verified: bool,
+    time_basis: str,
 ) -> str:
     source_count = len({item.source for item in candidates})
-    if time_verified:
+    if time_verified and time_basis == "cross_checked":
         return "time_verified"
+    if time_verified and time_basis == "date_checked_single_time":
+        return "date_verified_time_reported"
+    if time_basis == "conflict":
+        return "source_conflict"
     if date_verified:
         return "date_verified"
     if source_count >= 2:
@@ -185,7 +204,8 @@ def _source_text(
 ) -> str:
     sources = sorted({item.source for item in candidates})
     label = {
-        "time_verified": "verified date and time",
+        "time_verified": "cross-checked date and time",
+        "date_verified_time_reported": "verified date; time reported by one source",
         "date_verified": "verified date; time pending",
         "source_conflict": "source conflict; time hidden",
         "single_source": "single source; time pending",
@@ -200,7 +220,11 @@ def _merge_group(
     as_of: datetime,
 ) -> tuple[dict[str, Any], str]:
     consensus_date, date_verified = _consensus_date(candidates, primary)
-    kickoff_local, time_verified = _verified_kickoff(consensus_date, candidates)
+    kickoff_local, time_verified, time_basis = _verified_kickoff(
+        consensus_date,
+        candidates,
+        date_verified=date_verified,
+    )
     result_status, home_goals, away_goals = _select_result(candidates)
     if result_status:
         status = result_status
@@ -213,6 +237,7 @@ def _merge_group(
         candidates,
         date_verified=date_verified,
         time_verified=time_verified,
+        time_basis=time_basis,
     )
     teams = primary.payload["teams"]
     home_team_id, home_name = resolve_team(str(teams["home"]["name"]))
@@ -347,7 +372,8 @@ def merge_free_schedule_sources(
 
     # Stable de-duplication. Prefer a verified record over an unverified one.
     priority = {
-        "time_verified": 4,
+        "time_verified": 5,
+        "date_verified_time_reported": 4,
         "date_verified": 3,
         "source_conflict": 2,
         "single_source": 1,
