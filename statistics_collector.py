@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import time
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +23,7 @@ from match_statistics import (
 DEFAULT_LEAGUE_ID = 197
 DEFAULT_SEASONS = (2022, 2023, 2024)
 DEFAULT_MAX_REQUESTS = 85
+DEFAULT_REQUEST_DELAY_SECONDS = 8.0
 SYNTHETIC_FIXTURE_ID_MIN = 1_200_000_000
 
 
@@ -112,6 +114,7 @@ def _build_summary(
     total_available_after_merge: int,
     total_unavailable_after_merge: int,
     plan_only: bool,
+    request_delay_seconds: float,
     fatal_error: str | None,
     warnings: list[str],
 ) -> dict[str, Any]:
@@ -134,6 +137,11 @@ def _build_summary(
         "total_records_with_complete_statistics": total_available_after_merge,
         "total_records_without_complete_statistics": total_unavailable_after_merge,
         "plan_only": plan_only,
+        "request_delay_seconds": request_delay_seconds,
+        "estimated_minimum_runtime_minutes": round(
+            (selected_count * request_delay_seconds) / 60.0,
+            2,
+        ),
         "fatal_error": fatal_error,
         "warnings": warnings,
         "finished_at": utc_now_iso(),
@@ -175,6 +183,15 @@ def _parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--request-delay-seconds",
+        type=float,
+        default=DEFAULT_REQUEST_DELAY_SECONDS,
+        help=(
+            "Ελάχιστη απόσταση ανάμεσα στην έναρξη δύο API requests. "
+            "Για Free plan χρησιμοποίησε τουλάχιστον 7, προτείνεται 8."
+        ),
+    )
+    parser.add_argument(
         "--dataset",
         default=str(DEFAULT_DATASET_PATH),
     )
@@ -196,6 +213,11 @@ def main() -> int:
 
     if args.max_requests < 1:
         raise ValueError("Το max-requests πρέπει να είναι τουλάχιστον 1.")
+
+    if args.request_delay_seconds < 0:
+        raise ValueError(
+            "Το request-delay-seconds δεν μπορεί να είναι αρνητικό."
+        )
 
     initialize_database()
 
@@ -253,6 +275,7 @@ def main() -> int:
             total_available_after_merge=existing_available,
             total_unavailable_after_merge=existing_unavailable,
             plan_only=True,
+            request_delay_seconds=args.request_delay_seconds,
             fatal_error=None,
             warnings=warnings,
         )
@@ -267,10 +290,27 @@ def main() -> int:
     records_available = 0
     records_unavailable = 0
     fatal_error: str | None = None
+    last_request_started_at: float | None = None
 
-    for fixture_row in selected_rows:
+    for index, fixture_row in enumerate(selected_rows, start=1):
         fixture_id = int(fixture_row["fixture_id"])
+
+        if last_request_started_at is not None:
+            elapsed = time.monotonic() - last_request_started_at
+            remaining_delay = args.request_delay_seconds - elapsed
+            if remaining_delay > 0:
+                print(
+                    f"Αναμονή {remaining_delay:.1f}s πριν από το επόμενο request...",
+                    flush=True,
+                )
+                time.sleep(remaining_delay)
+
+        last_request_started_at = time.monotonic()
         requests_attempted += 1
+        print(
+            f"[{index}/{len(selected_rows)}] Fixture {fixture_id}",
+            flush=True,
+        )
 
         try:
             data = api_get(
@@ -351,6 +391,7 @@ def main() -> int:
         total_available_after_merge=total_available,
         total_unavailable_after_merge=total_unavailable,
         plan_only=False,
+        request_delay_seconds=args.request_delay_seconds,
         fatal_error=fatal_error,
         warnings=warnings,
     )
