@@ -14,7 +14,7 @@ DEFAULT_DATASET_PATH = (
     / "fixture_statistics.json"
 )
 
-DATASET_SCHEMA_VERSION = 1
+DATASET_SCHEMA_VERSION = 2
 SOURCE_NAME = "API-Football"
 
 
@@ -56,11 +56,10 @@ def _as_int(value: Any) -> int | None:
 
 
 def _statistics_by_team(
-    fixture_payload: dict[str, Any],
+    statistics_blocks: Any,
 ) -> dict[int, dict[str, int | None]]:
     result: dict[int, dict[str, int | None]] = {}
 
-    statistics_blocks = fixture_payload.get("statistics", [])
     if not isinstance(statistics_blocks, list):
         return result
 
@@ -94,9 +93,66 @@ def _statistics_by_team(
 
             parsed[normalized_name] = _as_int(item.get("value"))
 
-        result[team_id] = parsed
+        result[int(team_id)] = parsed
 
     return result
+
+
+def _build_record(
+    *,
+    fixture_id: int,
+    league_id: int,
+    season: int,
+    fixture_date: Any,
+    status: Any,
+    home_team_id: int,
+    home_team_name: str,
+    away_team_id: int,
+    away_team_name: str,
+    statistics_blocks: Any,
+    collected_at: str,
+) -> dict[str, Any] | None:
+    by_team = _statistics_by_team(statistics_blocks)
+    home_stats = by_team.get(int(home_team_id), {})
+    away_stats = by_team.get(int(away_team_id), {})
+
+    home_corners = _as_int(home_stats.get("corners"))
+    away_corners = _as_int(away_stats.get("corners"))
+    home_yellow = _as_int(home_stats.get("yellow_cards"))
+    away_yellow = _as_int(away_stats.get("yellow_cards"))
+
+    if any(
+        value is None
+        for value in (
+            home_corners,
+            away_corners,
+            home_yellow,
+            away_yellow,
+        )
+    ):
+        return None
+
+    return {
+        "fixture_id": int(fixture_id),
+        "league_id": int(league_id),
+        "season": int(season),
+        "fixture_date": fixture_date,
+        "status": str(status or "") or None,
+        "home_team_id": int(home_team_id),
+        "home_team_name": str(home_team_name or ""),
+        "away_team_id": int(away_team_id),
+        "away_team_name": str(away_team_name or ""),
+        "home_corners": int(home_corners),
+        "away_corners": int(away_corners),
+        "home_yellow_cards": int(home_yellow),
+        "away_yellow_cards": int(away_yellow),
+        "home_red_cards": _as_int(home_stats.get("red_cards")),
+        "away_red_cards": _as_int(away_stats.get("red_cards")),
+        "statistics_available": True,
+        "unavailable_reason": None,
+        "source": SOURCE_NAME,
+        "collected_at": collected_at,
+    }
 
 
 def parse_api_fixture_statistics(
@@ -104,13 +160,12 @@ def parse_api_fixture_statistics(
     collected_at: str | None = None,
 ) -> dict[str, Any] | None:
     """
-    Μετατρέπει ένα πλήρες αντικείμενο `/fixtures?ids=...` σε εγγραφή
+    Μετατρέπει πλήρες αντικείμενο του endpoint `/fixtures` σε εγγραφή
     κόρνερ και καρτών.
 
-    Για να θεωρηθεί έγκυρη η εγγραφή απαιτούνται πραγματικές τιμές για
-    κόρνερ και κίτρινες κάρτες και για τις δύο ομάδες. Οι κόκκινες κάρτες
-    αποθηκεύονται όταν υπάρχουν, αλλά δεν χρησιμοποιούνται ως υποκατάστατο
-    των κίτρινων καρτών.
+    Διατηρείται για συμβατότητα και για ελέγχους. Η δωρεάν συλλογή
+    χρησιμοποιεί το `parse_fixture_statistics_response`, επειδή καλεί το
+    endpoint `/fixtures/statistics?fixture=...` ξεχωριστά για κάθε αγώνα.
     """
 
     fixture = fixture_payload.get("fixture", {})
@@ -141,26 +196,6 @@ def parse_api_fixture_statistics(
     if any(value is None for value in required_ids):
         return None
 
-    by_team = _statistics_by_team(fixture_payload)
-    home_stats = by_team.get(int(home_team_id), {})
-    away_stats = by_team.get(int(away_team_id), {})
-
-    home_corners = _as_int(home_stats.get("corners"))
-    away_corners = _as_int(away_stats.get("corners"))
-    home_yellow = _as_int(home_stats.get("yellow_cards"))
-    away_yellow = _as_int(away_stats.get("yellow_cards"))
-
-    if any(
-        value is None
-        for value in (
-            home_corners,
-            away_corners,
-            home_yellow,
-            away_yellow,
-        )
-    ):
-        return None
-
     status = fixture.get("status", {})
     status_short = (
         str(status.get("short", "")).strip()
@@ -168,25 +203,105 @@ def parse_api_fixture_statistics(
         else ""
     )
 
+    return _build_record(
+        fixture_id=int(fixture_id),
+        league_id=int(league_id),
+        season=int(season),
+        fixture_date=fixture.get("date"),
+        status=status_short,
+        home_team_id=int(home_team_id),
+        home_team_name=str(home_team.get("name") or ""),
+        away_team_id=int(away_team_id),
+        away_team_name=str(away_team.get("name") or ""),
+        statistics_blocks=fixture_payload.get("statistics", []),
+        collected_at=collected_at or utc_now_iso(),
+    )
+
+
+def parse_fixture_statistics_response(
+    fixture_row: dict[str, Any],
+    response_items: Any,
+    collected_at: str | None = None,
+) -> dict[str, Any] | None:
+    """
+    Μετατρέπει την απάντηση του `/fixtures/statistics?fixture=ID` σε
+    κανονική εγγραφή, χρησιμοποιώντας τα στοιχεία του αγώνα από τη βάση.
+    """
+
+    fixture_id = _as_int(fixture_row.get("fixture_id"))
+    league_id = _as_int(fixture_row.get("league_id"))
+    season = _as_int(fixture_row.get("season"))
+    home_team_id = _as_int(fixture_row.get("home_team_id"))
+    away_team_id = _as_int(fixture_row.get("away_team_id"))
+
+    required_ids = (
+        fixture_id,
+        league_id,
+        season,
+        home_team_id,
+        away_team_id,
+    )
+    if any(value is None for value in required_ids):
+        return None
+
+    return _build_record(
+        fixture_id=int(fixture_id),
+        league_id=int(league_id),
+        season=int(season),
+        fixture_date=fixture_row.get("fixture_date"),
+        status=fixture_row.get("status"),
+        home_team_id=int(home_team_id),
+        home_team_name=str(fixture_row.get("home_team_name") or ""),
+        away_team_id=int(away_team_id),
+        away_team_name=str(fixture_row.get("away_team_name") or ""),
+        statistics_blocks=response_items,
+        collected_at=collected_at or utc_now_iso(),
+    )
+
+
+def build_unavailable_statistics_record(
+    fixture_row: dict[str, Any],
+    *,
+    reason: str,
+    collected_at: str | None = None,
+) -> dict[str, Any]:
+    """
+    Αποθηκεύει ότι το API απάντησε κανονικά αλλά δεν είχε πλήρη κόρνερ
+    και κίτρινες κάρτες. Έτσι ο ίδιος ιστορικός αγώνας δεν καταναλώνει
+    ξανά API request σε κάθε επόμενη εκτέλεση.
+    """
+
     return {
-        "fixture_id": int(fixture_id),
-        "league_id": int(league_id),
-        "season": int(season),
-        "fixture_date": fixture.get("date"),
-        "status": status_short or None,
-        "home_team_id": int(home_team_id),
-        "home_team_name": str(home_team.get("name") or ""),
-        "away_team_id": int(away_team_id),
-        "away_team_name": str(away_team.get("name") or ""),
-        "home_corners": int(home_corners),
-        "away_corners": int(away_corners),
-        "home_yellow_cards": int(home_yellow),
-        "away_yellow_cards": int(away_yellow),
-        "home_red_cards": _as_int(home_stats.get("red_cards")),
-        "away_red_cards": _as_int(away_stats.get("red_cards")),
+        "fixture_id": int(fixture_row["fixture_id"]),
+        "league_id": int(fixture_row["league_id"]),
+        "season": int(fixture_row["season"]),
+        "fixture_date": fixture_row.get("fixture_date"),
+        "status": fixture_row.get("status"),
+        "home_team_id": int(fixture_row["home_team_id"]),
+        "home_team_name": str(fixture_row.get("home_team_name") or ""),
+        "away_team_id": int(fixture_row["away_team_id"]),
+        "away_team_name": str(fixture_row.get("away_team_name") or ""),
+        "home_corners": None,
+        "away_corners": None,
+        "home_yellow_cards": None,
+        "away_yellow_cards": None,
+        "home_red_cards": None,
+        "away_red_cards": None,
+        "statistics_available": False,
+        "unavailable_reason": str(reason),
         "source": SOURCE_NAME,
         "collected_at": collected_at or utc_now_iso(),
     }
+
+
+def has_complete_statistics(record: dict[str, Any]) -> bool:
+    required_fields = (
+        "home_corners",
+        "away_corners",
+        "home_yellow_cards",
+        "away_yellow_cards",
+    )
+    return all(record.get(field) is not None for field in required_fields)
 
 
 def empty_dataset() -> dict[str, Any]:
@@ -194,6 +309,9 @@ def empty_dataset() -> dict[str, Any]:
         "schema_version": DATASET_SCHEMA_VERSION,
         "source": SOURCE_NAME,
         "updated_at": None,
+        "fixtures_count": 0,
+        "available_statistics_count": 0,
+        "unavailable_statistics_count": 0,
         "fixtures": [],
     }
 
@@ -260,11 +378,18 @@ def write_statistics_dataset(
     dataset_path.parent.mkdir(parents=True, exist_ok=True)
 
     normalized_records = merge_statistics_records([], records)
+    available_count = sum(
+        1 for record in normalized_records if has_complete_statistics(record)
+    )
+    unavailable_count = len(normalized_records) - available_count
+
     payload = {
         "schema_version": DATASET_SCHEMA_VERSION,
         "source": SOURCE_NAME,
         "updated_at": updated_at or utc_now_iso(),
         "fixtures_count": len(normalized_records),
+        "available_statistics_count": available_count,
+        "unavailable_statistics_count": unavailable_count,
         "fixtures": normalized_records,
     }
 
@@ -284,11 +409,12 @@ def import_statistics_dataset(
     valid_records = [
         record
         for record in fixtures
-        if isinstance(record, dict)
+        if isinstance(record, dict) and has_complete_statistics(record)
     ]
 
     saved = save_fixture_statistics(valid_records)
     return {
-        "records_in_file": len(valid_records),
+        "records_in_file": len(fixtures),
+        "records_with_complete_statistics": len(valid_records),
         "records_saved": saved,
     }

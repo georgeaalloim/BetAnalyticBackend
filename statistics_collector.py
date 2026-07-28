@@ -2,17 +2,18 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from database import get_connection, initialize_database
 from football_api import api_get
 from match_statistics import (
     DEFAULT_DATASET_PATH,
+    build_unavailable_statistics_record,
+    has_complete_statistics,
     load_statistics_dataset,
     merge_statistics_records,
-    parse_api_fixture_statistics,
+    parse_fixture_statistics_response,
     utc_now_iso,
     write_statistics_dataset,
 )
@@ -20,8 +21,7 @@ from match_statistics import (
 
 DEFAULT_LEAGUE_ID = 197
 DEFAULT_SEASONS = (2022, 2023, 2024)
-DEFAULT_MAX_REQUESTS = 90
-MAX_FIXTURE_IDS_PER_REQUEST = 20
+DEFAULT_MAX_REQUESTS = 85
 SYNTHETIC_FIXTURE_ID_MIN = 1_200_000_000
 
 
@@ -39,11 +39,6 @@ def _parse_seasons(raw_value: str) -> tuple[int, ...]:
         raise ValueError("Πρέπει να δηλωθεί τουλάχιστον μία σεζόν.")
 
     return tuple(sorted(seasons))
-
-
-def _chunks(items: list[int], size: int) -> Iterable[list[int]]:
-    for start in range(0, len(items), size):
-        yield items[start : start + size]
 
 
 def _eligible_fixture_rows(
@@ -82,44 +77,75 @@ def _eligible_fixture_rows(
     return [dict(row) for row in rows]
 
 
+def _is_fatal_api_error(message: str) -> bool:
+    lowered = message.lower()
+    fatal_markers = (
+        "suspended",
+        "api_football_key",
+        "api-football_key",
+        "quota",
+        "rate limit",
+        "too many requests",
+        "requests limit",
+        "free plans do not have access",
+        "authentication",
+        "unauthorized",
+        "forbidden",
+    )
+    return any(marker in lowered for marker in fatal_markers)
+
+
 def _build_summary(
     *,
+    status: str,
     league_id: int,
     seasons: tuple[int, ...],
     dataset_path: Path,
     eligible_count: int,
-    already_saved_count: int,
-    requested_fixture_count: int,
-    requests_planned: int,
+    already_processed_count: int,
+    selected_count: int,
+    requests_attempted: int,
     requests_completed: int,
-    records_received: int,
-    records_parsed: int,
-    records_rejected_missing_statistics: int,
+    records_added_available: int,
+    records_added_unavailable: int,
     total_records_after_merge: int,
+    total_available_after_merge: int,
+    total_unavailable_after_merge: int,
     plan_only: bool,
+    fatal_error: str | None,
     warnings: list[str],
 ) -> dict[str, Any]:
     return {
-        "status": "plan-only" if plan_only else "ok",
-        "source": "API-Football /fixtures?ids=...",
+        "status": status,
+        "source": "API-Football /fixtures/statistics?fixture=...",
+        "collection_mode": "one fixture per request (Free-plan compatible)",
         "league_id": league_id,
         "seasons": list(seasons),
         "dataset_path": str(dataset_path),
         "eligible_completed_fixtures": eligible_count,
-        "already_saved_fixtures": already_saved_count,
-        "missing_fixtures_considered": requested_fixture_count,
-        "requests_planned": requests_planned,
+        "already_processed_fixtures": already_processed_count,
+        "missing_fixtures_considered": selected_count,
+        "requests_planned": selected_count,
+        "requests_attempted": requests_attempted,
         "requests_completed": requests_completed,
-        "api_fixture_objects_received": records_received,
-        "records_with_corners_and_yellow_cards": records_parsed,
-        "records_rejected_missing_statistics": (
-            records_rejected_missing_statistics
-        ),
+        "new_records_with_corners_and_yellow_cards": records_added_available,
+        "new_records_without_complete_statistics": records_added_unavailable,
         "total_records_after_merge": total_records_after_merge,
+        "total_records_with_complete_statistics": total_available_after_merge,
+        "total_records_without_complete_statistics": total_unavailable_after_merge,
         "plan_only": plan_only,
+        "fatal_error": fatal_error,
         "warnings": warnings,
         "finished_at": utc_now_iso(),
     }
+
+
+def _write_summary(path: Path, summary: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(summary, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
 
 def _parse_args() -> argparse.Namespace:
@@ -143,7 +169,10 @@ def _parse_args() -> argparse.Namespace:
         "--max-requests",
         type=int,
         default=DEFAULT_MAX_REQUESTS,
-        help="Ανώτατο όριο API calls για αυτή την εκτέλεση.",
+        help=(
+            "Ανώτατο όριο API calls για αυτή την εκτέλεση. "
+            "Κάθε αγώνας χρειάζεται ένα request."
+        ),
     )
     parser.add_argument(
         "--dataset",
@@ -178,7 +207,7 @@ def main() -> int:
         for item in existing_dataset.get("fixtures", [])
         if isinstance(item, dict)
     ]
-    saved_ids = {
+    processed_ids = {
         int(item["fixture_id"])
         for item in existing_records
         if item.get("fixture_id") is not None
@@ -188,97 +217,107 @@ def main() -> int:
         league_id=args.league_id,
         seasons=seasons,
     )
-    missing_ids = [
-        int(row["fixture_id"])
+    missing_rows = [
+        row
         for row in eligible_rows
-        if int(row["fixture_id"]) not in saved_ids
+        if int(row["fixture_id"]) not in processed_ids
     ]
-
-    max_fixture_count = args.max_requests * MAX_FIXTURE_IDS_PER_REQUEST
-    selected_missing_ids = missing_ids[:max_fixture_count]
-    requests_planned = math.ceil(
-        len(selected_missing_ids) / MAX_FIXTURE_IDS_PER_REQUEST
-    ) if selected_missing_ids else 0
+    selected_rows = missing_rows[: args.max_requests]
 
     warnings: list[str] = []
-    if len(missing_ids) > len(selected_missing_ids):
+    if len(missing_rows) > len(selected_rows):
         warnings.append(
-            "Δεν χωρούν όλοι οι αγώνες στο όριο αιτημάτων. "
-            "Τρέξε ξανά το workflow για τους υπόλοιπους."
+            "Δεν χωρούν όλοι οι αγώνες στο ημερήσιο όριο. "
+            "Τρέξε ξανά το workflow την επόμενη ημέρα για τους υπόλοιπους."
         )
+
+    existing_available = sum(
+        1 for record in existing_records if has_complete_statistics(record)
+    )
+    existing_unavailable = len(existing_records) - existing_available
 
     if args.plan_only:
         summary = _build_summary(
+            status="plan-only",
             league_id=args.league_id,
             seasons=seasons,
             dataset_path=dataset_path,
             eligible_count=len(eligible_rows),
-            already_saved_count=len(saved_ids),
-            requested_fixture_count=len(selected_missing_ids),
-            requests_planned=requests_planned,
+            already_processed_count=len(processed_ids),
+            selected_count=len(selected_rows),
+            requests_attempted=0,
             requests_completed=0,
-            records_received=0,
-            records_parsed=0,
-            records_rejected_missing_statistics=0,
+            records_added_available=0,
+            records_added_unavailable=0,
             total_records_after_merge=len(existing_records),
+            total_available_after_merge=existing_available,
+            total_unavailable_after_merge=existing_unavailable,
             plan_only=True,
+            fatal_error=None,
             warnings=warnings,
         )
+        _write_summary(summary_path, summary)
         print(json.dumps(summary, ensure_ascii=False, indent=2))
         return 0
 
     collected_at = utc_now_iso()
-    parsed_records: list[dict[str, Any]] = []
+    new_records: list[dict[str, Any]] = []
+    requests_attempted = 0
     requests_completed = 0
-    received_objects = 0
-    rejected = 0
+    records_available = 0
+    records_unavailable = 0
+    fatal_error: str | None = None
 
-    for fixture_ids in _chunks(
-        selected_missing_ids,
-        MAX_FIXTURE_IDS_PER_REQUEST,
-    ):
-        data = api_get(
-            endpoint="/fixtures",
-            params={"ids": "-".join(str(item) for item in fixture_ids)},
-        )
-        requests_completed += 1
+    for fixture_row in selected_rows:
+        fixture_id = int(fixture_row["fixture_id"])
+        requests_attempted += 1
+
+        try:
+            data = api_get(
+                endpoint="/fixtures/statistics",
+                params={"fixture": fixture_id},
+            )
+            requests_completed += 1
+        except Exception as error:  # noqa: BLE001 - καταγράφουμε API/network failure
+            message = str(error)
+            warnings.append(f"Fixture {fixture_id}: {message}")
+            if _is_fatal_api_error(message):
+                fatal_error = message
+                break
+            continue
 
         response_items = data.get("response", [])
         if not isinstance(response_items, list):
-            raise RuntimeError("Το response του API-Football δεν είναι λίστα.")
+            warnings.append(
+                f"Fixture {fixture_id}: το response του API δεν ήταν λίστα."
+            )
+            continue
 
-        received_objects += len(response_items)
+        parsed = parse_fixture_statistics_response(
+            fixture_row,
+            response_items,
+            collected_at=collected_at,
+        )
+        if parsed is not None:
+            new_records.append(parsed)
+            records_available += 1
+            continue
 
-        returned_ids: set[int] = set()
-        for item in response_items:
-            if not isinstance(item, dict):
-                rejected += 1
-                continue
-
-            fixture_object = item.get("fixture", {})
-            if isinstance(fixture_object, dict) and fixture_object.get("id") is not None:
-                returned_ids.add(int(fixture_object["id"]))
-
-            parsed = parse_api_fixture_statistics(
-                item,
+        new_records.append(
+            build_unavailable_statistics_record(
+                fixture_row,
+                reason=(
+                    "Το API απάντησε, αλλά δεν επέστρεψε πλήρη Corner Kicks "
+                    "και Yellow Cards και για τις δύο ομάδες."
+                ),
                 collected_at=collected_at,
             )
-            if parsed is None:
-                rejected += 1
-                continue
-
-            parsed_records.append(parsed)
-
-        missing_from_response = set(fixture_ids) - returned_ids
-        if missing_from_response:
-            warnings.append(
-                "Το API δεν επέστρεψε τους fixture IDs: "
-                + ", ".join(str(item) for item in sorted(missing_from_response))
-            )
+        )
+        records_unavailable += 1
 
     merged_records = merge_statistics_records(
         existing_records,
-        parsed_records,
+        new_records,
     )
     write_statistics_dataset(
         merged_records,
@@ -286,30 +325,39 @@ def main() -> int:
         updated_at=collected_at,
     )
 
+    total_available = sum(
+        1 for record in merged_records if has_complete_statistics(record)
+    )
+    total_unavailable = len(merged_records) - total_available
+
+    if fatal_error is not None:
+        status = "partial" if new_records else "error"
+    else:
+        status = "ok"
+
     summary = _build_summary(
+        status=status,
         league_id=args.league_id,
         seasons=seasons,
         dataset_path=dataset_path,
         eligible_count=len(eligible_rows),
-        already_saved_count=len(saved_ids),
-        requested_fixture_count=len(selected_missing_ids),
-        requests_planned=requests_planned,
+        already_processed_count=len(processed_ids),
+        selected_count=len(selected_rows),
+        requests_attempted=requests_attempted,
         requests_completed=requests_completed,
-        records_received=received_objects,
-        records_parsed=len(parsed_records),
-        records_rejected_missing_statistics=rejected,
+        records_added_available=records_available,
+        records_added_unavailable=records_unavailable,
         total_records_after_merge=len(merged_records),
+        total_available_after_merge=total_available,
+        total_unavailable_after_merge=total_unavailable,
         plan_only=False,
+        fatal_error=fatal_error,
         warnings=warnings,
     )
-
-    summary_path.parent.mkdir(parents=True, exist_ok=True)
-    summary_path.write_text(
-        json.dumps(summary, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    _write_summary(summary_path, summary)
     print(json.dumps(summary, ensure_ascii=False, indent=2))
-    return 0
+
+    return 1 if fatal_error is not None else 0
 
 
 if __name__ == "__main__":
