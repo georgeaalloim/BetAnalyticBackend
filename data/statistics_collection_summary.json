@@ -1,4 +1,30 @@
 {
-  "status": "not-run-yet",
-  "message": "Τρέξε το workflow Collect corners and cards history."
+  "status": "error",
+  "source": "API-Football /fixtures/statistics?fixture=...",
+  "collection_mode": "one fixture per request (Free-plan compatible)",
+  "league_id": 197,
+  "seasons": [
+    2022,
+    2023,
+    2024
+  ],
+  "dataset_path": "data/fixture_statistics.json",
+  "eligible_completed_fixtures": 716,
+  "already_processed_fixtures": 0,
+  "missing_fixtures_considered": 85,
+  "requests_planned": 85,
+  "requests_attempted": 1,
+  "requests_completed": 0,
+  "new_records_with_corners_and_yellow_cards": 0,
+  "new_records_without_complete_statistics": 0,
+  "total_records_after_merge": 0,
+  "total_records_with_complete_statistics": 0,
+  "total_records_without_complete_statistics": 0,
+  "plan_only": false,
+  "fatal_error": "Σφάλμα API-Football: {'access': 'Your account is suspended, check on https://dashboard.api-football.com.'}",
+  "warnings": [
+    "Δεν χωρούν όλοι οι αγώνες στο ημερήσιο όριο. Τρέξε ξανά το workflow την επόμενη ημέρα για τους υπόλοιπους.",
+    "Fixture 923700: Σφάλμα API-Football: {'access': 'Your account is suspended, check on https://dashboard.api-football.com.'}"
+  ],
+  "finished_at": "2026-07-28T14:23:58Z"
 }
