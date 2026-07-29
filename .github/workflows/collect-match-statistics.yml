@@ -100,11 +100,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add \
+          git add -- \
             betanalytic.db \
             data/fixture_statistics.json \
             data/free_history_sync_summary.json \
-            data/history_enrichment_summary.json
+            data/history_enrichment_summary.json \
             data/canonical_statistics_audit.json
 
           if git diff --cached --quiet; then
