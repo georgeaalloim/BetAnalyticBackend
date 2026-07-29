@@ -6,11 +6,12 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from database import save_fixture_statistics
+from statistics_source_policy import choose_whole_record, clean_source
 
 
 DEFAULT_DATASET_PATH = Path(__file__).resolve().parent / "data" / "fixture_statistics.json"
 DATASET_SCHEMA_VERSION = 3
-SOURCE_NAME = "Mixed providers"
+SOURCE_NAME = "Canonical single-provider snapshots"
 
 COUNT_FIELDS = (
     "home_corners",
@@ -304,33 +305,16 @@ def load_statistics_dataset(path: str | Path = DEFAULT_DATASET_PATH) -> dict[str
     return data
 
 
-def _merge_sources(first: Any, second: Any) -> str:
-    names: list[str] = []
-    for raw in (first, second):
-        for name in str(raw or "").split(" + "):
-            cleaned = name.strip()
-            if cleaned and cleaned not in names:
-                names.append(cleaned)
-    return " + ".join(names) or SOURCE_NAME
-
-
 def _merge_record(existing: dict[str, Any], new: dict[str, Any]) -> dict[str, Any]:
-    merged = dict(existing)
-    for key, value in new.items():
-        if key in COUNT_FIELDS or key == "referee":
-            if value is not None and value != "":
-                merged[key] = value
-        elif value is not None and value != "":
-            merged[key] = value
-
-    merged["source"] = _merge_sources(existing.get("source"), new.get("source"))
-    complete = has_complete_statistics(merged)
-    merged["statistics_available"] = complete
-    merged["unavailable_reason"] = None if complete else (
-        new.get("unavailable_reason") or existing.get("unavailable_reason")
+    selected = choose_whole_record(existing, new)
+    selected["source"] = clean_source(selected.get("source")) or SOURCE_NAME
+    complete = has_complete_statistics(selected)
+    selected["statistics_available"] = complete
+    selected["unavailable_reason"] = None if complete else (
+        selected.get("unavailable_reason")
+        or "Η επιλεγμένη ενιαία πηγή δεν παρέχει πλήρη κόρνερ και κάρτες."
     )
-    return merged
-
+    return selected
 
 def merge_statistics_records(
     existing_records: Iterable[dict[str, Any]],

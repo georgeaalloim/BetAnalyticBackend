@@ -11,20 +11,17 @@ from zoneinfo import ZoneInfo
 
 import requests
 
-from database import (
-    get_connection,
-    initialize_database,
-    save_fixture_history_details,
-)
+from database import get_connection, initialize_database, save_fixture_history_details
 from fixtur_es_source import LEAGUE_ID, resolve_team
 from match_statistics import STATISTIC_ALIASES, utc_now_iso
+from statistics_source_policy import available_stat_pairs, source_key
 from time_utils import parse_iso_datetime
 
 BASE_URL = "https://v3.football.api-sports.io"
 SOURCE_NAME = "API-Football Free fixture details"
 ATHENS_TZ = ZoneInfo("Europe/Athens")
 REQUEST_TIMEOUT_SECONDS = 30
-MAX_IDS_PER_REQUEST = 20
+MAX_MATCHES_PER_RUN = 40
 
 
 @dataclass(frozen=True)
@@ -37,6 +34,8 @@ class EnrichmentResult:
     requests_used: int
     quota_remaining: int | None
     warnings: list[str]
+    score_mismatches: int = 0
+    pending_matches: int = 0
 
 
 def _as_int(value: Any) -> int | None:
@@ -51,11 +50,6 @@ def _as_int(value: Any) -> int | None:
         return int(value)
     except (TypeError, ValueError):
         return None
-
-
-def _chunks(items: list[int], size: int = MAX_IDS_PER_REQUEST) -> Iterable[list[int]]:
-    for index in range(0, len(items), size):
-        yield items[index:index + size]
 
 
 def _local_date(value: str) -> str | None:
@@ -78,6 +72,8 @@ def _canonical_completed_rows(seasons: list[int]) -> list[dict[str, Any]]:
                 f.home_team_name,
                 f.away_team_id,
                 f.away_team_name,
+                f.home_goals,
+                f.away_goals,
                 h.goal_scorers_json,
                 h.home_total_shots,
                 h.away_total_shots,
@@ -86,7 +82,10 @@ def _canonical_completed_rows(seasons: list[int]) -> list[dict[str, Any]]:
                 h.home_fouls,
                 h.away_fouls,
                 h.home_corners,
-                h.away_corners
+                h.away_corners,
+                h.source AS history_source,
+                h.score_verified,
+                h.available_stat_pairs
             FROM fixtures AS f
             LEFT JOIN fixture_history_details AS h
               ON h.fixture_id = f.fixture_id
@@ -103,17 +102,21 @@ def _canonical_completed_rows(seasons: list[int]) -> list[dict[str, Any]]:
 
 
 def _needs_enrichment(row: dict[str, Any]) -> bool:
-    important = (
-        "home_total_shots",
-        "away_total_shots",
-        "home_shots_on_target",
-        "away_shots_on_target",
-        "home_fouls",
-        "away_fouls",
-        "home_corners",
-        "away_corners",
-    )
-    return not row.get("goal_scorers_json") or any(row.get(key) is None for key in important)
+    expected_goals = int(row.get("home_goals") or 0) + int(row.get("away_goals") or 0)
+    scorers: list[Any] = []
+    raw = row.get("goal_scorers_json")
+    if raw:
+        try:
+            parsed = json.loads(str(raw))
+            if isinstance(parsed, list):
+                scorers = parsed
+        except json.JSONDecodeError:
+            pass
+    source_is_api = source_key(row.get("history_source")) == "api_football"
+    score_verified = bool(row.get("score_verified"))
+    enough_stats = int(row.get("available_stat_pairs") or 0) >= 5
+    scorers_complete = expected_goals == 0 or len(scorers) >= expected_goals
+    return not (source_is_api and score_verified and enough_stats and scorers_complete)
 
 
 def _request_json(
@@ -134,8 +137,7 @@ def _request_json(
     errors = payload.get("errors")
     if errors:
         raise ValueError(f"API-Football errors: {errors}")
-    remaining_raw = response.headers.get("x-ratelimit-requests-remaining")
-    remaining = _as_int(remaining_raw)
+    remaining = _as_int(response.headers.get("x-ratelimit-requests-remaining"))
     return payload, remaining
 
 
@@ -157,15 +159,13 @@ def _api_match_index(items: list[dict[str, Any]]) -> dict[tuple[int, int, int], 
         date_value = str(fixture.get("date") or "")
         if api_id is None or season is None or not date_value:
             continue
-        home_id, home_name = resolve_team(str(home.get("name") or ""))
-        away_id, away_name = resolve_team(str(away.get("name") or ""))
+        home_id, _home_name = resolve_team(str(home.get("name") or ""))
+        away_id, _away_name = resolve_team(str(away.get("name") or ""))
         normalized = dict(item)
         normalized["_api_fixture_id"] = api_id
         normalized["_local_date"] = _local_date(date_value)
         normalized["_canonical_home_id"] = home_id
         normalized["_canonical_away_id"] = away_id
-        normalized["_canonical_home_name"] = home_name
-        normalized["_canonical_away_name"] = away_name
         result.setdefault((int(season), int(home_id), int(away_id)), []).append(normalized)
     return result
 
@@ -179,11 +179,13 @@ def _match_api_fixture(
     if not candidates:
         return None
     canonical_date = _local_date(str(row.get("fixture_date") or ""))
-    if canonical_date is None:
-        return candidates[0]
     exact = [item for item in candidates if item.get("_local_date") == canonical_date]
-    if exact:
+    if len(exact) == 1:
         return exact[0]
+    if len(candidates) == 1 and canonical_date is None:
+        return candidates[0]
+    if canonical_date is None:
+        return None
     try:
         target = datetime.fromisoformat(canonical_date).date()
         ranked = sorted(
@@ -196,19 +198,30 @@ def _match_api_fixture(
             difference = abs(
                 (datetime.fromisoformat(str(ranked[0]["_local_date"])).date() - target).days
             )
-            if difference <= 2:
+            if difference <= 1:
                 return ranked[0]
     except ValueError:
         pass
     return None
 
 
-def _stats_by_api_team(item: dict[str, Any]) -> dict[int, dict[str, int | None]]:
+def _score_matches(canonical: dict[str, Any], api_item: dict[str, Any]) -> bool:
+    goals = api_item.get("goals") or {}
+    api_home = _as_int(goals.get("home"))
+    api_away = _as_int(goals.get("away"))
+    return (
+        api_home is not None
+        and api_away is not None
+        and api_home == int(canonical["home_goals"])
+        and api_away == int(canonical["away_goals"])
+    )
+
+
+def _statistics_by_api_team(response_items: Any) -> dict[int, dict[str, int | None]]:
     result: dict[int, dict[str, int | None]] = {}
-    statistics = item.get("statistics")
-    if not isinstance(statistics, list):
+    if not isinstance(response_items, list):
         return result
-    for block in statistics:
+    for block in response_items:
         if not isinstance(block, dict):
             continue
         team = block.get("team") or {}
@@ -226,9 +239,8 @@ def _stats_by_api_team(item: dict[str, Any]) -> dict[int, dict[str, int | None]]
     return result
 
 
-def _goal_scorers(item: dict[str, Any]) -> list[dict[str, Any]]:
+def _goal_scorers(events: Any) -> list[dict[str, Any]]:
     scorers: list[dict[str, Any]] = []
-    events = item.get("events")
     if not isinstance(events, list):
         return scorers
     for event in events:
@@ -243,32 +255,32 @@ def _goal_scorers(item: dict[str, Any]) -> list[dict[str, Any]]:
         player_name = str(player.get("name") or "").strip()
         if not player_name:
             continue
-        team_id = _as_int(team.get("id"))
-        minute = _as_int(time_data.get("elapsed"))
-        extra = _as_int(time_data.get("extra"))
-        scorers.append(
-            {
-                "player_name": player_name,
-                "team_api_id": team_id,
-                "team_name": str(team.get("name") or ""),
-                "minute": minute,
-                "extra_minute": extra,
-                "detail": detail,
-            }
-        )
+        scorers.append({
+            "player_name": player_name,
+            "team_api_id": _as_int(team.get("id")),
+            "team_name": str(team.get("name") or ""),
+            "minute": _as_int(time_data.get("elapsed")),
+            "extra_minute": _as_int(time_data.get("extra")),
+            "detail": detail,
+        })
     return scorers
 
 
-def _detail_record(canonical: dict[str, Any], item: dict[str, Any]) -> dict[str, Any]:
-    teams = item.get("teams") or {}
+def _detail_record(
+    canonical: dict[str, Any],
+    api_item: dict[str, Any],
+    statistics_response: Any,
+    events_response: Any,
+) -> dict[str, Any]:
+    teams = api_item.get("teams") or {}
     api_home = teams.get("home") or {}
     api_away = teams.get("away") or {}
     home_api_id = _as_int(api_home.get("id"))
     away_api_id = _as_int(api_away.get("id"))
-    by_team = _stats_by_api_team(item)
+    by_team = _statistics_by_api_team(statistics_response)
     home = by_team.get(int(home_api_id), {}) if home_api_id is not None else {}
     away = by_team.get(int(away_api_id), {}) if away_api_id is not None else {}
-    scorers = _goal_scorers(item)
+    scorers = _goal_scorers(events_response)
     for scorer in scorers:
         if scorer.get("team_api_id") == home_api_id:
             scorer["side"] = "home"
@@ -279,9 +291,10 @@ def _detail_record(canonical: dict[str, Any], item: dict[str, Any]) -> dict[str,
             scorer["team_id"] = int(canonical["away_team_id"])
             scorer["team_name"] = str(canonical["away_team_name"])
         scorer.pop("team_api_id", None)
-    collected_at = utc_now_iso()
-    return {
+
+    record = {
         "fixture_id": int(canonical["fixture_id"]),
+        "provider_fixture_id": int(api_item["_api_fixture_id"]),
         "home_total_shots": home.get("total_shots"),
         "away_total_shots": away.get("total_shots"),
         "home_shots_on_target": home.get("shots_on_target"),
@@ -297,9 +310,21 @@ def _detail_record(canonical: dict[str, Any], item: dict[str, Any]) -> dict[str,
         "home_corners": home.get("corners"),
         "away_corners": away.get("corners"),
         "goal_scorers_json": json.dumps(scorers, ensure_ascii=False),
+        "score_verified": True,
         "source": SOURCE_NAME,
-        "collected_at": collected_at,
+        "collected_at": utc_now_iso(),
     }
+    pairs = available_stat_pairs(record)
+    expected_goals = int(canonical["home_goals"]) + int(canonical["away_goals"])
+    scorer_complete = expected_goals == 0 or len(scorers) >= expected_goals
+    record["available_stat_pairs"] = pairs
+    if pairs >= 5 and scorer_complete:
+        record["data_quality"] = "complete"
+    elif pairs > 0 or scorers:
+        record["data_quality"] = "partial"
+    else:
+        record["data_quality"] = "score_only"
+    return record
 
 
 def enrich_history(
@@ -328,16 +353,17 @@ def enrich_history(
     rows = [row for row in _canonical_completed_rows(requested) if _needs_enrichment(row)]
     if recent_days is not None:
         cutoff = datetime.now(timezone.utc) - timedelta(days=max(1, int(recent_days)))
-        recent_rows: list[dict[str, Any]] = []
-        for row in rows:
-            try:
-                fixture_date = parse_iso_datetime(str(row.get("fixture_date") or ""))
-            except ValueError:
-                continue
-            if fixture_date >= cutoff:
-                recent_rows.append(row)
-        rows = recent_rows
+        rows = [
+            row for row in rows
+            if _safe_recent(str(row.get("fixture_date") or ""), cutoff)
+        ]
     rows.sort(key=lambda row: str(row.get("fixture_date") or ""), reverse=True)
+
+    max_matches = MAX_MATCHES_PER_RUN
+    if max_detail_batches is not None:
+        max_matches = min(max_matches, max(0, int(max_detail_batches)) * 20)
+    rows = rows[:max_matches]
+
     own_session = session is None
     http = session or requests.Session()
     http.headers.update({"x-apisports-key": cleaned_key, "User-Agent": "BetAnalytic/1.0"})
@@ -345,6 +371,7 @@ def enrich_history(
     quota_remaining: int | None = None
     warnings: list[str] = []
     api_items: list[dict[str, Any]] = []
+    score_mismatches = 0
     try:
         for season in requested:
             try:
@@ -354,8 +381,7 @@ def enrich_history(
                     params={"league": LEAGUE_ID, "season": season, "timezone": "Europe/Athens"},
                 )
                 requests_used += 1
-                if remaining is not None:
-                    quota_remaining = remaining
+                quota_remaining = remaining if remaining is not None else quota_remaining
                 response = payload.get("response")
                 if isinstance(response, list):
                     api_items.extend(item for item in response if isinstance(item, dict))
@@ -363,60 +389,78 @@ def enrich_history(
                 warnings.append(f"Αποτυχία λίστας API-Football για {season}: {error}")
 
         index = _api_match_index(api_items)
-        canonical_by_api_id: dict[int, dict[str, Any]] = {}
+        matches: list[tuple[dict[str, Any], dict[str, Any]]] = []
         for row in rows:
             matched = _match_api_fixture(row, index)
-            if matched is not None:
-                canonical_by_api_id[int(matched["_api_fixture_id"])] = row
+            if matched is None:
+                continue
+            if not _score_matches(row, matched):
+                score_mismatches += 1
+                warnings.append(
+                    "Απόρριψη ασύμφωνου σκορ για "
+                    f"{row['home_team_name']} - {row['away_team_name']} "
+                    f"({row['fixture_date']})."
+                )
+                continue
+            matches.append((row, matched))
 
         detail_records: list[dict[str, Any]] = []
-        ordered_ids = [
-            api_id
-            for api_id, _row in sorted(
-                canonical_by_api_id.items(),
-                key=lambda item: str(item[1].get("fixture_date") or ""),
-                reverse=True,
-            )
-        ]
-        if max_detail_batches is not None:
-            ordered_ids = ordered_ids[: max(0, int(max_detail_batches)) * MAX_IDS_PER_REQUEST]
-        for batch in _chunks(ordered_ids):
+        for canonical, matched in matches:
+            api_id = int(matched["_api_fixture_id"])
+            if quota_remaining is not None and quota_remaining <= 2:
+                warnings.append("Το ημερήσιο όριο API πλησιάζει στο τέλος· οι υπόλοιποι αγώνες μένουν pending.")
+                break
             try:
-                payload, remaining = _request_json(
+                stats_payload, remaining = _request_json(
                     http,
-                    "/fixtures",
-                    params={"ids": "-".join(str(value) for value in batch)},
+                    "/fixtures/statistics",
+                    params={"fixture": api_id},
                 )
                 requests_used += 1
-                if remaining is not None:
-                    quota_remaining = remaining
-                response = payload.get("response")
-                if not isinstance(response, list):
-                    continue
-                for item in response:
-                    if not isinstance(item, dict):
-                        continue
-                    api_id = _as_int((item.get("fixture") or {}).get("id"))
-                    canonical = canonical_by_api_id.get(int(api_id)) if api_id is not None else None
-                    if canonical is not None:
-                        detail_records.append(_detail_record(canonical, item))
+                quota_remaining = remaining if remaining is not None else quota_remaining
+                stats_response = stats_payload.get("response")
+
+                total_goals = int(canonical["home_goals"]) + int(canonical["away_goals"])
+                events_response: Any = []
+                if total_goals > 0:
+                    events_payload, remaining = _request_json(
+                        http,
+                        "/fixtures/events",
+                        params={"fixture": api_id, "type": "goal"},
+                    )
+                    requests_used += 1
+                    quota_remaining = remaining if remaining is not None else quota_remaining
+                    events_response = events_payload.get("response")
+
+                detail_records.append(
+                    _detail_record(canonical, matched, stats_response, events_response)
+                )
             except (requests.RequestException, ValueError) as error:
-                warnings.append(f"Αποτυχία λεπτομερειών API-Football για {batch}: {error}")
+                warnings.append(f"Αποτυχία λεπτομερειών API-Football για fixture={api_id}: {error}")
 
         saved = save_fixture_history_details(detail_records)
         return EnrichmentResult(
             enabled=True,
             seasons=requested,
             completed_matches_considered=len(rows),
-            api_matches_found=len(canonical_by_api_id),
+            api_matches_found=len(matches),
             matches_enriched=saved,
             requests_used=requests_used,
             quota_remaining=quota_remaining,
             warnings=warnings,
+            score_mismatches=score_mismatches,
+            pending_matches=max(0, len(rows) - saved - score_mismatches),
         )
     finally:
         if own_session:
             http.close()
+
+
+def _safe_recent(value: str, cutoff: datetime) -> bool:
+    try:
+        return parse_iso_datetime(value) >= cutoff
+    except ValueError:
+        return False
 
 
 def _parse_seasons(value: str) -> list[int]:
@@ -424,7 +468,9 @@ def _parse_seasons(value: str) -> list[int]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Συμπληρώνει δωρεάν στατιστικά ιστορικού και σκόρερ.")
+    parser = argparse.ArgumentParser(
+        description="Συμπληρώνει ενιαία snapshots API-Football για ιστορικά στατιστικά και σκόρερ."
+    )
     parser.add_argument("--seasons", default="2025,2026")
     parser.add_argument("--summary-output", default="data/history_enrichment_summary.json")
     args = parser.parse_args()
@@ -440,8 +486,10 @@ def main() -> int:
         "matches_enriched": result.matches_enriched,
         "requests_used": result.requests_used,
         "quota_remaining": result.quota_remaining,
+        "score_mismatches": result.score_mismatches,
+        "pending_matches": result.pending_matches,
         "warnings": result.warnings,
-        "finished_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "finished_at": utc_now_iso(),
     }
     path = Path(args.summary_output)
     path.parent.mkdir(parents=True, exist_ok=True)

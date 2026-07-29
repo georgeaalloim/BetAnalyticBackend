@@ -17,6 +17,7 @@ from count_market_model import (
 )
 from database import get_connection
 from ensemble_value_service import build_ensemble_context, predict_match_ensemble
+from statistics_source_policy import available_stat_pairs, source_key
 from time_utils import parse_iso_datetime, to_iso_z
 
 
@@ -173,31 +174,77 @@ def _history_stat_pair(row: dict[str, Any], home_field: str, away_field: str) ->
     }
 
 
+def _provider_snapshot(row: dict[str, Any], prefix: str) -> dict[str, Any]:
+    fields = (
+        "home_total_shots", "away_total_shots",
+        "home_shots_on_target", "away_shots_on_target",
+        "home_fouls", "away_fouls",
+        "home_yellow_cards", "away_yellow_cards",
+        "home_red_cards", "away_red_cards",
+        "home_offsides", "away_offsides",
+        "home_corners", "away_corners",
+    )
+    snapshot = {field: row.get(f"{prefix}{field}") for field in fields}
+    snapshot["source"] = row.get(f"{prefix}source")
+    snapshot["collected_at"] = row.get(f"{prefix}collected_at")
+    return snapshot
+
+
+def _select_history_sources(row: dict[str, Any]) -> tuple[dict[str, Any], str | None, str | None, list[dict[str, Any]], str | None]:
+    history_snapshot = _provider_snapshot(row, "h_")
+    statistics_snapshot = _provider_snapshot(row, "s_")
+    history_valid = (
+        source_key(history_snapshot.get("source")) == "api_football"
+        and bool(row.get("h_score_verified"))
+        and available_stat_pairs(history_snapshot) > 0
+    )
+    if history_valid:
+        selected = history_snapshot
+    else:
+        selected = statistics_snapshot
+
+    scorers: list[dict[str, Any]] = []
+    scorer_source: str | None = None
+    raw_scorers = row.get("h_goal_scorers_json")
+    if (
+        raw_scorers
+        and source_key(row.get("h_source")) == "api_football"
+        and bool(row.get("h_score_verified"))
+    ):
+        try:
+            parsed = json.loads(str(raw_scorers))
+            if isinstance(parsed, list):
+                scorers = [item for item in parsed if isinstance(item, dict)]
+                if scorers:
+                    scorer_source = str(row.get("h_source") or "") or None
+        except json.JSONDecodeError:
+            pass
+
+    return (
+        selected,
+        str(selected.get("source") or "") or None,
+        str(selected.get("collected_at") or "") or None,
+        scorers,
+        scorer_source,
+    )
+
+
 def _history_match_payload(row: dict[str, Any]) -> dict[str, Any]:
+    selected, statistics_source, collected_at, scorers, scorer_source = _select_history_sources(row)
     statistics = {
-        "total_shots": _history_stat_pair(row, "home_total_shots", "away_total_shots"),
-        "shots_on_target": _history_stat_pair(row, "home_shots_on_target", "away_shots_on_target"),
-        "fouls": _history_stat_pair(row, "home_fouls", "away_fouls"),
-        "yellow_cards": _history_stat_pair(row, "home_yellow_cards", "away_yellow_cards"),
-        "red_cards": _history_stat_pair(row, "home_red_cards", "away_red_cards"),
-        "offsides": _history_stat_pair(row, "home_offsides", "away_offsides"),
-        "corners": _history_stat_pair(row, "home_corners", "away_corners"),
+        "total_shots": _history_stat_pair(selected, "home_total_shots", "away_total_shots"),
+        "shots_on_target": _history_stat_pair(selected, "home_shots_on_target", "away_shots_on_target"),
+        "fouls": _history_stat_pair(selected, "home_fouls", "away_fouls"),
+        "yellow_cards": _history_stat_pair(selected, "home_yellow_cards", "away_yellow_cards"),
+        "red_cards": _history_stat_pair(selected, "home_red_cards", "away_red_cards"),
+        "offsides": _history_stat_pair(selected, "home_offsides", "away_offsides"),
+        "corners": _history_stat_pair(selected, "home_corners", "away_corners"),
     }
     available_pairs = sum(
         1
         for pair in statistics.values()
         if pair.get("home") is not None and pair.get("away") is not None
     )
-    scorers: list[dict[str, Any]] = []
-    raw_scorers = row.get("goal_scorers_json")
-    if raw_scorers:
-        try:
-            parsed = json.loads(str(raw_scorers))
-            if isinstance(parsed, list):
-                scorers = [item for item in parsed if isinstance(item, dict)]
-        except json.JSONDecodeError:
-            scorers = []
-
     return {
         "fixture_id": int(row["fixture_id"]),
         "season": int(row["season"]),
@@ -221,11 +268,13 @@ def _history_match_payload(row: dict[str, Any]) -> dict[str, Any]:
         "goal_scorers": {
             "available": bool(scorers),
             "items": scorers,
+            "source": scorer_source,
         },
-        "statistics_source": str(row.get("history_source") or row.get("statistics_source") or "") or None,
-        "statistics_collected_at": str(row.get("history_collected_at") or row.get("statistics_collected_at") or "") or None,
+        "statistics_source": statistics_source,
+        "statistics_collected_at": collected_at,
+        "statistics_source_consistent": True,
+        "statistics_source_rule": "All numeric match statistics come from one provider snapshot.",
     }
-
 
 def _build_history_payload(
     *,
@@ -248,25 +297,42 @@ def _build_history_payload(
                 f.home_goals,
                 f.away_goals,
                 s.fixture_id AS statistics_fixture_id,
-                COALESCE(h.home_corners, s.home_corners) AS home_corners,
-                COALESCE(h.away_corners, s.away_corners) AS away_corners,
-                COALESCE(h.home_yellow_cards, s.home_yellow_cards) AS home_yellow_cards,
-                COALESCE(h.away_yellow_cards, s.away_yellow_cards) AS away_yellow_cards,
-                COALESCE(h.home_red_cards, s.home_red_cards) AS home_red_cards,
-                COALESCE(h.away_red_cards, s.away_red_cards) AS away_red_cards,
-                COALESCE(h.home_total_shots, s.home_total_shots) AS home_total_shots,
-                COALESCE(h.away_total_shots, s.away_total_shots) AS away_total_shots,
-                COALESCE(h.home_shots_on_target, s.home_shots_on_target) AS home_shots_on_target,
-                COALESCE(h.away_shots_on_target, s.away_shots_on_target) AS away_shots_on_target,
-                COALESCE(h.home_fouls, s.home_fouls) AS home_fouls,
-                COALESCE(h.away_fouls, s.away_fouls) AS away_fouls,
-                COALESCE(h.home_offsides, s.home_offsides) AS home_offsides,
-                COALESCE(h.away_offsides, s.away_offsides) AS away_offsides,
-                h.goal_scorers_json,
-                h.source AS history_source,
-                h.collected_at AS history_collected_at,
-                s.source AS statistics_source,
-                s.collected_at AS statistics_collected_at
+                h.home_corners AS h_home_corners,
+                h.away_corners AS h_away_corners,
+                h.home_yellow_cards AS h_home_yellow_cards,
+                h.away_yellow_cards AS h_away_yellow_cards,
+                h.home_red_cards AS h_home_red_cards,
+                h.away_red_cards AS h_away_red_cards,
+                h.home_total_shots AS h_home_total_shots,
+                h.away_total_shots AS h_away_total_shots,
+                h.home_shots_on_target AS h_home_shots_on_target,
+                h.away_shots_on_target AS h_away_shots_on_target,
+                h.home_fouls AS h_home_fouls,
+                h.away_fouls AS h_away_fouls,
+                h.home_offsides AS h_home_offsides,
+                h.away_offsides AS h_away_offsides,
+                h.goal_scorers_json AS h_goal_scorers_json,
+                h.source AS h_source,
+                h.collected_at AS h_collected_at,
+                h.score_verified AS h_score_verified,
+                h.available_stat_pairs AS h_available_stat_pairs,
+                h.data_quality AS h_data_quality,
+                s.home_corners AS s_home_corners,
+                s.away_corners AS s_away_corners,
+                s.home_yellow_cards AS s_home_yellow_cards,
+                s.away_yellow_cards AS s_away_yellow_cards,
+                s.home_red_cards AS s_home_red_cards,
+                s.away_red_cards AS s_away_red_cards,
+                s.home_total_shots AS s_home_total_shots,
+                s.away_total_shots AS s_away_total_shots,
+                s.home_shots_on_target AS s_home_shots_on_target,
+                s.away_shots_on_target AS s_away_shots_on_target,
+                s.home_fouls AS s_home_fouls,
+                s.away_fouls AS s_away_fouls,
+                s.home_offsides AS s_home_offsides,
+                s.away_offsides AS s_away_offsides,
+                s.source AS s_source,
+                s.collected_at AS s_collected_at
             FROM fixtures AS f
             LEFT JOIN fixture_statistics AS s
               ON s.fixture_id = f.fixture_id

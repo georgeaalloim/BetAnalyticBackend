@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 
 from api_football_free_source import fetch_api_football_fixtures
 from api_football_history_enricher import enrich_history
+from audit_canonical_statistics import audit_and_fix
 from automation_config import AutomationConfig
 from database import initialize_database, save_fixture_statistics
 from fixtur_es_source import (
@@ -293,7 +294,21 @@ def main() -> int:
         "requests_used": history_enrichment.requests_used,
         "quota_remaining": history_enrichment.quota_remaining,
         "warnings": history_enrichment.warnings,
-        "mode": "recent completed matches only; one details batch maximum",
+        "score_mismatches": history_enrichment.score_mismatches,
+        "pending_matches": history_enrichment.pending_matches,
+        "mode": "recent completed matches only; explicit statistics/events endpoints; one-provider snapshots",
+    }
+
+    canonical_audit = audit_and_fix(apply_fixes=True)
+    sync_summary["canonical_statistics_audit"] = {
+        "mixed_dataset_records_removed": canonical_audit.mixed_dataset_records_removed,
+        "mixed_sqlite_statistics_removed": canonical_audit.mixed_sqlite_statistics_removed,
+        "noncanonical_history_removed": canonical_audit.noncanonical_history_removed,
+        "invalid_history_removed": canonical_audit.invalid_history_removed,
+        "history_score_mismatches": canonical_audit.history_score_mismatches,
+        "remaining_statistics_records": canonical_audit.remaining_statistics_records,
+        "remaining_history_records": canonical_audit.remaining_history_records,
+        "rule": "No field-level merge across providers; each numeric statistics block comes from one snapshot.",
     }
 
     seasons = _database_seasons()
@@ -311,7 +326,9 @@ def main() -> int:
             "το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει "
             "οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει "
             "τα δωρεάν CSV "
-            "αποτελεσμάτων/στατιστικών. Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό και "
+            "αποτελεσμάτων/στατιστικών. Τα αναλυτικά ιστορικά στοιχεία "
+            "αποθηκεύονται ως ενιαίο snapshot παρόχου χωρίς ανάμειξη πεδίων. "
+            "Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό και "
             "χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό "
             "χρονικό cutoff."
         ),

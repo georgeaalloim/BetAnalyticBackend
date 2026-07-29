@@ -6,7 +6,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import database
-from database import initialize_database, save_fixture_statistics, save_fixtures
+from database import (
+    initialize_database,
+    save_fixture_history_details,
+    save_fixture_statistics,
+    save_fixtures,
+)
 from static_feed_generator import generate_static_feed
 
 
@@ -37,6 +42,23 @@ class HistoryFeedTests(unittest.TestCase):
                     "home_offsides": 1, "away_offsides": 2,
                     "source": "test", "collected_at": "2026-09-01T20:00:00Z",
                 }])
+                save_fixture_history_details([{
+                    "fixture_id": 1,
+                    "provider_fixture_id": 999,
+                    "home_total_shots": 13, "away_total_shots": 9,
+                    "home_shots_on_target": 6, "away_shots_on_target": 2,
+                    "home_fouls": 10, "away_fouls": 12,
+                    "home_yellow_cards": 1, "away_yellow_cards": 3,
+                    "home_red_cards": 0, "away_red_cards": 0,
+                    "home_offsides": 2, "away_offsides": 1,
+                    "home_corners": 7, "away_corners": 2,
+                    "goal_scorers_json": '[{"player_name":"A Player","side":"home","minute":22}]',
+                    "score_verified": True,
+                    "available_stat_pairs": 7,
+                    "data_quality": "complete",
+                    "source": "API-Football Free fixture details",
+                    "collected_at": "2026-09-01T20:05:00Z",
+                }])
                 output = Path(temp_dir) / "out"
                 generated = generate_static_feed(
                     output_dir=output, league_id=197, league_name="Super League 1",
@@ -49,7 +71,14 @@ class HistoryFeedTests(unittest.TestCase):
                 self.assertEqual(feed["history"]["default_season"], 2026)
                 season = next(item for item in feed["history"]["seasons"] if item["season"] == 2026)
                 self.assertEqual(season["matches_count"], 1)
-                self.assertEqual(season["matches"][0]["statistics"]["corners"]["home"], 6)
+                self.assertEqual(season["matches"][0]["statistics"]["corners"]["home"], 7)
+                self.assertEqual(season["matches"][0]["statistics"]["total_shots"]["home"], 13)
+                self.assertTrue(season["matches"][0]["goal_scorers"]["available"])
+                self.assertTrue(season["matches"][0]["statistics_source_consistent"])
+                self.assertEqual(
+                    season["matches"][0]["statistics_source"],
+                    "API-Football Free fixture details",
+                )
             finally:
                 database.DATABASE_PATH = original
 
