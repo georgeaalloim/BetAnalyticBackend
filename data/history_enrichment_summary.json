@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "seasons": [
+    2025,
+    2026
+  ],
+  "completed_matches_considered": 236,
+  "api_matches_found": 0,
+  "matches_enriched": 0,
+  "requests_used": 0,
+  "quota_remaining": null,
+  "warnings": [
+    "Αποτυχία λίστας API-Football για 2025: API-Football errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+    "Αποτυχία λίστας API-Football για 2026: API-Football errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}"
+  ],
+  "finished_at": "2026-07-29T10:18:55Z"
+}

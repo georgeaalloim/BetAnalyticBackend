@@ -1,23 +1,66 @@
 {
   "status": "ok",
-  "generated_at": "2026-07-29T09:54:23Z",
+  "generated_at": "2026-07-29T10:18:50Z",
   "seasons": [
     2022,
     2023,
     2024,
-    2025
+    2025,
+    2026
   ],
-  "fixtures_in_feed": 0,
-  "ready_predictions": 0,
+  "fixtures_in_feed": 28,
+  "ready_predictions": 28,
   "unavailable_predictions": 0,
-  "feed_sha256": "05a9ec427d9e3ee3c7b5e48f1dacdf462ad8b87c0b89f2a981846642e655d20b",
+  "feed_sha256": "564d0d82dc04ea2aa8d7ef4affd1c5c2aa51a054b96ad711b66578effce2150a",
   "feed_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/feed.json",
   "manifest_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/manifest.json",
   "sync_summary": {
     "fixtures": {
-      "source": "local-database",
-      "source_key": "local_database",
-      "skipped": true
+      "source": "Free cross-checked schedule: Fixtur.es + OpenFootball CC0 + Football-Data.co.uk + optional API-Football Free",
+      "source_key": "free_cross_checked_schedule",
+      "status": "ok",
+      "received": 182,
+      "processed": 182,
+      "source_seasons": [
+        2026
+      ],
+      "verification_counts": {
+        "single_source": 182
+      },
+      "source_counts": {
+        "Fixtur.es": 182,
+        "OpenFootball CC0": 0,
+        "Football-Data.co.uk": 0,
+        "API-Football Free": 0
+      },
+      "fixtur_es_pages_checked": [
+        "https://fixtur.es/en/matches/super-league-greece"
+      ],
+      "fixtur_es_calendars_used": [
+        "https://ics.fixtur.es/v2/league/super-league-greece.ics"
+      ],
+      "openfootball_seasons_requested": [
+        2026,
+        2027
+      ],
+      "openfootball_seasons_loaded": [],
+      "openfootball_urls_loaded": [],
+      "api_football_free_enabled": true,
+      "api_football_free_seasons_requested": [
+        2026,
+        2027
+      ],
+      "api_football_free_seasons_loaded": [],
+      "api_football_free_requests_used": 2,
+      "api_football_free_quota_remaining": null,
+      "warnings": [
+        "Αποτυχία σελίδας https://www.icx.fixtur.es/en/super-league-greece: HTTPSConnectionPool(host='www.icx.fixtur.es', port=443): Max retries exceeded with url: /en/super-league-greece (Caused by SSLError(SSLCertVerificationError(1, \"[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'www.icx.fixtur.es'. (_ssl.c:1010)\")))",
+        "Δεν έχει δημοσιευτεί ακόμη OpenFootball αρχείο για 2026.",
+        "Δεν έχει δημοσιευτεί ακόμη OpenFootball αρχείο για 2027.",
+        "Αποτυχία API-Football Free για 2026: API errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "Αποτυχία API-Football Free για 2027: API errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}"
+      ],
+      "safety_rule": "Η ώρα εμφανίζεται όταν δύο πηγές συμφωνούν στην ώρα ή όταν δύο ανεξάρτητες πηγές επιβεβαιώνουν την ημερομηνία και μία από αυτές δίνει ρητή ώρα. Αν υπάρχουν αντικρουόμενες ώρες, η εφαρμογή εμφανίζει «Ώρα δεν έχει οριστεί»."
     },
     "detailed_statistics": {
       "source": "Football-Data.co.uk CSV (free; no API key)",
@@ -52,17 +95,35 @@
       "records_with_complete_statistics": 747,
       "records_saved_to_sqlite": 747
     },
+    "history_enrichment": {
+      "source": "API-Football Free fixture details",
+      "enabled": true,
+      "seasons": [
+        2025,
+        2026
+      ],
+      "completed_matches_considered": 0,
+      "api_matches_found": 0,
+      "matches_enriched": 0,
+      "requests_used": 0,
+      "quota_remaining": null,
+      "warnings": [
+        "Αποτυχία λίστας API-Football για 2025: API-Football errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "Αποτυχία λίστας API-Football για 2026: API-Football errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}"
+      ],
+      "mode": "recent completed matches only; one details batch maximum"
+    },
     "automatic_mode": {
       "enabled": true,
       "paid_api_required": false,
       "api_secret_required": false,
       "optional_free_api_supported": true,
-      "optional_free_api_enabled": false,
+      "optional_free_api_enabled": true,
       "superleague_scraping": false,
       "manual_schedule_overrides": false,
       "future_detailed_season_detection": true,
       "description": "Κάθε run διασταυρώνει δωρεάν το πρόγραμμα, χρησιμοποιώντας το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει τα δωρεάν CSV αποτελεσμάτων/στατιστικών. Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό και χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό χρονικό cutoff."
     },
-    "finished_at": "2026-07-29T09:54:25Z"
+    "finished_at": "2026-07-29T10:18:54Z"
   }
 }
