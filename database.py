@@ -162,6 +162,35 @@ def initialize_database() -> None:
             """
         )
 
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS fixture_history_details (
+                fixture_id INTEGER PRIMARY KEY,
+                home_total_shots INTEGER CHECK(home_total_shots >= 0),
+                away_total_shots INTEGER CHECK(away_total_shots >= 0),
+                home_shots_on_target INTEGER CHECK(home_shots_on_target >= 0),
+                away_shots_on_target INTEGER CHECK(away_shots_on_target >= 0),
+                home_fouls INTEGER CHECK(home_fouls >= 0),
+                away_fouls INTEGER CHECK(away_fouls >= 0),
+                home_yellow_cards INTEGER CHECK(home_yellow_cards >= 0),
+                away_yellow_cards INTEGER CHECK(away_yellow_cards >= 0),
+                home_red_cards INTEGER CHECK(home_red_cards >= 0),
+                away_red_cards INTEGER CHECK(away_red_cards >= 0),
+                home_offsides INTEGER CHECK(home_offsides >= 0),
+                away_offsides INTEGER CHECK(away_offsides >= 0),
+                home_corners INTEGER CHECK(home_corners >= 0),
+                away_corners INTEGER CHECK(away_corners >= 0),
+                goal_scorers_json TEXT,
+                source TEXT NOT NULL,
+                collected_at TEXT NOT NULL,
+                FOREIGN KEY(fixture_id)
+                    REFERENCES fixtures(fixture_id)
+                    ON UPDATE CASCADE
+                    ON DELETE CASCADE
+            )
+            """
+        )
+
         _ensure_columns(
             connection,
             "fixtures",
@@ -939,3 +968,87 @@ def get_fixture_statistics(
 
     return [dict(row) for row in rows]
 
+
+
+def save_fixture_history_details(records: list[dict[str, Any]]) -> int:
+    """Αποθηκεύει προαιρετικά αναλυτικά στοιχεία και σκόρερ για το ιστορικό."""
+    if not records:
+        return 0
+
+    fields = (
+        "home_total_shots",
+        "away_total_shots",
+        "home_shots_on_target",
+        "away_shots_on_target",
+        "home_fouls",
+        "away_fouls",
+        "home_yellow_cards",
+        "away_yellow_cards",
+        "home_red_cards",
+        "away_red_cards",
+        "home_offsides",
+        "away_offsides",
+        "home_corners",
+        "away_corners",
+    )
+    rows: list[tuple[Any, ...]] = []
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        if record.get("fixture_id") is None or not record.get("source") or not record.get("collected_at"):
+            continue
+        values: list[Any] = [int(record["fixture_id"])]
+        for field in fields:
+            value = record.get(field)
+            values.append(int(value) if value is not None and value != "" else None)
+        values.extend([
+            str(record.get("goal_scorers_json") or "") or None,
+            str(record["source"]),
+            str(record["collected_at"]),
+        ])
+        rows.append(tuple(values))
+
+    if not rows:
+        return 0
+
+    with get_connection() as connection:
+        connection.executemany(
+            """
+            INSERT INTO fixture_history_details (
+                fixture_id,
+                home_total_shots, away_total_shots,
+                home_shots_on_target, away_shots_on_target,
+                home_fouls, away_fouls,
+                home_yellow_cards, away_yellow_cards,
+                home_red_cards, away_red_cards,
+                home_offsides, away_offsides,
+                home_corners, away_corners,
+                goal_scorers_json, source, collected_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(fixture_id) DO UPDATE SET
+                home_total_shots = COALESCE(excluded.home_total_shots, fixture_history_details.home_total_shots),
+                away_total_shots = COALESCE(excluded.away_total_shots, fixture_history_details.away_total_shots),
+                home_shots_on_target = COALESCE(excluded.home_shots_on_target, fixture_history_details.home_shots_on_target),
+                away_shots_on_target = COALESCE(excluded.away_shots_on_target, fixture_history_details.away_shots_on_target),
+                home_fouls = COALESCE(excluded.home_fouls, fixture_history_details.home_fouls),
+                away_fouls = COALESCE(excluded.away_fouls, fixture_history_details.away_fouls),
+                home_yellow_cards = COALESCE(excluded.home_yellow_cards, fixture_history_details.home_yellow_cards),
+                away_yellow_cards = COALESCE(excluded.away_yellow_cards, fixture_history_details.away_yellow_cards),
+                home_red_cards = COALESCE(excluded.home_red_cards, fixture_history_details.home_red_cards),
+                away_red_cards = COALESCE(excluded.away_red_cards, fixture_history_details.away_red_cards),
+                home_offsides = COALESCE(excluded.home_offsides, fixture_history_details.home_offsides),
+                away_offsides = COALESCE(excluded.away_offsides, fixture_history_details.away_offsides),
+                home_corners = COALESCE(excluded.home_corners, fixture_history_details.home_corners),
+                away_corners = COALESCE(excluded.away_corners, fixture_history_details.away_corners),
+                goal_scorers_json = CASE
+                    WHEN excluded.goal_scorers_json IS NOT NULL AND excluded.goal_scorers_json != ''
+                    THEN excluded.goal_scorers_json
+                    ELSE fixture_history_details.goal_scorers_json
+                END,
+                source = excluded.source,
+                collected_at = excluded.collected_at
+            """,
+            rows,
+        )
+        connection.commit()
+    return len(rows)

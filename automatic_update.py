@@ -12,6 +12,7 @@ from zoneinfo import ZoneInfo
 from dotenv import load_dotenv
 
 from api_football_free_source import fetch_api_football_fixtures
+from api_football_history_enricher import enrich_history
 from automation_config import AutomationConfig
 from database import initialize_database, save_fixture_statistics
 from fixtur_es_source import (
@@ -275,6 +276,25 @@ def main() -> int:
             "warnings": football_data.warnings,
             **statistics_summary,
         }
+
+    history_enrichment = enrich_history(
+        seasons=(as_of.year - 1, as_of.year),
+        api_key=os.getenv("API_FOOTBALL_KEY"),
+        recent_days=4,
+        max_detail_batches=1,
+    )
+    sync_summary["history_enrichment"] = {
+        "source": "API-Football Free fixture details",
+        "enabled": history_enrichment.enabled,
+        "seasons": history_enrichment.seasons,
+        "completed_matches_considered": history_enrichment.completed_matches_considered,
+        "api_matches_found": history_enrichment.api_matches_found,
+        "matches_enriched": history_enrichment.matches_enriched,
+        "requests_used": history_enrichment.requests_used,
+        "quota_remaining": history_enrichment.quota_remaining,
+        "warnings": history_enrichment.warnings,
+        "mode": "recent completed matches only; one details batch maximum",
+    }
 
     seasons = _database_seasons()
     sync_summary["automatic_mode"] = {
