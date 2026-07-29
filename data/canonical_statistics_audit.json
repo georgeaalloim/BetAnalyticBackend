@@ -1,0 +1,9 @@
+{
+  "mixed_dataset_records_removed": 0,
+  "mixed_sqlite_statistics_removed": 0,
+  "noncanonical_history_removed": 0,
+  "invalid_history_removed": 0,
+  "history_score_mismatches": 0,
+  "remaining_statistics_records": 747,
+  "remaining_history_records": 0
+}
