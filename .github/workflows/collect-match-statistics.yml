@@ -66,11 +66,17 @@ jobs:
             --seasons 2025,2026 \
             --summary-output data/history_enrichment_summary.json
 
+      - name: Audit and clean mixed-provider records
+        run: |
+          python audit_canonical_statistics.py \
+            --report data/canonical_statistics_audit.json
+
       - name: Validate persisted files
         run: |
           python -m json.tool data/fixture_statistics.json > /dev/null
           python -m json.tool data/free_history_sync_summary.json > /dev/null
           python -m json.tool data/history_enrichment_summary.json > /dev/null
+          python -m json.tool data/canonical_statistics_audit.json > /dev/null
           python - <<'PY'
           import sqlite3
 
@@ -99,6 +105,7 @@ jobs:
             data/fixture_statistics.json \
             data/free_history_sync_summary.json \
             data/history_enrichment_summary.json
+            data/canonical_statistics_audit.json
 
           if git diff --cached --quiet; then
             echo "No new free historical data to commit."
@@ -126,4 +133,5 @@ jobs:
           path: |
             data/free_history_sync_summary.json
             data/history_enrichment_summary.json
+            data/canonical_statistics_audit.json
           if-no-files-found: error
