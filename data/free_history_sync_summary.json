@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "generated_at": "2026-07-28T18:17:52Z",
+  "generated_at": "2026-07-29T06:15:45Z",
   "seasons": [
     2022,
     2023,
@@ -10,7 +10,7 @@
   "fixtures_in_feed": 0,
   "ready_predictions": 0,
   "unavailable_predictions": 0,
-  "feed_sha256": "108ba1781923a83b6e28372d92758ace836471b697b312d68146e713182df645",
+  "feed_sha256": "bcaa903835e0ee9f346fc9acb8b793396265677796d7a00d6ba2800f55289e51",
   "feed_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/feed.json",
   "manifest_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/manifest.json",
   "sync_summary": {
@@ -63,6 +63,6 @@
       "future_detailed_season_detection": true,
       "description": "Κάθε run διασταυρώνει δωρεάν το πρόγραμμα, χρησιμοποιώντας το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει τα δωρεάν CSV αποτελεσμάτων/στατιστικών. Οι νέοι ολοκληρωμένοι αγώνες χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό χρονικό cutoff."
     },
-    "finished_at": "2026-07-28T18:17:54Z"
+    "finished_at": "2026-07-29T06:15:46Z"
   }
 }
