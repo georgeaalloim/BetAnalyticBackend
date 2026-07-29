@@ -3,7 +3,7 @@ name: Sync free match history
 on:
   workflow_dispatch:
   schedule:
-    # Καθημερινά στις 03:37 UTC. Χωρίς API key και χωρίς πληρωμένη υπηρεσία.
+    # Καθημερινά στις 03:37 UTC. Χρησιμοποιεί δωρεάν API key, χωρίς πληρωμένο πλάνο.
     - cron: "37 3 * * *"
 
 permissions:
@@ -16,7 +16,10 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
+
+    env:
+      API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
 
     steps:
       - name: Checkout main branch
@@ -41,19 +44,33 @@ jobs:
         run: |
           python -m unittest discover -p "test_*.py" -v
 
-      - name: Update free historical results and statistics
+      - name: Require free API-Football key for complete history
+        run: |
+          if [ -z "$API_FOOTBALL_KEY" ]; then
+            echo "Missing API_FOOTBALL_KEY repository secret."
+            echo "Create a free API-Football account and add its key as a GitHub Actions secret."
+            exit 1
+          fi
+
+      - name: Update completed matches and free CSV statistics
         run: |
           mkdir -p data automation_output
           python automatic_update.py \
             --output-dir automation_output \
-            --skip-sync \
             --skip-upload \
             | tee data/free_history_sync_summary.json
+
+      - name: Complete missing statistics and goal scorers
+        run: |
+          python api_football_history_enricher.py \
+            --seasons 2025,2026 \
+            --summary-output data/history_enrichment_summary.json
 
       - name: Validate persisted files
         run: |
           python -m json.tool data/fixture_statistics.json > /dev/null
           python -m json.tool data/free_history_sync_summary.json > /dev/null
+          python -m json.tool data/history_enrichment_summary.json > /dev/null
           python - <<'PY'
           import sqlite3
 
@@ -80,7 +97,8 @@ jobs:
           git add \
             betanalytic.db \
             data/fixture_statistics.json \
-            data/free_history_sync_summary.json
+            data/free_history_sync_summary.json \
+            data/history_enrichment_summary.json
 
           if git diff --cached --quiet; then
             echo "No new free historical data to commit."
@@ -105,5 +123,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: free-history-sync-summary
-          path: data/free_history_sync_summary.json
+          path: |
+            data/free_history_sync_summary.json
+            data/history_enrichment_summary.json
           if-no-files-found: error
