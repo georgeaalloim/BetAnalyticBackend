@@ -203,8 +203,6 @@ def _fixture_payload(
     training_fixtures: list[dict[str, Any]],
     corners_context: CountMarketContext | None,
     corners_context_error: str | None,
-    cards_context: CountMarketContext | None,
-    cards_context_error: str | None,
     training_statistics: list[dict[str, Any]],
 ) -> dict[str, Any]:
     fixture_id = int(fixture["fixture_id"])
@@ -281,12 +279,6 @@ def _fixture_payload(
             home_team_id=home_team_id,
             away_team_id=away_team_id,
         )
-        prediction["yellow_cards_market"] = _predict_optional_count_market(
-            cards_context,
-            cards_context_error,
-            home_team_id=home_team_id,
-            away_team_id=away_team_id,
-        )
         payload.update(
             {
                 "prediction_status": "ready",
@@ -342,8 +334,6 @@ def generate_static_feed(
     stats_by_season: dict[int, list[dict[str, Any]]] = {}
     corners_context_by_season: dict[int, CountMarketContext | None] = {}
     corners_error_by_season: dict[int, str | None] = {}
-    cards_context_by_season: dict[int, CountMarketContext | None] = {}
-    cards_error_by_season: dict[int, str | None] = {}
     validation_by_season: dict[str, Any] = {}
 
     target_seasons = sorted({int(fixture["season"]) for fixture in upcoming_fixtures})
@@ -372,19 +362,11 @@ def generate_static_feed(
         corners_context, corners_error = _build_count_context(
             training_statistics, market="corners"
         )
-        cards_context, cards_error = _build_count_context(
-            training_statistics, market="yellow_cards"
-        )
         corners_context_by_season[season] = corners_context
         corners_error_by_season[season] = corners_error
-        cards_context_by_season[season] = cards_context
-        cards_error_by_season[season] = cards_error
         validation_by_season[str(season)] = {
             "statistics_records": len(training_statistics),
             "corners": walk_forward_backtest(training_statistics, market="corners"),
-            "yellow_cards": walk_forward_backtest(
-                training_statistics, market="yellow_cards"
-            ),
         }
 
     fixture_payloads = [
@@ -396,8 +378,6 @@ def generate_static_feed(
             training_fixtures=training_by_season.get(int(fixture["season"]), []),
             corners_context=corners_context_by_season.get(int(fixture["season"])),
             corners_context_error=corners_error_by_season.get(int(fixture["season"])),
-            cards_context=cards_context_by_season.get(int(fixture["season"])),
-            cards_context_error=cards_error_by_season.get(int(fixture["season"])),
             training_statistics=stats_by_season.get(int(fixture["season"]), []),
         )
         for fixture in upcoming_fixtures
@@ -432,7 +412,7 @@ def generate_static_feed(
             "temporal_leakage_protection": True,
             "training_season_window": TRAINING_SEASON_WINDOW,
             "count_markets_model": "Bayesian-Smoothed Count Markets v0.1",
-            "count_markets": ["corners", "yellow_cards"],
+            "count_markets": ["corners"],
         },
         "count_market_validation": validation_by_season,
         "lookahead_days": lookahead_days,
@@ -451,7 +431,7 @@ def generate_static_feed(
     manifest_payload: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
         "data_version": int(as_of.timestamp()),
-        "model_version": "0.5-count-markets-0.1",
+        "model_version": "0.5-corners-only",
         "generated_at": to_iso_z(as_of),
         "feed_url": feed_public_url,
         "feed_sha256": feed_sha256,

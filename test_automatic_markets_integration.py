@@ -21,7 +21,7 @@ class AutomaticMarketsIntegrationTests(unittest.TestCase):
         database.DATABASE_PATH = self.original_database_path
         self.temp_dir.cleanup()
 
-    def test_feed_contains_ready_dynamic_corners_and_cards(self) -> None:
+    def test_feed_contains_ready_dynamic_corners(self) -> None:
         teams = [1, 2, 3, 4, 5, 6]
         fixtures = []
         statistics = []
@@ -115,9 +115,6 @@ class AutomaticMarketsIntegrationTests(unittest.TestCase):
         self.assertEqual(fixture["schedule_source"], "test schedule")
         self.assertEqual(fixture["prediction_status"], "ready")
         self.assertEqual(fixture["prediction"]["corners_market"]["status"], "ready")
-        self.assertEqual(
-            fixture["prediction"]["yellow_cards_market"]["status"], "ready"
-        )
         self.assertIsNotNone(
             fixture["prediction"]["corners_market"]["selected"]
         )
