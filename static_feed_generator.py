@@ -20,9 +20,10 @@ from ensemble_value_service import build_ensemble_context, predict_match_ensembl
 from time_utils import parse_iso_datetime, to_iso_z
 
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 COMPLETED_STATUS = "FT"
 TRAINING_SEASON_WINDOW = 3
+HISTORY_SEASONS_COUNT = 2
 
 
 @dataclass(frozen=True)
@@ -162,6 +163,134 @@ def _load_upcoming_fixtures(
             upcoming.append((fixture_datetime, fixture))
     upcoming.sort(key=lambda item: item[0])
     return [fixture for _, fixture in upcoming]
+
+
+
+def _history_stat_pair(row: dict[str, Any], home_field: str, away_field: str) -> dict[str, int | None]:
+    return {
+        "home": int(row[home_field]) if row.get(home_field) is not None else None,
+        "away": int(row[away_field]) if row.get(away_field) is not None else None,
+    }
+
+
+def _history_match_payload(row: dict[str, Any]) -> dict[str, Any]:
+    has_statistics = row.get("statistics_fixture_id") is not None
+    return {
+        "fixture_id": int(row["fixture_id"]),
+        "season": int(row["season"]),
+        "fixture_date": str(row.get("fixture_date") or ""),
+        "status": "FT",
+        "home_team": {
+            "team_id": int(row["home_team_id"]),
+            "team_name": str(row["home_team_name"]),
+        },
+        "away_team": {
+            "team_id": int(row["away_team_id"]),
+            "team_name": str(row["away_team_name"]),
+        },
+        "score": {
+            "home": int(row["home_goals"]),
+            "away": int(row["away_goals"]),
+        },
+        "statistics_available": has_statistics,
+        "statistics": {
+            "total_shots": _history_stat_pair(row, "home_total_shots", "away_total_shots"),
+            "shots_on_target": _history_stat_pair(row, "home_shots_on_target", "away_shots_on_target"),
+            "fouls": _history_stat_pair(row, "home_fouls", "away_fouls"),
+            "yellow_cards": _history_stat_pair(row, "home_yellow_cards", "away_yellow_cards"),
+            "red_cards": _history_stat_pair(row, "home_red_cards", "away_red_cards"),
+            "offsides": _history_stat_pair(row, "home_offsides", "away_offsides"),
+            "corners": _history_stat_pair(row, "home_corners", "away_corners"),
+            "throw_ins": {"home": None, "away": None},
+        },
+        "goal_scorers": {
+            "available": False,
+            "items": [],
+            "message": "Οι δωρεάν πηγές του έργου δεν παρέχουν αξιόπιστα ονόματα σκόρερ ανά αγώνα.",
+        },
+        "throw_ins_available": False,
+        "referee": str(row.get("referee") or "") or None,
+        "statistics_source": str(row.get("statistics_source") or "") or None,
+        "statistics_collected_at": str(row.get("statistics_collected_at") or "") or None,
+    }
+
+
+def _build_history_payload(
+    *,
+    league_id: int,
+    default_season: int,
+) -> dict[str, Any]:
+    seasons = tuple(range(default_season - HISTORY_SEASONS_COUNT + 1, default_season + 1))
+    placeholders = ",".join("?" for _ in seasons)
+    with get_connection() as connection:
+        rows = connection.execute(
+            f"""
+            SELECT
+                f.fixture_id,
+                f.season,
+                f.fixture_date,
+                f.home_team_id,
+                f.home_team_name,
+                f.away_team_id,
+                f.away_team_name,
+                f.home_goals,
+                f.away_goals,
+                s.fixture_id AS statistics_fixture_id,
+                s.home_corners,
+                s.away_corners,
+                s.home_yellow_cards,
+                s.away_yellow_cards,
+                s.home_red_cards,
+                s.away_red_cards,
+                s.home_total_shots,
+                s.away_total_shots,
+                s.home_shots_on_target,
+                s.away_shots_on_target,
+                s.home_fouls,
+                s.away_fouls,
+                s.home_offsides,
+                s.away_offsides,
+                s.referee,
+                s.source AS statistics_source,
+                s.collected_at AS statistics_collected_at
+            FROM fixtures AS f
+            LEFT JOIN fixture_statistics AS s
+              ON s.fixture_id = f.fixture_id
+            WHERE f.league_id = ?
+              AND f.season IN ({placeholders})
+              AND f.status = 'FT'
+              AND f.home_goals IS NOT NULL
+              AND f.away_goals IS NOT NULL
+            ORDER BY f.fixture_date DESC, f.fixture_id DESC
+            """,
+            (int(league_id), *seasons),
+        ).fetchall()
+
+    matches_by_season: dict[int, list[dict[str, Any]]] = {
+        season: [] for season in seasons
+    }
+    for raw_row in rows:
+        row = dict(raw_row)
+        season = int(row["season"])
+        matches_by_season.setdefault(season, []).append(_history_match_payload(row))
+
+    return {
+        "default_season": int(default_season),
+        "available_seasons": sorted(seasons, reverse=True),
+        "automatic_update": True,
+        "automatic_update_rule": (
+            "Κάθε αγώνας που αποθηκεύεται ως FT με τελικό σκορ προστίθεται "
+            "αυτόματα στο ιστορικό και χρησιμοποιείται στις επόμενες προβλέψεις."
+        ),
+        "seasons": [
+            {
+                "season": season,
+                "matches_count": len(matches_by_season.get(season, [])),
+                "matches": matches_by_season.get(season, []),
+            }
+            for season in sorted(seasons, reverse=True)
+        ],
+    }
 
 
 def _derive_scoring_probabilities(prediction: dict[str, Any]) -> dict[str, float]:
@@ -401,6 +530,13 @@ def generate_static_feed(
         fixture["prediction_status"] == "ready" for fixture in fixture_payloads
     )
     unavailable_count = len(fixture_payloads) - ready_count
+    default_history_season = (
+        as_of.year if as_of.month >= 7 else as_of.year - 1
+    )
+    history_payload = _build_history_payload(
+        league_id=league_id,
+        default_season=default_history_season,
+    )
     feed_payload: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
         "generated_at": to_iso_z(as_of),
@@ -421,6 +557,7 @@ def generate_static_feed(
         "ready_predictions": ready_count,
         "unavailable_predictions": unavailable_count,
         "seasons": seasons_payload,
+        "history": history_payload,
     }
 
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -431,12 +568,16 @@ def generate_static_feed(
     manifest_payload: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
         "data_version": int(as_of.timestamp()),
-        "model_version": "0.5-corners-only",
+        "model_version": "0.6-history-seasons-corners",
         "generated_at": to_iso_z(as_of),
         "feed_url": feed_public_url,
         "feed_sha256": feed_sha256,
         "fixtures_count": len(fixture_payloads),
         "ready_predictions": ready_count,
+        "history_matches_count": sum(
+            item["matches_count"] for item in history_payload["seasons"]
+        ),
+        "history_default_season": history_payload["default_season"],
     }
     _atomic_write_json(manifest_path, manifest_payload)
     return GeneratedFeed(
