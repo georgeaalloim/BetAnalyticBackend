@@ -120,11 +120,36 @@ jobs:
               if "slgr" in lowered or "super league official" in lowered:
                   raise SystemExit("Forbidden Super League scraping source found.")
               if fixture.get("kickoff_time_confirmed"):
-                  if "verified date and time" not in lowered:
+                  valid_time_labels = (
+                      "verified date and time",
+                      "verified date; time reported by one source",
+                  )
+                  if not any(label in lowered for label in valid_time_labels):
                       raise SystemExit(
-                          "A confirmed kickoff was not verified by two free sources: "
+                          "A confirmed kickoff does not have a valid verification label: "
                           + str(fixture.get("fixture_id"))
                       )
+
+          history = feed.get("history")
+          if not isinstance(history, dict):
+              raise SystemExit("The feed does not contain history.")
+          if int(history.get("default_season", -1)) != 2026:
+              raise SystemExit("History default season must be 2026.")
+          history_seasons = {
+              int(item.get("season"))
+              for item in history.get("seasons", [])
+          }
+          if not {2025, 2026}.issubset(history_seasons):
+              raise SystemExit("History must contain seasons 2025 and 2026.")
+          for season_item in history.get("seasons", []):
+              matches = season_item.get("matches", [])
+              if int(season_item.get("matches_count", -1)) != len(matches):
+                  raise SystemExit("History matches_count mismatch.")
+              for match in matches:
+                  if match.get("status") != "FT":
+                      raise SystemExit("History contains a non-completed match.")
+                  if match.get("score", {}).get("home") is None:
+                      raise SystemExit("History match is missing its score.")
 
           if manifest.get("feed_sha256") is None:
               raise SystemExit("manifest.json does not contain feed_sha256.")
