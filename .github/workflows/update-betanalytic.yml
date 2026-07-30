@@ -139,14 +139,18 @@ jobs:
           history = feed.get("history")
           if not isinstance(history, dict):
               raise SystemExit("The feed does not contain history.")
-          if int(history.get("default_season", -1)) != 2026:
-              raise SystemExit("History default season must be 2026.")
+          history_default = int(history.get("default_season", -1))
+          if history_default < 2000:
+              raise SystemExit("History does not declare a valid active season.")
           history_seasons = {
               int(item.get("season"))
               for item in history.get("seasons", [])
           }
-          if not {2025, 2026}.issubset(history_seasons):
-              raise SystemExit("History must contain seasons 2025 and 2026.")
+          if history_seasons != {history_default}:
+              raise SystemExit(
+                  "App history must expose only its active season: "
+                  + str(sorted(history_seasons))
+              )
           for season_item in history.get("seasons", []):
               matches = season_item.get("matches", [])
               if int(season_item.get("matches_count", -1)) != len(matches):
