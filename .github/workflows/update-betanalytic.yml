@@ -8,6 +8,7 @@ on:
   workflow_run:
     workflows:
       - Sync free match history
+      - Rebuild clean database
     types:
       - completed
 
