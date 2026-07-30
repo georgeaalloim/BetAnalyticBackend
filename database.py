@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import sqlite3
 from pathlib import Path
 from typing import Any
@@ -7,7 +8,10 @@ from typing import Any
 from statistics_source_policy import choose_whole_record
 
 
-DATABASE_PATH = Path(__file__).resolve().parent / "betanalytic.db"
+DEFAULT_DATABASE_PATH = Path(__file__).resolve().parent / "betanalytic.db"
+DATABASE_PATH = Path(
+    os.getenv("BETANALYTIC_DATABASE_PATH", str(DEFAULT_DATABASE_PATH))
+).expanduser().resolve()
 
 
 ODDS_SNAPSHOT_COLUMNS = (
@@ -43,6 +47,7 @@ class _ClosingConnection(sqlite3.Connection):
 def get_connection() -> sqlite3.Connection:
     """Ανοίγει σύνδεση SQLite με foreign keys και ασφαλές κλείσιμο."""
 
+    DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
     connection = sqlite3.connect(
         DATABASE_PATH,
         factory=_ClosingConnection,

@@ -1,0 +1,13 @@
+ΝΕΑ ΑΡΧΕΙΑ
+- clean_rebuild.py
+- test_clean_rebuild.py
+- .github/workflows/rebuild-clean-database.yml
+- data/manual_verified_matches.json
+- CLEAN_REBUILD_GR.md
+- MANUAL_SUPERLEAGUE_VERIFICATION_GR.md
+
+ΤΡΟΠΟΠΟΙΗΜΕΝΑ ΑΡΧΕΙΑ
+- database.py: υποστήριξη απομονωμένης διαδρομής βάσης μέσω BETANALYTIC_DATABASE_PATH
+- match_statistics.py: υποστήριξη απομονωμένου dataset μέσω BETANALYTIC_STATISTICS_PATH
+- .github/workflows/update-betanalytic.yml: δημοσίευση feed μετά από επιτυχημένο clean rebuild
+- .gitignore: αγνόηση προσωρινών φακέλων και backups του clean rebuild

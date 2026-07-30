@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
@@ -9,7 +10,12 @@ from database import save_fixture_statistics
 from statistics_source_policy import choose_whole_record, clean_source
 
 
-DEFAULT_DATASET_PATH = Path(__file__).resolve().parent / "data" / "fixture_statistics.json"
+DEFAULT_DATASET_PATH = Path(
+    os.getenv(
+        "BETANALYTIC_STATISTICS_PATH",
+        str(Path(__file__).resolve().parent / "data" / "fixture_statistics.json"),
+    )
+).expanduser().resolve()
 DATASET_SCHEMA_VERSION = 3
 SOURCE_NAME = "Canonical single-provider snapshots"
 

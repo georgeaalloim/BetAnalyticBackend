@@ -5,3 +5,5 @@ __pycache__/
 .pytest_cache/
 automation_output/
 .idea/
+clean_rebuild_work/
+clean_rebuild_backup/

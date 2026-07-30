@@ -1,0 +1,17 @@
+ΑΝΕΒΑΣΜΑ ΣΤΟ ΥΠΑΡΧΟΝ REPOSITORY BetAnalyticBackend
+
+Το πακέτο περιέχει μόνο νέα/τροποποιημένα αρχεία.
+ΔΕΝ περιέχει betanalytic.db και ΔΕΝ αντικαθιστά την τωρινή βάση πριν τρέξει το ασφαλές workflow.
+
+1. Ανέβασε όλα τα αρχεία, διατηρώντας ακριβώς τους φακέλους.
+2. Κάνε commit στο main.
+3. Actions -> Rebuild clean database -> Run workflow.
+4. Στο confirmation γράψε ακριβώς: REBUILD
+5. Περίμενε να γίνει πράσινο.
+6. Θα ξεκινήσει αυτόματα το Update and publish BetAnalytic data.
+
+Μετά το run κατέβασε το artifact clean-database-rebuild και έλεγξε:
+- data/clean_rebuild_report.json
+- data/manual_verification_report.json
+- data/quarantined_statistics.json
+- data/manual_verification_queue.csv
