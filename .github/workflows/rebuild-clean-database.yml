@@ -1,4 +1,4 @@
-name: Rebuild clean database
+ame: Rebuild clean database
 
 on:
   workflow_dispatch:
@@ -124,11 +124,16 @@ jobs:
           git add -- \
             betanalytic.db \
             data/fixture_statistics.json \
-            data/manual_verified_matches.json \
             data/clean_rebuild_report.json \
             data/manual_verification_report.json \
             data/quarantined_statistics.json \
             data/manual_verification_queue.csv
+
+          # Το manual ledger είναι προαιρετικό. Αν υπάρχει, το καταγράφουμε·
+          # αν έχει αφαιρεθεί, το workflow συνεχίζει χωρίς pathspec error.
+          if [ -f data/manual_verified_matches.json ]; then
+            git add -- data/manual_verified_matches.json
+          fi
 
           if git diff --cached --quiet; then
             echo "No clean rebuild changes to commit."
