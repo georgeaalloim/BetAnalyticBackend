@@ -1,4 +1,4 @@
-ame: Rebuild clean database
+name: Rebuild clean database
 
 on:
   workflow_dispatch:
