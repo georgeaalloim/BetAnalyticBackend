@@ -1,0 +1,13 @@
+{
+  "ledger_entries": 0,
+  "fixtures_found": 0,
+  "fully_matching_entries": 0,
+  "score_mismatches": 0,
+  "statistics_mismatches": 0,
+  "statistics_quarantined": 0,
+  "missing_fixtures": 0,
+  "missing_statistics": 0,
+  "details": [],
+  "generated_at": "2026-07-30T08:45:20Z",
+  "ledger_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/data/manual_verified_matches.json"
+}

@@ -1,0 +1,6 @@
+{
+  "generated_at": "2026-07-30T08:45:20Z",
+  "policy": "Quarantined records are excluded from the production database, feed and model. Official-site checks are manual only; no SLGR scraping is performed.",
+  "quality_quarantine": [],
+  "manual_verification_details": []
+}
