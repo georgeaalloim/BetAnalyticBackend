@@ -1,8 +1,7 @@
 {
   "status": "ok",
-  "generated_at": "2026-07-30T06:09:22Z",
+  "generated_at": "2026-07-30T08:46:16Z",
   "seasons": [
-    2022,
     2023,
     2024,
     2025,
@@ -11,7 +10,7 @@
   "fixtures_in_feed": 28,
   "ready_predictions": 28,
   "unavailable_predictions": 0,
-  "feed_sha256": "65d27f798d33560b5b8cd7e395f515101c099e3748d6d5fab89f74250327d123",
+  "feed_sha256": "aa6391a6315e03a13ec6994003a83b5ab60c758a39424a52705b282008d503f2",
   "feed_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/feed.json",
   "manifest_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/manifest.json",
   "sync_summary": {
@@ -89,11 +88,11 @@
       "warnings": [
         "Δεν έχει δημοσιευτεί ακόμη CSV για τη σεζόν 2026."
       ],
-      "records_before_merge": 749,
+      "records_before_merge": 709,
       "records_received": 709,
-      "records_after_merge": 749,
-      "records_with_complete_statistics": 747,
-      "records_saved_to_sqlite": 747
+      "records_after_merge": 709,
+      "records_with_complete_statistics": 708,
+      "records_saved_to_sqlite": 708
     },
     "history_enrichment": {
       "source": "API-Football Free fixture details",
@@ -121,7 +120,7 @@
       "noncanonical_history_removed": 0,
       "invalid_history_removed": 0,
       "history_score_mismatches": 0,
-      "remaining_statistics_records": 747,
+      "remaining_statistics_records": 708,
       "remaining_history_records": 0,
       "rule": "No field-level merge across providers; each numeric statistics block comes from one snapshot."
     },
@@ -136,6 +135,6 @@
       "future_detailed_season_detection": true,
       "description": "Κάθε run διασταυρώνει δωρεάν το πρόγραμμα, χρησιμοποιώντας το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει τα δωρεάν CSV αποτελεσμάτων/στατιστικών. Τα αναλυτικά ιστορικά στοιχεία αποθηκεύονται ως ενιαίο snapshot παρόχου χωρίς ανάμειξη πεδίων. Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό και χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό χρονικό cutoff."
     },
-    "finished_at": "2026-07-30T06:09:30Z"
+    "finished_at": "2026-07-30T08:46:20Z"
   }
 }
