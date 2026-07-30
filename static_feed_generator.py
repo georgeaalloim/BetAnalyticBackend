@@ -24,7 +24,7 @@ from time_utils import parse_iso_datetime, to_iso_z
 SCHEMA_VERSION = 3
 COMPLETED_STATUS = "FT"
 TRAINING_SEASON_WINDOW = 3
-HISTORY_SEASONS_COUNT = 2
+HISTORY_SEASONS_COUNT = 1
 
 
 @dataclass(frozen=True)
@@ -281,7 +281,10 @@ def _build_history_payload(
     league_id: int,
     default_season: int,
 ) -> dict[str, Any]:
-    seasons = tuple(range(default_season - HISTORY_SEASONS_COUNT + 1, default_season + 1))
+    # Presentation filter only: older seasons remain in SQLite and are still
+    # available to the prediction model, but the app history shows only the
+    # active season.
+    seasons = (int(default_season),)
     placeholders = ",".join("?" for _ in seasons)
     with get_connection() as connection:
         rows = connection.execute(
@@ -361,8 +364,9 @@ def _build_history_payload(
         "available_seasons": sorted(seasons, reverse=True),
         "automatic_update": True,
         "automatic_update_rule": (
-            "Κάθε αγώνας που αποθηκεύεται ως FT με τελικό σκορ προστίθεται "
-            "αυτόματα στο ιστορικό και χρησιμοποιείται στις επόμενες προβλέψεις."
+            "Στο ιστορικό της εφαρμογής εμφανίζεται μόνο η ενεργή σεζόν. "
+            "Οι παλαιότερες σεζόν παραμένουν εσωτερικά στη βάση και μπορούν "
+            "να χρησιμοποιούνται από το μοντέλο για την εκπαίδευση."
         ),
         "seasons": [
             {
@@ -650,7 +654,7 @@ def generate_static_feed(
     manifest_payload: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
         "data_version": int(as_of.timestamp()),
-        "model_version": "0.7-h2h-history-scorers",
+        "model_version": "0.8-current-history-training-retained",
         "generated_at": to_iso_z(as_of),
         "feed_url": feed_public_url,
         "feed_sha256": feed_sha256,

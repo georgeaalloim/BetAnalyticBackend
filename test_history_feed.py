@@ -69,7 +69,12 @@ class HistoryFeedTests(unittest.TestCase):
                 import json
                 feed = json.loads(generated.feed_path.read_text(encoding="utf-8"))
                 self.assertEqual(feed["history"]["default_season"], 2026)
-                season = next(item for item in feed["history"]["seasons"] if item["season"] == 2026)
+                self.assertEqual(feed["history"]["available_seasons"], [2026])
+                self.assertEqual(
+                    [item["season"] for item in feed["history"]["seasons"]],
+                    [2026],
+                )
+                season = feed["history"]["seasons"][0]
                 self.assertEqual(season["matches_count"], 1)
                 self.assertEqual(season["matches"][0]["statistics"]["corners"]["home"], 7)
                 self.assertEqual(season["matches"][0]["statistics"]["total_shots"]["home"], 13)
