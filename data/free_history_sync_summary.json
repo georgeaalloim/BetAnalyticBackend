@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "generated_at": "2026-08-08T04:36:44Z",
+  "generated_at": "2026-08-09T04:48:40Z",
   "seasons": [
     2023,
     2024,
@@ -10,7 +10,7 @@
   "fixtures_in_feed": 35,
   "ready_predictions": 35,
   "unavailable_predictions": 0,
-  "feed_sha256": "cd3d0ecef3d1086e62abcaeb71219a94b5a02d3a7191a5d1251fb7341fabed06",
+  "feed_sha256": "091a64d9b367d103a93faad85df8b2f26a75da0f37372384acaa27c01f03d166",
   "feed_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/feed.json",
   "manifest_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/manifest.json",
   "sync_summary": {
@@ -135,6 +135,6 @@
       "future_detailed_season_detection": true,
       "description": "Κάθε run διασταυρώνει δωρεάν το πρόγραμμα, χρησιμοποιώντας το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει τα δωρεάν CSV αποτελεσμάτων/στατιστικών. Τα αναλυτικά ιστορικά στοιχεία αποθηκεύονται ως ενιαίο snapshot παρόχου χωρίς ανάμειξη πεδίων. Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό και χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό χρονικό cutoff."
     },
-    "finished_at": "2026-08-08T04:36:49Z"
+    "finished_at": "2026-08-09T04:48:44Z"
   }
 }
