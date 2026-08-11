@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "generated_at": "2026-08-10T05:07:40Z",
+  "generated_at": "2026-08-11T04:51:13Z",
   "seasons": [
     2023,
     2024,
@@ -10,7 +10,7 @@
   "fixtures_in_feed": 35,
   "ready_predictions": 35,
   "unavailable_predictions": 0,
-  "feed_sha256": "dc4d44e5baf6875a93cca34d26ba3ef0faa1ba86bbf357cc5674cfd872df7319",
+  "feed_sha256": "767795da6cb95a8a81c18af7d207b8b5da4d5bcc132371ab8a4a2c1577ef4fdf",
   "feed_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/feed.json",
   "manifest_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/manifest.json",
   "sync_summary": {
@@ -86,7 +86,7 @@
       "inserted_new_fixtures": 0,
       "fixtures_saved": 709,
       "warnings": [
-        "Δεν έχει δημοσιευτεί ακόμη CSV για τη σεζόν 2026."
+        "Αποτυχία Football-Data https://www.football-data.co.uk/mmz4281/2627/G1.csv: Το CSV Football-Data δεν περιέχει τα πεδία Date/HomeTeam/AwayTeam."
       ],
       "records_before_merge": 709,
       "records_received": 709,
@@ -135,6 +135,6 @@
       "future_detailed_season_detection": true,
       "description": "Κάθε run διασταυρώνει δωρεάν το πρόγραμμα, χρησιμοποιώντας το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει τα δωρεάν CSV αποτελεσμάτων/στατιστικών. Τα αναλυτικά ιστορικά στοιχεία αποθηκεύονται ως ενιαίο snapshot παρόχου χωρίς ανάμειξη πεδίων. Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό και χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό χρονικό cutoff."
     },
-    "finished_at": "2026-08-10T05:07:45Z"
+    "finished_at": "2026-08-11T04:51:18Z"
   }
 }
