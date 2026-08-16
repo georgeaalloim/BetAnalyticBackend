@@ -6,7 +6,10 @@ from poisson_mle_model import (
     fit_poisson_mle_model,
     predict_match_mle,
 )
-from poisson_model import predict_match
+from poisson_model import (
+    DEFAULT_DIXON_COLES_RHO,
+    predict_match,
+)
 from market_lines import (
     combine_total_market_lines,
     select_strongest_relevant_market,
@@ -27,7 +30,6 @@ DEFAULT_BASELINE_WEIGHT = 0.60
 DEFAULT_MLE_WEIGHT = 0.40
 
 DEFAULT_PRIOR_MATCHES = 2.0
-DEFAULT_DIXON_COLES_RHO = 0.0
 DEFAULT_L2_REGULARIZATION = 2.0
 DEFAULT_MAX_GOALS = 10
 
@@ -375,6 +377,9 @@ def build_ensemble_context(
             "baseline_dixon_coles_rho": (
                 DEFAULT_DIXON_COLES_RHO
             ),
+            "mle_dixon_coles_rho": (
+                DEFAULT_DIXON_COLES_RHO
+            ),
             "mle_l2_regularization": (
                 l2_regularization
             ),
@@ -471,6 +476,7 @@ def predict_match_ensemble(
         home_team_id=home_team_id,
         away_team_id=away_team_id,
         max_goals=max_goals,
+        rho=dixon_coles_rho,
     )
 
     baseline_result_probabilities = (
@@ -603,7 +609,7 @@ def predict_match_ensemble(
 
     return {
         "model": (
-            "Probability Ensemble v0.5"
+            "Probability Ensemble + Dixon-Coles v0.6"
         ),
         "data_quality": {
             "level": (
@@ -637,6 +643,9 @@ def predict_match_ensemble(
                 prior_matches
             ),
             "baseline_dixon_coles_rho": (
+                dixon_coles_rho
+            ),
+            "mle_dixon_coles_rho": (
                 dixon_coles_rho
             ),
             "mle_l2_regularization": (
@@ -784,6 +793,11 @@ def predict_match_ensemble(
                         "model"
                     ]
                 ),
+                "model_parameters": (
+                    baseline_prediction[
+                        "model_parameters"
+                    ]
+                ),
                 "result_probabilities": (
                     baseline_prediction[
                         "result_probabilities"
@@ -803,6 +817,11 @@ def predict_match_ensemble(
             "poisson_mle": {
                 "model": (
                     mle_prediction["model"]
+                ),
+                "model_parameters": (
+                    mle_prediction[
+                        "model_parameters"
+                    ]
                 ),
                 "result_probabilities": (
                     mle_prediction[

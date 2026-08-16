@@ -7,6 +7,10 @@ import numpy as np
 from scipy.optimize import minimize
 
 from market_lines import build_total_market_lines
+from poisson_model import (
+    DEFAULT_DIXON_COLES_RHO,
+    dixon_coles_correction,
+)
 
 
 DEFAULT_L2_REGULARIZATION = 1.0
@@ -298,14 +302,26 @@ def predict_match_mle(
     home_team_id: int,
     away_team_id: int,
     max_goals: int = DEFAULT_MAX_GOALS,
+    rho: float = DEFAULT_DIXON_COLES_RHO,
 ) -> dict[str, Any]:
-    """Παράγει 1-X-2 και αγορές γκολ από fitted Poisson MLE."""
+    """
+    Παράγει 1-X-2 και αγορές γκολ από fitted Poisson MLE.
+
+    Η ίδια διόρθωση Dixon-Coles που χρησιμοποιεί το βασικό
+    Poisson εφαρμόζεται και στο MLE score grid, ώστε το 40%
+    του ensemble να μη μένει ανεξάρτητο Poisson στα χαμηλά σκορ.
+    """
 
     if home_team_id == away_team_id:
         raise ValueError("Οι δύο ομάδες δεν μπορούν να είναι ίδιες.")
 
     if max_goals < 1:
         raise ValueError("Το max_goals πρέπει να είναι τουλάχιστον 1.")
+
+    if rho < -0.25 or rho > 0.25:
+        raise ValueError(
+            "Το rho πρέπει να βρίσκεται στο διάστημα από -0.25 έως 0.25."
+        )
 
     home_team = _find_team_rating(fitted_model, home_team_id)
     away_team = _find_team_rating(fitted_model, away_team_id)
@@ -345,7 +361,18 @@ def predict_match_mle(
                 away_goals_value,
                 expected_away_goals,
             )
-            score_probability = home_probability * away_probability
+            correction = dixon_coles_correction(
+                home_goals=home_goals_value,
+                away_goals=away_goals_value,
+                expected_home_goals=expected_home_goals,
+                expected_away_goals=expected_away_goals,
+                rho=rho,
+            )
+            score_probability = (
+                home_probability
+                * away_probability
+                * correction
+            )
             total_probability += score_probability
 
             if home_goals_value > away_goals_value:
@@ -402,7 +429,15 @@ def predict_match_mle(
     ]
 
     return {
-        "model": fitted_model["model"],
+        "model": (
+            "Poisson MLE + Dixon-Coles v0.5"
+            if rho != 0
+            else fitted_model["model"]
+        ),
+        "model_parameters": {
+            "dixon_coles_rho": rho,
+            "max_goals": max_goals,
+        },
         "home_team": {
             "team_id": int(home_team["team_id"]),
             "team_name": str(home_team["team_name"]),

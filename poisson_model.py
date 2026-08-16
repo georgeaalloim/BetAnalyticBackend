@@ -5,7 +5,7 @@ from market_lines import build_total_market_lines
 
 
 DEFAULT_PRIOR_MATCHES = 2.0
-DEFAULT_DIXON_COLES_RHO = 0.0
+DEFAULT_DIXON_COLES_RHO = -0.10
 DEFAULT_MAX_GOALS = 10
 
 
