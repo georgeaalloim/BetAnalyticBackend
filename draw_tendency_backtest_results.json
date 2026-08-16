@@ -1,0 +1,41 @@
+{
+  "method": "strict walk-forward; minimum 5 previous home/away matches; 60% Bayesian Poisson + 40% Poisson MLE; Dixon-Coles rho=-0.10",
+  "previous_rule": "DRAW only when within 0.015 of strongest HOME/AWAY",
+  "new_rule": "previous rule plus current-season venue draw tendency: last 5 home/away, at least 1 draw each and at least 3 combined, then DRAW allowed within 0.075",
+  "2022": {
+    "evaluated_matches": 164,
+    "actual_draws": 47,
+    "previous": {"correct_predictions": 90, "accuracy_percent": 54.88, "draw_predictions": 17, "correct_draws": 6, "draw_recall_percent": 12.77, "draw_precision_percent": 35.29},
+    "draw_tendency": {"correct_predictions": 96, "accuracy_percent": 58.54, "draw_predictions": 33, "correct_draws": 16, "draw_recall_percent": 34.04, "draw_precision_percent": 48.48},
+    "changed_picks": 16,
+    "previous_correct_lost": 4,
+    "previous_wrong_fixed": 10
+  },
+  "2023": {
+    "evaluated_matches": 166,
+    "actual_draws": 39,
+    "previous": {"correct_predictions": 91, "accuracy_percent": 54.82, "draw_predictions": 0, "correct_draws": 0, "draw_recall_percent": 0.0, "draw_precision_percent": 0.0},
+    "draw_tendency": {"correct_predictions": 92, "accuracy_percent": 55.42, "draw_predictions": 5, "correct_draws": 2, "draw_recall_percent": 5.13, "draw_precision_percent": 40.0},
+    "changed_picks": 5,
+    "previous_correct_lost": 1,
+    "previous_wrong_fixed": 2
+  },
+  "2024": {
+    "evaluated_matches": 163,
+    "actual_draws": 29,
+    "previous": {"correct_predictions": 91, "accuracy_percent": 55.83, "draw_predictions": 14, "correct_draws": 2, "draw_recall_percent": 6.9, "draw_precision_percent": 14.29},
+    "draw_tendency": {"correct_predictions": 93, "accuracy_percent": 57.06, "draw_predictions": 20, "correct_draws": 5, "draw_recall_percent": 17.24, "draw_precision_percent": 25.0},
+    "changed_picks": 6,
+    "previous_correct_lost": 1,
+    "previous_wrong_fixed": 3
+  },
+  "overall": {
+    "evaluated_matches": 493,
+    "actual_draws": 115,
+    "previous": {"correct_predictions": 272, "accuracy_percent": 55.17, "draw_predictions": 31, "correct_draws": 8, "draw_recall_percent": 6.96, "draw_precision_percent": 25.81},
+    "draw_tendency": {"correct_predictions": 281, "accuracy_percent": 57.0, "draw_predictions": 58, "correct_draws": 23, "draw_recall_percent": 20.0, "draw_precision_percent": 39.66},
+    "changed_picks": 27,
+    "previous_correct_lost": 6,
+    "previous_wrong_fixed": 15
+  }
+}

@@ -2,6 +2,14 @@ from __future__ import annotations
 
 from typing import Any
 
+from draw_decision import (
+    DEFAULT_DRAW_TIE_MARGIN,
+    DEFAULT_DRAW_TREND_MARGIN,
+    build_draw_tendency_context,
+    get_match_draw_tendency,
+    select_1x2_result,
+)
+
 from poisson_mle_model import (
     fit_poisson_mle_model,
     predict_match_mle,
@@ -312,6 +320,7 @@ def build_ensemble_context(
     l2_regularization: float = (
         DEFAULT_L2_REGULARIZATION
     ),
+    target_season: int | None = None,
 ) -> dict[str, Any]:
     """
     Δημιουργεί το κοινό ιστορικό περιβάλλον
@@ -360,6 +369,11 @@ def build_ensemble_context(
         )
     )
 
+    draw_tendency_context = build_draw_tendency_context(
+        completed_fixtures,
+        target_season=target_season,
+    )
+
     return {
         "fixtures_used": len(
             completed_fixtures
@@ -369,6 +383,9 @@ def build_ensemble_context(
         ),
         "fitted_mle_model": (
             fitted_mle_model
+        ),
+        "draw_tendency_context": (
+            draw_tendency_context
         ),
         "parameters": {
             "baseline_prior_matches": (
@@ -598,18 +615,28 @@ def predict_match_ensemble(
         )
     )
 
-    predicted_result = max(
-        RESULT_LABELS,
-        key=lambda label: (
-            ensemble_result_probabilities[
-                label
-            ]
+    draw_tendency = get_match_draw_tendency(
+        context.get("draw_tendency_context"),
+        home_team_id=home_team_id,
+        away_team_id=away_team_id,
+    )
+
+    predicted_result = select_1x2_result(
+        probabilities=(
+            ensemble_result_probabilities
+        ),
+        draw_tie_margin=(
+            DEFAULT_DRAW_TIE_MARGIN
+        ),
+        draw_tendency=draw_tendency,
+        draw_trend_margin=(
+            DEFAULT_DRAW_TREND_MARGIN
         ),
     )
 
     return {
         "model": (
-            "Probability Ensemble + Dixon-Coles v0.6"
+            "Probability Ensemble + Dixon-Coles + Draw Tendency v0.8"
         ),
         "data_quality": {
             "level": (
@@ -668,6 +695,11 @@ def predict_match_ensemble(
         "predicted_result": (
             predicted_result
         ),
+        "draw_decision": {
+            "base_tie_margin": DEFAULT_DRAW_TIE_MARGIN,
+            "trend_margin": DEFAULT_DRAW_TREND_MARGIN,
+            "trend": draw_tendency,
+        },
         "expected_goals": {
             "home": round(
                 expected_home_goals,

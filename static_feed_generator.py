@@ -564,7 +564,8 @@ def generate_static_feed(
         else:
             try:
                 goal_context_by_season[season] = build_ensemble_context(
-                    fixtures=training_fixtures
+                    fixtures=training_fixtures,
+                    target_season=season,
                 )
                 goal_error_by_season[season] = None
             except (ValueError, RuntimeError) as error:
@@ -654,7 +655,7 @@ def generate_static_feed(
     manifest_payload: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
         "data_version": int(as_of.timestamp()),
-        "model_version": "0.8-current-history-training-retained",
+        "model_version": "0.9-draw-tendency",
         "generated_at": to_iso_z(as_of),
         "feed_url": feed_public_url,
         "feed_sha256": feed_sha256,
