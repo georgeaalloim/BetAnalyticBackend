@@ -1,0 +1,16 @@
+fixtur_es_source.py
+  - Αφαιρεί status prefixes/suffixes πριν την αναγνώριση ομάδων.
+  - Αναγνωρίζει SUSPENDED/POSTPONED/CANCELLED/ABANDONED/INTERRUPTED.
+  - Χαρτογραφεί non-playable fixtures σε PST χωρίς σκορ.
+
+automation_config.py
+  - Default prediction statuses: NS,TBD (όχι PST).
+
+static_feed_generator.py
+  - Defense-in-depth: μόνο NS/TBD μπορούν να μπουν στο prediction feed.
+  - model_version: 0.9-fixture-status-safety.
+
+test_fixture_status_safety.py
+  - Regression tests για το πραγματικό παράδειγμα Panathinaikos - Kifisia.
+  - Επιβεβαιώνει team IDs 617 / 5050.
+  - Επιβεβαιώνει ότι PST fixture δεν παίρνει πρόβλεψη.

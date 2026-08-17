@@ -95,7 +95,7 @@ class AutomationConfig:
 
         raw_statuses = _env_text(
             "BETANALYTIC_UPCOMING_STATUSES",
-            "NS,TBD,PST",
+            "NS,TBD",
         )
         upcoming_statuses = tuple(
             status.strip().upper()

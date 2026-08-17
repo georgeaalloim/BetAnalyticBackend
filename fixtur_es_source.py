@@ -134,6 +134,36 @@ _SCORE_PATTERN = re.compile(
 _MATCH_SEPARATOR_PATTERN = re.compile(r"\s+[\-–—]\s+")
 _SPACE_PATTERN = re.compile(r"\s+")
 
+# Fixtur.es can prepend a match-state label directly to SUMMARY, for example
+# ``⚠️ SUSPENDED: Panathinaikos - Kifisia``.  That label is metadata about
+# the fixture, not part of the home-team name.
+_NON_PLAYABLE_STATUS_MARKERS = (
+    "suspended",
+    "postponed",
+    "cancelled",
+    "canceled",
+    "abandoned",
+    "interrupted",
+    "αναβ",
+    "αναστολ",
+    "μαται",
+    "διακοπ",
+)
+_STATUS_PREFIX_PATTERN = re.compile(
+    r"^\s*[^A-Za-zΑ-Ωα-ω0-9]*"
+    r"(?:suspended|postponed|cancelled|canceled|abandoned|interrupted|"
+    r"αναβ(?:ληθηκε|ολη)?|αναστολ(?:η|ηκε)?|μαται(?:ωθηκε|ωση)?|διακοπ(?:ηκε|η)?)"
+    r"\s*(?:[:|\-–—]+\s*|\s+)",
+    flags=re.IGNORECASE,
+)
+_STATUS_SUFFIX_PATTERN = re.compile(
+    r"\s*(?:[\[(]\s*)?"
+    r"(?:suspended|postponed|cancelled|canceled|abandoned|interrupted|"
+    r"αναβ(?:ληθηκε|ολη)?|αναστολ(?:η|ηκε)?|μαται(?:ωθηκε|ωση)?|διακοπ(?:ηκε|η)?)"
+    r"\s*(?:[\])]\s*)?$",
+    flags=re.IGNORECASE,
+)
+
 
 @dataclass(frozen=True)
 class SourceResult:
@@ -221,9 +251,28 @@ def _strip_score(text_value: str) -> str:
     ).strip(" -–—:|")
 
 
+def _strip_fixture_status_noise(text_value: str) -> str:
+    """Remove source status labels without touching the actual club names."""
+    cleaned = _clean_text(text_value)
+    previous = None
+    while cleaned and cleaned != previous:
+        previous = cleaned
+        cleaned = _STATUS_PREFIX_PATTERN.sub("", cleaned).strip()
+        cleaned = _STATUS_SUFFIX_PATTERN.sub("", cleaned).strip()
+    return cleaned.strip(" -–—:|")
+
+
+def _has_non_playable_status(*texts: str) -> bool:
+    for text_value in texts:
+        normalized = _clean_text(text_value).casefold()
+        if any(marker in normalized for marker in _NON_PLAYABLE_STATUS_MARKERS):
+            return True
+    return False
+
+
 def _extract_teams(*texts: str) -> tuple[str, str] | None:
     for text_value in texts:
-        cleaned = _strip_score(text_value)
+        cleaned = _strip_fixture_status_noise(_strip_score(text_value))
         cleaned = re.sub(
             r"\b(super league greece|super league 1|round\s+\d+)\b",
             " ",
@@ -254,12 +303,18 @@ def _fixture_status(
     as_of: datetime,
 ) -> tuple[str, int | None, int | None]:
     normalized_status = _clean_text(event_status).upper()
-    normalized_text = _clean_text(text).casefold()
 
-    if normalized_status == "CANCELLED" or any(
-        marker in normalized_text
-        for marker in ("postponed", "cancelled", "canceled", "αναβ")
-    ):
+    if normalized_status in {
+        "CANCELLED",
+        "CANCELED",
+        "SUSPENDED",
+        "POSTPONED",
+        "ABANDONED",
+        "INTERRUPTED",
+    } or _has_non_playable_status(text):
+        # The prediction feed treats all non-playable states as postponed.
+        # This prevents a suspended/cancelled fixture from receiving a model
+        # prediction while preserving the fixture state in the database.
         return "PST", None, None
 
     as_of_athens = as_of.astimezone(ATHENS_TZ)

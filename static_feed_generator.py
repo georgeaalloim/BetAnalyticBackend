@@ -25,6 +25,7 @@ SCHEMA_VERSION = 3
 COMPLETED_STATUS = "FT"
 TRAINING_SEASON_WINDOW = 3
 HISTORY_SEASONS_COUNT = 1
+PREDICTABLE_UPCOMING_STATUSES = frozenset({"NS", "TBD"})
 
 
 @dataclass(frozen=True)
@@ -151,7 +152,12 @@ def _load_upcoming_fixtures(
         ).fetchall()
 
     upper_bound = as_of + timedelta(days=lookahead_days)
-    allowed_statuses = {status.upper() for status in upcoming_statuses}
+    # A postponed/suspended/cancelled fixture must never enter the prediction
+    # pipeline, even if an environment variable accidentally includes PST.
+    allowed_statuses = (
+        {status.upper() for status in upcoming_statuses}
+        & PREDICTABLE_UPCOMING_STATUSES
+    )
     upcoming: list[tuple[datetime, dict[str, Any]]] = []
     for row in rows:
         fixture = dict(row)
@@ -564,8 +570,7 @@ def generate_static_feed(
         else:
             try:
                 goal_context_by_season[season] = build_ensemble_context(
-                    fixtures=training_fixtures,
-                    target_season=season,
+                    fixtures=training_fixtures
                 )
                 goal_error_by_season[season] = None
             except (ValueError, RuntimeError) as error:
@@ -655,7 +660,7 @@ def generate_static_feed(
     manifest_payload: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
         "data_version": int(as_of.timestamp()),
-        "model_version": "0.9-draw-tendency",
+        "model_version": "0.9-fixture-status-safety",
         "generated_at": to_iso_z(as_of),
         "feed_url": feed_public_url,
         "feed_sha256": feed_sha256,
