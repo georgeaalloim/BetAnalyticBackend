@@ -1,16 +1,16 @@
 {
   "status": "ok",
-  "generated_at": "2026-08-23T04:11:21Z",
+  "generated_at": "2026-08-24T04:23:58Z",
   "seasons": [
     2023,
     2024,
     2025,
     2026
   ],
-  "fixtures_in_feed": 31,
-  "ready_predictions": 31,
+  "fixtures_in_feed": 28,
+  "ready_predictions": 28,
   "unavailable_predictions": 0,
-  "feed_sha256": "52be1db662aa5f57ab6d48b72abe728ad1f7474114bdfacea709b4287f6642d7",
+  "feed_sha256": "151d1a43f5469fe07296dfab63ba8ac622822b8994dc54378c1ae4c4cc2aeae9",
   "feed_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/feed.json",
   "manifest_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/manifest.json",
   "sync_summary": {
@@ -101,7 +101,7 @@
         2025,
         2026
       ],
-      "completed_matches_considered": 0,
+      "completed_matches_considered": 3,
       "api_matches_found": 0,
       "matches_enriched": 0,
       "requests_used": 0,
@@ -111,7 +111,7 @@
         "Αποτυχία λίστας API-Football για 2026: API-Football errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}"
       ],
       "score_mismatches": 0,
-      "pending_matches": 0,
+      "pending_matches": 3,
       "mode": "recent completed matches only; explicit statistics/events endpoints; one-provider snapshots"
     },
     "canonical_statistics_audit": {
@@ -135,6 +135,6 @@
       "future_detailed_season_detection": true,
       "description": "Κάθε run διασταυρώνει δωρεάν το πρόγραμμα, χρησιμοποιώντας το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει τα δωρεάν CSV αποτελεσμάτων/στατιστικών. Τα αναλυτικά ιστορικά στοιχεία αποθηκεύονται ως ενιαίο snapshot παρόχου χωρίς ανάμειξη πεδίων. Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό και χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό χρονικό cutoff."
     },
-    "finished_at": "2026-08-23T04:11:26Z"
+    "finished_at": "2026-08-24T04:24:05Z"
   }
 }
