@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "generated_at": "2026-08-24T04:23:58Z",
+  "generated_at": "2026-08-25T04:11:33Z",
   "seasons": [
     2023,
     2024,
@@ -10,7 +10,7 @@
   "fixtures_in_feed": 28,
   "ready_predictions": 28,
   "unavailable_predictions": 0,
-  "feed_sha256": "151d1a43f5469fe07296dfab63ba8ac622822b8994dc54378c1ae4c4cc2aeae9",
+  "feed_sha256": "6d817b996e2137d67a0c0a36c8efe436881cfd598ec6156e832f934e92747f6e",
   "feed_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/feed.json",
   "manifest_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/manifest.json",
   "sync_summary": {
@@ -18,18 +18,19 @@
       "source": "Free cross-checked schedule: Fixtur.es + OpenFootball CC0 + Football-Data.co.uk + optional API-Football Free",
       "source_key": "free_cross_checked_schedule",
       "status": "ok",
-      "received": 182,
-      "processed": 182,
+      "received": 183,
+      "processed": 183,
       "source_seasons": [
         2026
       ],
       "verification_counts": {
-        "single_source": 182
+        "source_conflict": 5,
+        "single_source": 178
       },
       "source_counts": {
         "Fixtur.es": 182,
         "OpenFootball CC0": 0,
-        "Football-Data.co.uk": 0,
+        "Football-Data.co.uk": 6,
         "API-Football Free": 0
       },
       "fixtur_es_pages_checked": [
@@ -57,7 +58,12 @@
         "Δεν έχει δημοσιευτεί ακόμη OpenFootball αρχείο για 2026.",
         "Δεν έχει δημοσιευτεί ακόμη OpenFootball αρχείο για 2027.",
         "Αποτυχία API-Football Free για 2026: API errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "Αποτυχία API-Football Free για 2027: API errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}"
+        "Αποτυχία API-Football Free για 2027: API errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "Διαφωνία δωρεάν πηγών για AEK Athens FC - Iraklis 1908; η ώρα αποκρύφτηκε.",
+        "Διαφωνία δωρεάν πηγών για Kalamata - Aris Thessalonikis; η ώρα αποκρύφτηκε.",
+        "Διαφωνία δωρεάν πηγών για Olympiakos Piraeus - Atromitos; η ώρα αποκρύφτηκε.",
+        "Διαφωνία δωρεάν πηγών για OFI - Volos NFC; η ώρα αποκρύφτηκε.",
+        "Διαφωνία δωρεάν πηγών για Panetolikos - Asteras Tripolis; η ώρα αποκρύφτηκε."
       ],
       "safety_rule": "Η ώρα εμφανίζεται όταν δύο πηγές συμφωνούν στην ώρα ή όταν δύο ανεξάρτητες πηγές επιβεβαιώνουν την ημερομηνία και μία από αυτές δίνει ρητή ώρα. Αν υπάρχουν αντικρουόμενες ώρες, η εφαρμογή εμφανίζει «Ώρα δεν έχει οριστεί»."
     },
@@ -73,26 +79,26 @@
       "seasons_loaded": [
         2023,
         2024,
-        2025
+        2025,
+        2026
       ],
       "urls_loaded": [
         "https://www.football-data.co.uk/mmz4281/2324/G1.csv",
         "https://www.football-data.co.uk/mmz4281/2425/G1.csv",
-        "https://www.football-data.co.uk/mmz4281/2526/G1.csv"
+        "https://www.football-data.co.uk/mmz4281/2526/G1.csv",
+        "https://www.football-data.co.uk/mmz4281/2627/G1.csv"
       ],
-      "csv_rows_loaded": 709,
-      "csv_rows_with_complete_corners_and_cards": 708,
-      "matched_existing_fixtures": 709,
+      "csv_rows_loaded": 715,
+      "csv_rows_with_complete_corners_and_cards": 714,
+      "matched_existing_fixtures": 715,
       "inserted_new_fixtures": 0,
-      "fixtures_saved": 709,
-      "warnings": [
-        "Αποτυχία Football-Data https://www.football-data.co.uk/mmz4281/2627/G1.csv: Το CSV Football-Data δεν περιέχει τα πεδία Date/HomeTeam/AwayTeam."
-      ],
+      "fixtures_saved": 715,
+      "warnings": [],
       "records_before_merge": 709,
-      "records_received": 709,
-      "records_after_merge": 709,
-      "records_with_complete_statistics": 708,
-      "records_saved_to_sqlite": 708
+      "records_received": 715,
+      "records_after_merge": 715,
+      "records_with_complete_statistics": 714,
+      "records_saved_to_sqlite": 714
     },
     "history_enrichment": {
       "source": "API-Football Free fixture details",
@@ -101,7 +107,7 @@
         2025,
         2026
       ],
-      "completed_matches_considered": 3,
+      "completed_matches_considered": 7,
       "api_matches_found": 0,
       "matches_enriched": 0,
       "requests_used": 0,
@@ -111,7 +117,7 @@
         "Αποτυχία λίστας API-Football για 2026: API-Football errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}"
       ],
       "score_mismatches": 0,
-      "pending_matches": 3,
+      "pending_matches": 7,
       "mode": "recent completed matches only; explicit statistics/events endpoints; one-provider snapshots"
     },
     "canonical_statistics_audit": {
@@ -120,7 +126,7 @@
       "noncanonical_history_removed": 0,
       "invalid_history_removed": 0,
       "history_score_mismatches": 0,
-      "remaining_statistics_records": 708,
+      "remaining_statistics_records": 714,
       "remaining_history_records": 0,
       "rule": "No field-level merge across providers; each numeric statistics block comes from one snapshot."
     },
@@ -135,6 +141,6 @@
       "future_detailed_season_detection": true,
       "description": "Κάθε run διασταυρώνει δωρεάν το πρόγραμμα, χρησιμοποιώντας το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει τα δωρεάν CSV αποτελεσμάτων/στατιστικών. Τα αναλυτικά ιστορικά στοιχεία αποθηκεύονται ως ενιαίο snapshot παρόχου χωρίς ανάμειξη πεδίων. Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό και χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό χρονικό cutoff."
     },
-    "finished_at": "2026-08-24T04:24:05Z"
+    "finished_at": "2026-08-25T04:11:38Z"
   }
 }
