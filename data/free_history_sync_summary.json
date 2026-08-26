@@ -1,16 +1,16 @@
 {
   "status": "ok",
-  "generated_at": "2026-08-26T08:56:39Z",
+  "generated_at": "2026-08-26T09:16:52Z",
   "seasons": [
     2023,
     2024,
     2025,
     2026
   ],
-  "fixtures_in_feed": 28,
-  "ready_predictions": 28,
+  "fixtures_in_feed": 35,
+  "ready_predictions": 35,
   "unavailable_predictions": 0,
-  "feed_sha256": "acd782d5616dfa96b7d84f9e6f6fced88e6884e3ec120f85e986be53a04dff21",
+  "feed_sha256": "3b00ef244ff5948dc3e69504ddc7efd6e18121ada9e1aab16be0356c0255d26c",
   "feed_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/feed.json",
   "manifest_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/manifest.json",
   "sync_summary": {
@@ -18,14 +18,14 @@
       "source": "Free cross-checked schedule: Fixtur.es + OpenFootball CC0 + Football-Data.co.uk + Football-Data latest fixtures + optional API-Football Free",
       "source_key": "free_cross_checked_schedule",
       "status": "ok",
-      "received": 183,
-      "processed": 183,
+      "received": 182,
+      "processed": 182,
       "source_seasons": [
         2026
       ],
       "verification_counts": {
-        "source_conflict": 5,
-        "single_source_time": 10,
+        "source_conflict": 6,
+        "single_source_time": 8,
         "single_source": 168
       },
       "source_counts": {
@@ -68,6 +68,7 @@
         "Διαφωνία δωρεάν πηγών για Kalamata - Aris Thessalonikis; η ώρα αποκρύφτηκε.",
         "Διαφωνία δωρεάν πηγών για Olympiakos Piraeus - Atromitos; η ώρα αποκρύφτηκε.",
         "Διαφωνία δωρεάν πηγών για OFI - Volos NFC; η ώρα αποκρύφτηκε.",
+        "Διαφωνία δωρεάν πηγών για PAOK - Levadiakos; η ώρα αποκρύφτηκε.",
         "Διαφωνία δωρεάν πηγών για Panetolikos - Asteras Tripolis; η ώρα αποκρύφτηκε."
       ],
       "safety_rule": "Η ακριβής ώρα εμφανίζεται όταν υπάρχει ρητή και εύλογη ώρα από Fixtur.es ή Football-Data. Όταν υπάρχουν δύο timed πηγές πρέπει να συμφωνούν εντός 30 λεπτών· σε διαφωνία η ώρα κρύβεται. Προφανείς placeholder ώρες όπως 03:00 δεν εμφανίζονται."
@@ -101,9 +102,9 @@
       "warnings": [],
       "records_before_merge": 715,
       "records_received": 715,
-      "records_after_merge": 715,
-      "records_with_complete_statistics": 714,
-      "records_saved_to_sqlite": 714
+      "records_after_merge": 716,
+      "records_with_complete_statistics": 715,
+      "records_saved_to_sqlite": 715
     },
     "history_enrichment": {
       "source": "API-Football Free fixture details",
@@ -131,7 +132,7 @@
       "noncanonical_history_removed": 0,
       "invalid_history_removed": 0,
       "history_score_mismatches": 0,
-      "remaining_statistics_records": 714,
+      "remaining_statistics_records": 715,
       "remaining_history_records": 0,
       "rule": "No field-level merge across providers; each numeric statistics block comes from one snapshot."
     },
@@ -146,6 +147,6 @@
       "future_detailed_season_detection": true,
       "description": "Κάθε run διασταυρώνει δωρεάν το πρόγραμμα, χρησιμοποιώντας το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει τα δωρεάν CSV αποτελεσμάτων/στατιστικών. Τα αναλυτικά ιστορικά στοιχεία αποθηκεύονται ως ενιαίο snapshot παρόχου χωρίς ανάμειξη πεδίων. Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό και χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό χρονικό cutoff."
     },
-    "finished_at": "2026-08-26T08:56:45Z"
+    "finished_at": "2026-08-26T09:16:58Z"
   }
 }
