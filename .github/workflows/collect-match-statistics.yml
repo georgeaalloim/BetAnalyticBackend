@@ -20,6 +20,8 @@ jobs:
 
     env:
       API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+      # Optional: premium/public-use key. If omitted, backend uses documented free v1 key 123.
+      THESPORTSDB_KEY: ${{ secrets.THESPORTSDB_KEY }}
 
     steps:
       - name: Checkout main branch
@@ -44,12 +46,12 @@ jobs:
         run: |
           python -m unittest discover -p "test_*.py" -v
 
-      - name: Require free API-Football key for complete history
+      - name: Show optional scorer fallback status
         run: |
           if [ -z "$API_FOOTBALL_KEY" ]; then
-            echo "Missing API_FOOTBALL_KEY repository secret."
-            echo "Create a free API-Football account and add its key as a GitHub Actions secret."
-            exit 1
+            echo "API_FOOTBALL_KEY not set: continuing with automatic TheSportsDB scorer collection."
+          else
+            echo "API-Football fallback enabled."
           fi
 
       - name: Update completed matches and free CSV statistics

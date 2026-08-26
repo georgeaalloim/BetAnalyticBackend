@@ -33,6 +33,8 @@ jobs:
       BETANALYTIC_LOOKAHEAD_DAYS: ${{ vars.BETANALYTIC_LOOKAHEAD_DAYS }}
       # Προαιρετικό δωρεάν key. Αν λείπει, το workflow συνεχίζει κανονικά.
       API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+      # Optional: premium/public-use key. If omitted, backend uses documented free v1 key 123.
+      THESPORTSDB_KEY: ${{ secrets.THESPORTSDB_KEY }}
 
     steps:
       - name: Checkout repository
