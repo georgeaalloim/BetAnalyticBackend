@@ -21,6 +21,7 @@ from fixtur_es_source import (
     replace_source_fixtures,
     season_from_local_date,
 )
+from football_data_latest_fixtures import fetch_latest_football_data_fixtures
 from football_data_source import (
     FootballDataResult,
     fetch_football_data,
@@ -168,6 +169,7 @@ def main() -> int:
             seasons=verification_seasons,
             api_key=os.getenv("API_FOOTBALL_KEY"),
         )
+        latest_football_data = fetch_latest_football_data_fixtures()
         allowed_schedule_seasons = set(verification_seasons)
         fixtur_schedule = [
             item
@@ -183,6 +185,11 @@ def main() -> int:
             fixtur_es_fixtures=fixtur_schedule,
             openfootball_fixtures=openfootball.fixtures,
             football_data_fixtures=football_fixtures,
+            football_data_latest_fixtures=[
+                item
+                for item in latest_football_data.fixtures
+                if int(item["league"]["season"]) in allowed_schedule_seasons
+            ],
             api_football_fixtures=api_football.fixtures,
             as_of=as_of,
         )
@@ -202,7 +209,8 @@ def main() -> int:
         sync_summary["fixtures"] = {
             "source": (
                 "Free cross-checked schedule: Fixtur.es + OpenFootball CC0 + "
-                "Football-Data.co.uk + optional API-Football Free"
+                "Football-Data.co.uk + Football-Data latest fixtures + "
+                "optional API-Football Free"
             ),
             "source_key": "free_cross_checked_schedule",
             "status": "ok",
@@ -216,6 +224,8 @@ def main() -> int:
             "openfootball_seasons_requested": openfootball.seasons_requested,
             "openfootball_seasons_loaded": openfootball.seasons_loaded,
             "openfootball_urls_loaded": openfootball.urls_loaded,
+            "football_data_latest_fixtures_url": latest_football_data.url,
+            "football_data_latest_fixtures_rows": latest_football_data.greek_rows_loaded,
             "api_football_free_enabled": api_football.enabled,
             "api_football_free_seasons_requested": api_football.seasons_requested,
             "api_football_free_seasons_loaded": api_football.seasons_loaded,
@@ -224,14 +234,15 @@ def main() -> int:
             "warnings": [
                 *fixtur_es.warnings,
                 *openfootball.warnings,
+                *latest_football_data.warnings,
                 *api_football.warnings,
                 *merged_schedule.warnings,
             ],
             "safety_rule": (
-                "Η ώρα εμφανίζεται όταν δύο πηγές συμφωνούν στην ώρα ή όταν "
-                "δύο ανεξάρτητες πηγές επιβεβαιώνουν την ημερομηνία και μία "
-                "από αυτές δίνει ρητή ώρα. Αν υπάρχουν αντικρουόμενες ώρες, "
-                "η εφαρμογή εμφανίζει «Ώρα δεν έχει οριστεί»."
+                "Η ακριβής ώρα εμφανίζεται μόνο όταν τουλάχιστον δύο ανεξάρτητες "
+                "πηγές με ρητή ώρα συμφωνούν εντός 30 λεπτών. Η δεύτερη πηγή "
+                "περιλαμβάνει το δωρεάν latest fixtures CSV του Football-Data.co.uk. "
+                "Αλλιώς η εφαρμογή εμφανίζει «Ώρα υπό επιβεβαίωση»."
             ),
         }
 

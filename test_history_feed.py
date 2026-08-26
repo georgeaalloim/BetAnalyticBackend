@@ -71,6 +71,13 @@ class HistoryFeedTests(unittest.TestCase):
                 self.assertEqual(feed["history"]["default_season"], 2026)
                 self.assertEqual(feed["history"]["available_seasons"], [2026])
                 self.assertEqual(
+                    {item["team_name"] for item in feed["history"]["teams"]},
+                    {"Home", "Away"},
+                )
+                self.assertTrue(
+                    all(item["matches_played"] == 1 for item in feed["history"]["teams"])
+                )
+                self.assertEqual(
                     [item["season"] for item in feed["history"]["seasons"]],
                     [2026],
                 )

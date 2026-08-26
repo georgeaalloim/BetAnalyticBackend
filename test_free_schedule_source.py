@@ -51,7 +51,7 @@ class FreeScheduleSourceTests(unittest.TestCase):
         self.assertTrue(merged["fixture"]["time_confirmed"])
         self.assertEqual(merged["fixture"]["verification"], "time_verified")
 
-    def test_date_only_second_source_allows_reported_time(self) -> None:
+    def test_date_only_second_source_does_not_publish_exact_time(self) -> None:
         result = merge_free_schedule_sources(
             fixtur_es_fixtures=[
                 fixture("Fixtur.es", "2026-08-22T17:00:00+00:00")
@@ -67,14 +67,10 @@ class FreeScheduleSourceTests(unittest.TestCase):
             as_of=self.as_of,
         )
         merged = result.fixtures[0]
-        self.assertTrue(merged["fixture"]["time_confirmed"])
+        self.assertFalse(merged["fixture"]["time_confirmed"])
         self.assertEqual(
             merged["fixture"]["verification"],
-            "date_verified_time_reported",
-        )
-        self.assertEqual(
-            merged["fixture"]["date"],
-            "2026-08-22T17:00:00+00:00",
+            "date_verified_single_time",
         )
 
     def test_single_source_hides_time(self) -> None:
@@ -129,6 +125,27 @@ class FreeScheduleSourceTests(unittest.TestCase):
         merged = result.fixtures[0]
         self.assertTrue(merged["fixture"]["time_confirmed"])
         self.assertIn("API-Football Free", merged["fixture"]["sources"])
+
+    def test_latest_football_data_can_cross_check_fixtures_time(self) -> None:
+        result = merge_free_schedule_sources(
+            fixtur_es_fixtures=[fixture("Fixtur.es", "2026-08-29T16:30:00+00:00")],
+            openfootball_fixtures=[],
+            football_data_fixtures=[],
+            football_data_latest_fixtures=[
+                fixture(
+                    "Football-Data.co.uk Latest Fixtures",
+                    "2026-08-29T16:30:00+00:00",
+                )
+            ],
+            as_of=self.as_of,
+        )
+        merged = result.fixtures[0]
+        self.assertTrue(merged["fixture"]["time_confirmed"])
+        self.assertEqual(merged["fixture"]["verification"], "time_verified")
+        self.assertIn(
+            "Football-Data.co.uk Latest Fixtures",
+            merged["fixture"]["sources"],
+        )
 
 
 if __name__ == "__main__":

@@ -365,9 +365,50 @@ def _build_history_payload(
         season = int(row["season"])
         matches_by_season.setdefault(season, []).append(_history_match_payload(row))
 
+    # The history hub must be usable even before the first completed match.
+    # Build the team catalogue from every fixture of the active season, not
+    # only from FT rows.
+    with get_connection() as connection:
+        team_rows = connection.execute(
+            """
+            SELECT team_id, team_name
+            FROM (
+                SELECT home_team_id AS team_id, home_team_name AS team_name
+                FROM fixtures
+                WHERE league_id = ? AND season = ?
+                UNION
+                SELECT away_team_id AS team_id, away_team_name AS team_name
+                FROM fixtures
+                WHERE league_id = ? AND season = ?
+            )
+            ORDER BY team_name COLLATE NOCASE ASC
+            """,
+            (int(league_id), int(default_season), int(league_id), int(default_season)),
+        ).fetchall()
+
+    active_matches = matches_by_season.get(int(default_season), [])
+    played_counts: dict[int, int] = {}
+    for match in active_matches:
+        for side in ("home_team", "away_team"):
+            team = match.get(side) or {}
+            team_id = int(team.get("team_id") or -1)
+            if team_id > 0:
+                played_counts[team_id] = played_counts.get(team_id, 0) + 1
+
+    teams = [
+        {
+            "team_id": int(row["team_id"]),
+            "team_name": str(row["team_name"]),
+            "matches_played": played_counts.get(int(row["team_id"]), 0),
+        }
+        for row in team_rows
+        if int(row["team_id"]) > 0 and str(row["team_name"] or "").strip()
+    ]
+
     return {
         "default_season": int(default_season),
         "available_seasons": sorted(seasons, reverse=True),
+        "teams": teams,
         "automatic_update": True,
         "automatic_update_rule": (
             "Στο ιστορικό της εφαρμογής εμφανίζεται μόνο η ενεργή σεζόν. "

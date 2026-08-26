@@ -154,7 +154,7 @@ def _verified_kickoff(
     if len(exact) >= 2:
         return selected, True, "cross_checked"
     if date_verified:
-        return selected, True, "date_checked_single_time"
+        return selected, False, "date_verified_single_time"
     return selected, False, "single_source"
 
 
@@ -187,8 +187,8 @@ def _verification_label(
     source_count = len({item.source for item in candidates})
     if time_verified and time_basis == "cross_checked":
         return "time_verified"
-    if time_verified and time_basis == "date_checked_single_time":
-        return "date_verified_time_reported"
+    if time_basis == "date_verified_single_time":
+        return "date_verified_single_time"
     if time_basis == "conflict":
         return "source_conflict"
     if date_verified:
@@ -205,7 +205,7 @@ def _source_text(
     sources = sorted({item.source for item in candidates})
     label = {
         "time_verified": "cross-checked date and time",
-        "date_verified_time_reported": "verified date; time reported by one source",
+        "date_verified_single_time": "verified date; exact time awaiting second timed source",
         "date_verified": "verified date; time pending",
         "source_conflict": "source conflict; time hidden",
         "single_source": "single source; time pending",
@@ -274,6 +274,7 @@ def merge_free_schedule_sources(
     fixtur_es_fixtures: Iterable[dict[str, Any]],
     openfootball_fixtures: Iterable[dict[str, Any]],
     football_data_fixtures: Iterable[dict[str, Any]],
+    football_data_latest_fixtures: Iterable[dict[str, Any]] = (),
     api_football_fixtures: Iterable[dict[str, Any]] = (),
     as_of: datetime,
 ) -> FreeScheduleResult:
@@ -281,6 +282,7 @@ def merge_free_schedule_sources(
         "Fixtur.es": list(fixtur_es_fixtures),
         "OpenFootball CC0": list(openfootball_fixtures),
         "Football-Data.co.uk": list(football_data_fixtures),
+        "Football-Data.co.uk Latest Fixtures": list(football_data_latest_fixtures),
         "API-Football Free": list(api_football_fixtures),
     }
     grouped: dict[str, dict[tuple[int, int, int], list[_Candidate]]] = {}
@@ -309,6 +311,7 @@ def merge_free_schedule_sources(
         for source in (
             "API-Football Free",
             "OpenFootball CC0",
+            "Football-Data.co.uk Latest Fixtures",
             "Football-Data.co.uk",
         ):
             for items in grouped[source].values():
@@ -359,6 +362,7 @@ def merge_free_schedule_sources(
     for source in (
         "API-Football Free",
         "OpenFootball CC0",
+        "Football-Data.co.uk Latest Fixtures",
         "Football-Data.co.uk",
     ):
         for key, items in grouped[source].items():
@@ -373,7 +377,7 @@ def merge_free_schedule_sources(
     # Stable de-duplication. Prefer a verified record over an unverified one.
     priority = {
         "time_verified": 5,
-        "date_verified_time_reported": 4,
+        "date_verified_single_time": 4,
         "date_verified": 3,
         "source_conflict": 2,
         "single_source": 1,
