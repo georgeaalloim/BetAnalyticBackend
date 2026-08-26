@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from math import exp
 from pathlib import Path
 from typing import Any, Iterable
+from zoneinfo import ZoneInfo
 
 from count_market_model import (
     CountMarketContext,
@@ -26,6 +27,7 @@ COMPLETED_STATUS = "FT"
 TRAINING_SEASON_WINDOW = 3
 HISTORY_SEASONS_COUNT = 1
 PREDICTABLE_UPCOMING_STATUSES = frozenset({"NS", "TBD"})
+ATHENS_TZ = ZoneInfo("Europe/Athens")
 
 
 @dataclass(frozen=True)
@@ -59,6 +61,113 @@ def _safe_parse_fixture_date(fixture: dict[str, Any]) -> datetime | None:
     return _safe_parse_date(fixture.get("fixture_date"))
 
 
+def _local_match_date(value: Any) -> str | None:
+    parsed = _safe_parse_date(value)
+    if parsed is None:
+        return None
+    return parsed.astimezone(ATHENS_TZ).date().isoformat()
+
+
+def _completed_match_key(fixture: dict[str, Any]) -> tuple[Any, ...] | None:
+    """Natural key used to suppress duplicate copies of one completed match.
+
+    Different free providers can assign a different fixture_id to the same
+    match.  A prediction model must never count both copies as two matches.
+    """
+    local_date = _local_match_date(fixture.get("fixture_date"))
+    if local_date is None:
+        return None
+    try:
+        return (
+            int(fixture["season"]),
+            local_date,
+            int(fixture["home_team_id"]),
+            int(fixture["away_team_id"]),
+            int(fixture["home_goals"]),
+            int(fixture["away_goals"]),
+        )
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
+def _statistics_match_key(record: dict[str, Any]) -> tuple[Any, ...] | None:
+    local_date = _local_match_date(record.get("fixture_date"))
+    if local_date is None:
+        return None
+    try:
+        return (
+            int(record["season"]),
+            local_date,
+            int(record["home_team_id"]),
+            int(record["away_team_id"]),
+        )
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
+def _dedupe_completed_matches(fixtures: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
+    by_key: dict[tuple[Any, ...], dict[str, Any]] = {}
+    fallback: list[dict[str, Any]] = []
+    for fixture in fixtures:
+        key = _completed_match_key(fixture)
+        if key is None:
+            fallback.append(fixture)
+            continue
+        current = by_key.get(key)
+        if current is None:
+            by_key[key] = fixture
+            continue
+        # Prefer the row with a confirmed kickoff; otherwise keep the older
+        # stable fixture id so the result is deterministic.
+        current_rank = (
+            1 if bool(current.get("kickoff_time_confirmed")) else 0,
+            -int(current.get("fixture_id") or 0),
+        )
+        new_rank = (
+            1 if bool(fixture.get("kickoff_time_confirmed")) else 0,
+            -int(fixture.get("fixture_id") or 0),
+        )
+        if new_rank > current_rank:
+            by_key[key] = fixture
+    result = [*by_key.values(), *fallback]
+    result.sort(key=lambda item: str(item.get("fixture_date") or ""))
+    return result
+
+
+def _statistics_quality(record: dict[str, Any]) -> tuple[int, str, int]:
+    fields = (
+        "home_corners", "away_corners",
+        "home_yellow_cards", "away_yellow_cards",
+        "home_red_cards", "away_red_cards",
+        "home_total_shots", "away_total_shots",
+        "home_shots_on_target", "away_shots_on_target",
+        "home_fouls", "away_fouls",
+        "home_offsides", "away_offsides",
+    )
+    present = sum(record.get(field) is not None for field in fields)
+    return (
+        present,
+        str(record.get("collected_at") or ""),
+        -int(record.get("fixture_id") or 0),
+    )
+
+
+def _dedupe_statistics(records: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
+    by_key: dict[tuple[Any, ...], dict[str, Any]] = {}
+    fallback: list[dict[str, Any]] = []
+    for record in records:
+        key = _statistics_match_key(record)
+        if key is None:
+            fallback.append(record)
+            continue
+        current = by_key.get(key)
+        if current is None or _statistics_quality(record) > _statistics_quality(current):
+            by_key[key] = record
+    result = [*by_key.values(), *fallback]
+    result.sort(key=lambda item: str(item.get("fixture_date") or ""))
+    return result
+
+
 def select_training_fixtures(
     fixtures: Iterable[dict[str, Any]],
     cutoff: datetime,
@@ -79,7 +188,7 @@ def select_training_fixtures(
             continue
         selected.append((fixture_datetime, fixture))
     selected.sort(key=lambda item: item[0])
-    return [fixture for _, fixture in selected]
+    return _dedupe_completed_matches(fixture for _, fixture in selected)
 
 
 def select_training_statistics(
@@ -93,7 +202,7 @@ def select_training_statistics(
             continue
         selected.append((fixture_datetime, record))
     selected.sort(key=lambda item: item[0])
-    return [record for _, record in selected]
+    return _dedupe_statistics(record for _, record in selected)
 
 
 def _load_training_candidates(league_id: int, target_season: int) -> list[dict[str, Any]]:
@@ -282,6 +391,44 @@ def _history_match_payload(row: dict[str, Any]) -> dict[str, Any]:
         "statistics_source_rule": "All numeric match statistics come from one provider snapshot.",
     }
 
+
+def _history_row_quality(row: dict[str, Any]) -> tuple[int, int, int, int]:
+    history_snapshot = _provider_snapshot(row, "h_")
+    statistics_snapshot = _provider_snapshot(row, "s_")
+    scorers_present = 1 if str(row.get("h_goal_scorers_json") or "").strip() else 0
+    history_pairs = available_stat_pairs(history_snapshot)
+    statistics_pairs = available_stat_pairs(statistics_snapshot)
+    has_statistics_row = 1 if row.get("statistics_fixture_id") is not None else 0
+    # Prefer richer information, then keep a stable lower fixture id.
+    return (
+        scorers_present,
+        max(history_pairs, statistics_pairs),
+        has_statistics_row,
+        -int(row.get("fixture_id") or 0),
+    )
+
+
+def _dedupe_history_rows(rows: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
+    by_key: dict[tuple[Any, ...], dict[str, Any]] = {}
+    fallback: list[dict[str, Any]] = []
+    for row in rows:
+        key = _completed_match_key(row)
+        if key is None:
+            fallback.append(row)
+            continue
+        current = by_key.get(key)
+        if current is None or _history_row_quality(row) > _history_row_quality(current):
+            by_key[key] = row
+    result = [*by_key.values(), *fallback]
+    result.sort(
+        key=lambda item: (
+            str(item.get("fixture_date") or ""),
+            int(item.get("fixture_id") or 0),
+        ),
+        reverse=True,
+    )
+    return result
+
 def _build_history_payload(
     *,
     league_id: int,
@@ -360,8 +507,8 @@ def _build_history_payload(
     matches_by_season: dict[int, list[dict[str, Any]]] = {
         season: [] for season in seasons
     }
-    for raw_row in rows:
-        row = dict(raw_row)
+    deduped_rows = _dedupe_history_rows(dict(raw_row) for raw_row in rows)
+    for row in deduped_rows:
         season = int(row["season"])
         matches_by_season.setdefault(season, []).append(_history_match_payload(row))
 

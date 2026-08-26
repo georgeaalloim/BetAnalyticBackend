@@ -94,6 +94,81 @@ class HistoryFeedTests(unittest.TestCase):
             finally:
                 database.DATABASE_PATH = original
 
+    def test_duplicate_provider_copy_is_shown_once_in_history(self) -> None:
+        original = database.DATABASE_PATH
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database.DATABASE_PATH = Path(temp_dir) / "test.db"
+            try:
+                initialize_database()
+                duplicate_fixtures = []
+                for fixture_id, kickoff in (
+                    (1001, "2026-08-23T17:00:00Z"),
+                    (2002, "2026-08-23T18:00:00Z"),
+                ):
+                    duplicate_fixtures.append({
+                        "fixture": {
+                            "id": fixture_id,
+                            "date": kickoff,
+                            "status": {"short": "FT"},
+                            "time_confirmed": True,
+                            "source": "test",
+                        },
+                        "league": {"id": 197, "season": 2026},
+                        "teams": {
+                            "home": {"id": 15, "name": "PAOK"},
+                            "away": {"id": 16, "name": "Levadiakos"},
+                        },
+                        "goals": {"home": 4, "away": 0},
+                    })
+                save_fixtures(duplicate_fixtures)
+                save_fixture_statistics([{
+                    "fixture_id": 2002,
+                    "league_id": 197,
+                    "season": 2026,
+                    "fixture_date": "2026-08-23T18:00:00Z",
+                    "home_team_id": 15,
+                    "home_team_name": "PAOK",
+                    "away_team_id": 16,
+                    "away_team_name": "Levadiakos",
+                    "home_corners": 3,
+                    "away_corners": 1,
+                    "home_yellow_cards": 0,
+                    "away_yellow_cards": 0,
+                    "home_red_cards": 0,
+                    "away_red_cards": 0,
+                    "home_total_shots": 13,
+                    "away_total_shots": 8,
+                    "home_shots_on_target": 5,
+                    "away_shots_on_target": 1,
+                    "home_fouls": 21,
+                    "away_fouls": 13,
+                    "home_offsides": 1,
+                    "away_offsides": 1,
+                    "source": "test",
+                    "collected_at": "2026-08-24T00:00:00Z",
+                }])
+                output = Path(temp_dir) / "out"
+                generated = generate_static_feed(
+                    output_dir=output,
+                    league_id=197,
+                    league_name="Super League 1",
+                    seasons=(2026,),
+                    as_of=datetime(2026, 8, 26, tzinfo=timezone.utc),
+                    lookahead_days=45,
+                    upcoming_statuses=("NS", "TBD"),
+                    feed_public_url="feed.json",
+                    sync_summary={},
+                )
+                import json
+                feed = json.loads(generated.feed_path.read_text(encoding="utf-8"))
+                season = feed["history"]["seasons"][0]
+                self.assertEqual(season["matches_count"], 1)
+                self.assertEqual(season["matches"][0]["statistics"]["corners"], {"home": 3, "away": 1})
+                paok = next(item for item in feed["history"]["teams"] if item["team_name"] == "PAOK")
+                self.assertEqual(paok["matches_played"], 1)
+            finally:
+                database.DATABASE_PATH = original
+
 
 if __name__ == "__main__":
     unittest.main()
