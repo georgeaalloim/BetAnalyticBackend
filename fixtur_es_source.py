@@ -92,6 +92,8 @@ TEAM_ALIASES: dict[str, tuple[int, str]] = {
     "αελ": (951, "Larissa"),
     "αελ novibet": (951, "Larissa"),
     "levadiakos": (957, "Levadiakos"),
+    "levadeiakos": (957, "Levadiakos"),
+    "levadia": (957, "Levadiakos"),
     "λεβαδειακος": (957, "Levadiakos"),
     "ofi": (1124, "OFI"),
     "ofi crete": (1124, "OFI"),

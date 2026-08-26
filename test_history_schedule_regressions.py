@@ -11,6 +11,7 @@ from fixtur_es_source import (
     _parse_html_fallback,
     _to_api_fixture,
     replace_source_fixtures,
+    resolve_team,
 )
 
 
@@ -48,6 +49,12 @@ class HistoryScheduleRegressionTests(unittest.TestCase):
             as_of=datetime(2026, 8, 26, 7, 0, tzinfo=timezone.utc),
         )
         self.assertFalse(payload["fixture"]["time_confirmed"])
+
+
+    def test_levadeiakos_spelling_resolves_to_canonical_team(self) -> None:
+        team_id, team_name = resolve_team("Levadeiakos")
+        self.assertEqual(team_id, 957)
+        self.assertEqual(team_name, "Levadiakos")
 
     def test_schedule_refresh_preserves_completed_current_season_match(self) -> None:
         original = database.DATABASE_PATH

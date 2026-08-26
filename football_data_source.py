@@ -363,11 +363,13 @@ def reconcile_and_save_football_data(
             local_date = _athens_date(item.get("fixture_date"))
             if local_date is None:
                 continue
+            existing_home_id, _ = resolve_team(str(item.get("home_team_name") or ""))
+            existing_away_id, _ = resolve_team(str(item.get("away_team_name") or ""))
             existing_index[
                 (
                     int(item["season"]),
-                    int(item["home_team_id"]),
-                    int(item["away_team_id"]),
+                    int(existing_home_id),
+                    int(existing_away_id),
                     local_date,
                 )
             ] = item
@@ -384,10 +386,12 @@ def reconcile_and_save_football_data(
         teams = payload["teams"]
         external_id = int(fixture["id"])
         local_date = _athens_date(fixture.get("date"))
+        canonical_home_id, _ = resolve_team(str(teams["home"].get("name") or ""))
+        canonical_away_id, _ = resolve_team(str(teams["away"].get("name") or ""))
         key = (
             int(league["season"]),
-            int(teams["home"]["id"]),
-            int(teams["away"]["id"]),
+            int(canonical_home_id),
+            int(canonical_away_id),
             local_date,
         )
         existing = existing_index.get(key) if local_date is not None else None

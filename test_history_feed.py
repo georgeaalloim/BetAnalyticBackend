@@ -100,36 +100,48 @@ class HistoryFeedTests(unittest.TestCase):
             database.DATABASE_PATH = Path(temp_dir) / "test.db"
             try:
                 initialize_database()
-                duplicate_fixtures = []
-                for fixture_id, kickoff in (
-                    (1001, "2026-08-23T17:00:00Z"),
-                    (2002, "2026-08-23T18:00:00Z"),
-                ):
-                    duplicate_fixtures.append({
+                duplicate_fixtures = [
+                    {
                         "fixture": {
-                            "id": fixture_id,
-                            "date": kickoff,
+                            "id": 1001,
+                            "date": "2026-08-23T17:00:00Z",
                             "status": {"short": "FT"},
                             "time_confirmed": True,
-                            "source": "test",
+                            "source": "Fixtur.es",
                         },
                         "league": {"id": 197, "season": 2026},
                         "teams": {
-                            "home": {"id": 15, "name": "PAOK"},
-                            "away": {"id": 16, "name": "Levadiakos"},
+                            "home": {"id": 619, "name": "PAOK"},
+                            "away": {"id": 957, "name": "Levadiakos"},
                         },
                         "goals": {"home": 4, "away": 0},
-                    })
+                    },
+                    {
+                        "fixture": {
+                            "id": 2002,
+                            "date": "2026-08-23T18:00:00Z",
+                            "status": {"short": "FT"},
+                            "time_confirmed": True,
+                            "source": "Football-Data.co.uk",
+                        },
+                        "league": {"id": 197, "season": 2026},
+                        "teams": {
+                            "home": {"id": 619, "name": "PAOK"},
+                            "away": {"id": 1099999999, "name": "Levadeiakos"},
+                        },
+                        "goals": {"home": 4, "away": 0},
+                    },
+                ]
                 save_fixtures(duplicate_fixtures)
                 save_fixture_statistics([{
                     "fixture_id": 2002,
                     "league_id": 197,
                     "season": 2026,
                     "fixture_date": "2026-08-23T18:00:00Z",
-                    "home_team_id": 15,
+                    "home_team_id": 619,
                     "home_team_name": "PAOK",
-                    "away_team_id": 16,
-                    "away_team_name": "Levadiakos",
+                    "away_team_id": 1099999999,
+                    "away_team_name": "Levadeiakos",
                     "home_corners": 3,
                     "away_corners": 1,
                     "home_yellow_cards": 0,

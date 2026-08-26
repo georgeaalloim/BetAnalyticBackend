@@ -17,6 +17,7 @@ from count_market_model import (
     walk_forward_backtest,
 )
 from database import get_connection
+from fixtur_es_source import resolve_team
 from ensemble_value_service import build_ensemble_context, predict_match_ensemble
 from statistics_source_policy import available_stat_pairs, source_key
 from time_utils import parse_iso_datetime, to_iso_z
@@ -68,11 +69,27 @@ def _local_match_date(value: Any) -> str | None:
     return parsed.astimezone(ATHENS_TZ).date().isoformat()
 
 
+def _canonical_team_id(record: dict[str, Any], side: str) -> int:
+    """Resolve team identity from the name before trusting a provider id.
+
+    Free providers occasionally spell the same club differently (for example
+    ``Levadiakos`` vs ``Levadeiakos``) and can therefore leave an old synthetic
+    team id in SQLite.  Re-resolving the displayed name makes deduplication
+    independent of those stale ids.
+    """
+    raw_name = str(record.get(f"{side}_team_name") or "").strip()
+    if raw_name:
+        resolved_id, _ = resolve_team(raw_name)
+        return int(resolved_id)
+    return int(record[f"{side}_team_id"])
+
+
 def _completed_match_key(fixture: dict[str, Any]) -> tuple[Any, ...] | None:
     """Natural key used to suppress duplicate copies of one completed match.
 
-    Different free providers can assign a different fixture_id to the same
-    match.  A prediction model must never count both copies as two matches.
+    Different free providers can assign a different fixture_id *and* a
+    different spelling/team id to the same match.  The natural key therefore
+    uses canonical team identity resolved from the team names.
     """
     local_date = _local_match_date(fixture.get("fixture_date"))
     if local_date is None:
@@ -81,8 +98,8 @@ def _completed_match_key(fixture: dict[str, Any]) -> tuple[Any, ...] | None:
         return (
             int(fixture["season"]),
             local_date,
-            int(fixture["home_team_id"]),
-            int(fixture["away_team_id"]),
+            _canonical_team_id(fixture, "home"),
+            _canonical_team_id(fixture, "away"),
             int(fixture["home_goals"]),
             int(fixture["away_goals"]),
         )
@@ -98,8 +115,8 @@ def _statistics_match_key(record: dict[str, Any]) -> tuple[Any, ...] | None:
         return (
             int(record["season"]),
             local_date,
-            int(record["home_team_id"]),
-            int(record["away_team_id"]),
+            _canonical_team_id(record, "home"),
+            _canonical_team_id(record, "away"),
         )
     except (KeyError, TypeError, ValueError):
         return None
@@ -346,6 +363,8 @@ def _select_history_sources(row: dict[str, Any]) -> tuple[dict[str, Any], str | 
 
 def _history_match_payload(row: dict[str, Any]) -> dict[str, Any]:
     selected, statistics_source, collected_at, scorers, scorer_source = _select_history_sources(row)
+    home_team_id, home_team_name = resolve_team(str(row.get("home_team_name") or ""))
+    away_team_id, away_team_name = resolve_team(str(row.get("away_team_name") or ""))
     statistics = {
         "total_shots": _history_stat_pair(selected, "home_total_shots", "away_total_shots"),
         "shots_on_target": _history_stat_pair(selected, "home_shots_on_target", "away_shots_on_target"),
@@ -366,12 +385,12 @@ def _history_match_payload(row: dict[str, Any]) -> dict[str, Any]:
         "fixture_date": str(row.get("fixture_date") or ""),
         "status": "FT",
         "home_team": {
-            "team_id": int(row["home_team_id"]),
-            "team_name": str(row["home_team_name"]),
+            "team_id": int(home_team_id),
+            "team_name": str(home_team_name),
         },
         "away_team": {
-            "team_id": int(row["away_team_id"]),
-            "team_name": str(row["away_team_name"]),
+            "team_id": int(away_team_id),
+            "team_name": str(away_team_name),
         },
         "score": {
             "home": int(row["home_goals"]),
@@ -542,14 +561,28 @@ def _build_history_payload(
             if team_id > 0:
                 played_counts[team_id] = played_counts.get(team_id, 0) + 1
 
+    # Canonicalize the team catalogue as well.  Otherwise an old synthetic id
+    # such as ``Levadeiakos`` can survive as a second team card even after the
+    # completed-match list itself has been deduplicated.
+    canonical_teams: dict[int, str] = {}
+    for row in team_rows:
+        raw_name = str(row["team_name"] or "").strip()
+        if not raw_name:
+            continue
+        team_id, team_name = resolve_team(raw_name)
+        if int(team_id) > 0:
+            canonical_teams[int(team_id)] = str(team_name)
+
     teams = [
         {
-            "team_id": int(row["team_id"]),
-            "team_name": str(row["team_name"]),
-            "matches_played": played_counts.get(int(row["team_id"]), 0),
+            "team_id": team_id,
+            "team_name": team_name,
+            "matches_played": played_counts.get(team_id, 0),
         }
-        for row in team_rows
-        if int(row["team_id"]) > 0 and str(row["team_name"] or "").strip()
+        for team_id, team_name in sorted(
+            canonical_teams.items(),
+            key=lambda item: item[1].casefold(),
+        )
     ]
 
     return {
