@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 import sqlite3
 from pathlib import Path
@@ -202,6 +203,23 @@ def initialize_database() -> None:
             """
         )
 
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS fixture_goal_scorers (
+                fixture_id INTEGER PRIMARY KEY,
+                goal_scorers_json TEXT NOT NULL,
+                source TEXT NOT NULL,
+                provider_event_id TEXT,
+                score_verified INTEGER NOT NULL DEFAULT 0,
+                collected_at TEXT NOT NULL,
+                FOREIGN KEY(fixture_id)
+                    REFERENCES fixtures(fixture_id)
+                    ON UPDATE CASCADE
+                    ON DELETE CASCADE
+            )
+            """
+        )
+
         _ensure_columns(
             connection,
             "fixtures",
@@ -274,6 +292,17 @@ def initialize_database() -> None:
                 league_id,
                 season,
                 fixture_date
+            )
+            """
+        )
+
+        connection.execute(
+            """
+            CREATE INDEX IF NOT EXISTS
+                idx_fixture_goal_scorers_verified
+            ON fixture_goal_scorers (
+                score_verified,
+                collected_at
             )
             """
         )
@@ -968,6 +997,112 @@ def get_fixture_statistics(
 
     return [dict(row) for row in rows]
 
+
+
+def _parse_goal_scorers_json(value: Any) -> list[dict[str, Any]] | None:
+    if isinstance(value, list):
+        parsed = value
+    else:
+        try:
+            parsed = json.loads(str(value or "[]"))
+        except (TypeError, ValueError):
+            return None
+    if not isinstance(parsed, list):
+        return None
+    result: list[dict[str, Any]] = []
+    for item in parsed:
+        if not isinstance(item, dict):
+            return None
+        player_name = str(item.get("player_name") or "").strip()
+        side = str(item.get("side") or "").strip().lower()
+        if not player_name or side not in {"home", "away"}:
+            return None
+        result.append(dict(item))
+    return result
+
+
+def save_fixture_goal_scorers(records: list[dict[str, Any]]) -> int:
+    """
+    Αποθηκεύει σκόρερ ανεξάρτητα από το snapshot αριθμητικών στατιστικών.
+
+    Γράφεται μόνο πλήρες, score-verified σύνολο: ο αριθμός των scorer events
+    πρέπει να συμφωνεί ακριβώς με το τελικό σκορ, συνολικά και ανά πλευρά.
+    Έτσι μια ελλιπής τρίτη πηγή δεν εμφανίζει λάθος ονόματα στο Android.
+    """
+    if not records:
+        return 0
+
+    initialize_database()
+    saved = 0
+    with get_connection() as connection:
+        for record in records:
+            if not isinstance(record, dict) or record.get("fixture_id") is None:
+                continue
+            fixture_id = int(record["fixture_id"])
+            fixture = connection.execute(
+                """
+                SELECT home_goals, away_goals
+                FROM fixtures
+                WHERE fixture_id = ? AND status = 'FT'
+                """,
+                (fixture_id,),
+            ).fetchone()
+            if fixture is None or fixture["home_goals"] is None or fixture["away_goals"] is None:
+                continue
+
+            scorers = _parse_goal_scorers_json(record.get("goal_scorers_json"))
+            if scorers is None:
+                continue
+            expected_home = int(fixture["home_goals"])
+            expected_away = int(fixture["away_goals"])
+            if len(scorers) != expected_home + expected_away:
+                continue
+            if sum(1 for item in scorers if item.get("side") == "home") != expected_home:
+                continue
+            if sum(1 for item in scorers if item.get("side") == "away") != expected_away:
+                continue
+
+            source = str(record.get("source") or "").strip()
+            collected_at = str(record.get("collected_at") or "").strip()
+            if not source or not collected_at or not bool(record.get("score_verified")):
+                continue
+
+            existing = connection.execute(
+                "SELECT source, score_verified FROM fixture_goal_scorers WHERE fixture_id = ?",
+                (fixture_id,),
+            ).fetchone()
+            # A manually verified backfill is authoritative and is not replaced
+            # by an automatic lower-priority provider on a later retry.
+            if existing is not None:
+                old_source = str(existing["source"] or "").casefold()
+                new_source = source.casefold()
+                if "verified backfill" in old_source and "verified backfill" not in new_source:
+                    continue
+
+            connection.execute(
+                """
+                INSERT INTO fixture_goal_scorers (
+                    fixture_id, goal_scorers_json, source, provider_event_id,
+                    score_verified, collected_at
+                ) VALUES (?, ?, ?, ?, ?, ?)
+                ON CONFLICT(fixture_id) DO UPDATE SET
+                    goal_scorers_json = excluded.goal_scorers_json,
+                    source = excluded.source,
+                    provider_event_id = excluded.provider_event_id,
+                    score_verified = excluded.score_verified,
+                    collected_at = excluded.collected_at
+                """,
+                (
+                    fixture_id,
+                    json.dumps(scorers, ensure_ascii=False),
+                    source,
+                    str(record.get("provider_event_id") or "") or None,
+                    1,
+                    collected_at,
+                ),
+            )
+            saved += 1
+    return saved
 
 
 def save_fixture_history_details(records: list[dict[str, Any]]) -> int:

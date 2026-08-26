@@ -8,6 +8,7 @@ from pathlib import Path
 import database
 from database import (
     initialize_database,
+    save_fixture_goal_scorers,
     save_fixture_history_details,
     save_fixture_statistics,
     save_fixtures,
@@ -167,6 +168,68 @@ class HistoryFeedTests(unittest.TestCase):
                     match["goal_scorers"]["items"][0]["player_name"],
                     "Current Scorer",
                 )
+                self.assertEqual(match["goal_scorers"]["items"][0]["minute"], 82)
+            finally:
+                database.DATABASE_PATH = original
+
+    def test_dedicated_scorer_source_is_combined_with_football_data_stats(self) -> None:
+        original = database.DATABASE_PATH
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database.DATABASE_PATH = Path(temp_dir) / "test.db"
+            try:
+                initialize_database()
+                save_fixtures([{
+                    "fixture": {
+                        "id": 7101,
+                        "date": "2026-08-22T17:00:00Z",
+                        "status": {"short": "FT"},
+                        "time_confirmed": True,
+                        "source": "test",
+                    },
+                    "league": {"id": 197, "season": 2026},
+                    "teams": {
+                        "home": {"id": 553, "name": "Olympiakos Piraeus"},
+                        "away": {"id": 12260, "name": "Atromitos"},
+                    },
+                    "goals": {"home": 1, "away": 0},
+                }])
+                save_fixture_statistics([{
+                    "fixture_id": 7101, "league_id": 197, "season": 2026,
+                    "fixture_date": "2026-08-22T17:00:00Z",
+                    "home_team_id": 553, "home_team_name": "Olympiakos Piraeus",
+                    "away_team_id": 12260, "away_team_name": "Atromitos",
+                    "home_corners": 14, "away_corners": 4,
+                    "home_yellow_cards": 3, "away_yellow_cards": 6,
+                    "home_red_cards": 1, "away_red_cards": 0,
+                    "home_total_shots": 26, "away_total_shots": 8,
+                    "home_shots_on_target": 10, "away_shots_on_target": 1,
+                    "home_fouls": 14, "away_fouls": 14,
+                    "home_offsides": None, "away_offsides": None,
+                    "source": "Football-Data.co.uk CSV",
+                    "collected_at": "2026-08-23T00:00:00Z",
+                }])
+                self.assertEqual(save_fixture_goal_scorers([{
+                    "fixture_id": 7101,
+                    "goal_scorers_json": '[{"player_name":"David Carmo","side":"home","team_id":553,"team_name":"Olympiakos Piraeus","minute":82,"extra_minute":null,"detail":"Goal"}]',
+                    "source": "TheSportsDB API v1",
+                    "provider_event_id": "evt-7101",
+                    "score_verified": True,
+                    "collected_at": "2026-08-23T00:05:00Z",
+                }]), 1)
+
+                output = Path(temp_dir) / "out"
+                generated = generate_static_feed(
+                    output_dir=output, league_id=197, league_name="Super League 1",
+                    seasons=(2026,), as_of=datetime(2026, 8, 26, tzinfo=timezone.utc),
+                    lookahead_days=45, upcoming_statuses=("NS", "TBD"),
+                    feed_public_url="feed.json", sync_summary={},
+                )
+                import json
+                feed = json.loads(generated.feed_path.read_text(encoding="utf-8"))
+                match = feed["history"]["seasons"][0]["matches"][0]
+                self.assertEqual(match["statistics_source"], "Football-Data.co.uk CSV")
+                self.assertEqual(match["goal_scorers"]["source"], "TheSportsDB API v1")
+                self.assertEqual(match["goal_scorers"]["items"][0]["player_name"], "David Carmo")
                 self.assertEqual(match["goal_scorers"]["items"][0]["minute"], 82)
             finally:
                 database.DATABASE_PATH = original

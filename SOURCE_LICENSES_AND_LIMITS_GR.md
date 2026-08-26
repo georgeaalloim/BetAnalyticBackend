@@ -29,9 +29,14 @@
 - Η σελίδα αναφέρει ότι τα δεδομένα ενημερώνονται περιοδικά και ότι δεν εγγυάται την ορθότητά τους.
 - Η αρχική σελίδα αναφέρει «All Rights Reserved». Δεν βρέθηκε ρητή CC0 άδεια για αναδημοσίευση σε app store.
 
-## TheSportsDB
+## TheSportsDB API v1 — αυτόματοι σκόρερ
 
-Δεν χρησιμοποιείται. Οι όροι του δωρεάν API περιορίζουν τη δημοσίευση εφαρμογής σε app store χωρίς συνδρομή.
+- Documentation: `https://www.thesportsdb.com/documentation`
+- Η τρέχουσα τεκμηρίωση δηλώνει free API, current free v1 key `123` και όριο 30 requests/λεπτό για free users.
+- Το BetAnalytic χρησιμοποιεί μόνο `searchevents.php` και `lookuptimeline.php` για ολοκληρωμένους αγώνες με ελλείποντες σκόρερ.
+- Ο collector περιορίζεται σε 8 αγώνες ανά run (έως 24 requests στο χειρότερο σενάριο) και απορρίπτει ελλιπή/ασύμφωνα timelines.
+- Μπορεί να δοθεί `THESPORTSDB_KEY` ως GitHub Secret για άλλο/premium key.
+- Πριν από δημόσια ή εμπορική κυκλοφορία πρέπει να επιβεβαιωθούν οι τρέχοντες όροι χρήσης του provider και, όπου απαιτείται, να χρησιμοποιηθεί το κατάλληλο πλάνο/key.
 
 ## Super League official website
 

@@ -13,6 +13,8 @@ from dotenv import load_dotenv
 
 from api_football_free_source import fetch_api_football_fixtures
 from api_football_history_enricher import enrich_history
+from goal_scorer_backfill import apply_committed_scorer_backfill
+from goal_scorer_enricher import enrich_goal_scorers
 from audit_canonical_statistics import audit_and_fix
 from automation_config import AutomationConfig
 from database import initialize_database, save_fixture_statistics
@@ -290,6 +292,43 @@ def main() -> int:
         }
 
     active_history_season = season_from_local_date(as_of.astimezone(ATHENS_TZ).date())
+
+    # One-time/idempotent verified backfill for matches that already existed
+    # before automatic scorer collection was introduced. It runs every time,
+    # but the DB upsert makes it safe and deterministic.
+    scorer_backfill = apply_committed_scorer_backfill()
+    sync_summary["scorer_backfill"] = {
+        "source": "BetAnalytic verified backfill",
+        "entries": scorer_backfill.entries,
+        "matched": scorer_backfill.matched,
+        "saved": scorer_backfill.saved,
+        "pending": scorer_backfill.pending,
+        "warnings": scorer_backfill.warnings,
+    }
+
+    # Primary automatic source for every NEW finished match. Missing/incomplete
+    # timelines are not saved; they stay pending and are retried next run.
+    scorer_enrichment = enrich_goal_scorers(
+        season=active_history_season,
+        api_key=os.getenv("THESPORTSDB_KEY"),
+        recent_days=60,
+        max_matches=8,
+    )
+    sync_summary["automatic_goal_scorers"] = {
+        "source": "TheSportsDB API v1",
+        "enabled": scorer_enrichment.enabled,
+        "completed_matches_considered": scorer_enrichment.completed_matches_considered,
+        "matches_searched": scorer_enrichment.matches_searched,
+        "events_found": scorer_enrichment.events_found,
+        "matches_saved": scorer_enrichment.matches_saved,
+        "requests_used": scorer_enrichment.requests_used,
+        "pending_matches": scorer_enrichment.pending_matches,
+        "warnings": scorer_enrichment.warnings,
+        "mode": "automatic FT -> event search -> timeline -> exact score validation -> save; pending rows retry next run",
+    }
+
+    # Secondary fallback. The enricher now sees the dedicated scorer table, so
+    # API-Football is called only for matches still missing complete scorers.
     history_enrichment = enrich_history(
         seasons=(active_history_season,),
         api_key=os.getenv("API_FOOTBALL_KEY"),
@@ -299,7 +338,7 @@ def main() -> int:
         date_fallback_days=45,
     )
     sync_summary["history_enrichment"] = {
-        "source": "API-Football Free fixture details",
+        "source": "API-Football scorer fallback",
         "enabled": history_enrichment.enabled,
         "seasons": history_enrichment.seasons,
         "completed_matches_considered": history_enrichment.completed_matches_considered,
@@ -310,7 +349,7 @@ def main() -> int:
         "warnings": history_enrichment.warnings,
         "score_mismatches": history_enrichment.score_mismatches,
         "pending_matches": history_enrichment.pending_matches,
-        "mode": "active-season scorer backfill first; API-Football events; date fallback for recent free-plan matches",
+        "mode": "fallback only for scorer rows still missing after TheSportsDB; recent-date fallback when available",
     }
 
     canonical_audit = audit_and_fix(apply_fixes=True)
@@ -342,9 +381,13 @@ def main() -> int:
             "τα δωρεάν CSV "
             "αποτελεσμάτων/στατιστικών. Τα αναλυτικά ιστορικά στοιχεία "
             "αποθηκεύονται ως ενιαίο snapshot παρόχου χωρίς ανάμειξη πεδίων. "
-            "Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό και "
-            "χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό "
-            "χρονικό cutoff."
+            "Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό. "
+            "Για κάθε νέο FT με γκολ γίνεται αυτόματη αναζήτηση scorer timeline "
+            "στο TheSportsDB, αυστηρός έλεγχος ότι οι σκόρερ συμφωνούν ακριβώς "
+            "με το τελικό σκορ και αυτόματο retry σε επόμενο run αν η πηγή είναι "
+            "ακόμη ελλιπής. Το API-Football χρησιμοποιείται ως προαιρετικό fallback. "
+            "Οι ολοκληρωμένοι αγώνες χρησιμοποιούνται αυτόματα στις επόμενες "
+            "προβλέψεις με αυστηρό χρονικό cutoff."
         ),
     }
     sync_summary["finished_at"] = to_iso_z(utc_now())

@@ -11,7 +11,12 @@ from zoneinfo import ZoneInfo
 
 import requests
 
-from database import get_connection, initialize_database, save_fixture_history_details
+from database import (
+    get_connection,
+    initialize_database,
+    save_fixture_goal_scorers,
+    save_fixture_history_details,
+)
 from fixtur_es_source import LEAGUE_ID, resolve_team, season_from_local_date
 from match_statistics import STATISTIC_ALIASES, utc_now_iso
 from statistics_source_policy import available_stat_pairs, source_key
@@ -76,6 +81,9 @@ def _canonical_completed_rows(seasons: list[int]) -> list[dict[str, Any]]:
                 f.home_goals,
                 f.away_goals,
                 h.goal_scorers_json,
+                g.goal_scorers_json AS dedicated_goal_scorers_json,
+                g.score_verified AS dedicated_score_verified,
+                g.source AS dedicated_scorer_source,
                 h.home_total_shots,
                 h.away_total_shots,
                 h.home_shots_on_target,
@@ -96,6 +104,8 @@ def _canonical_completed_rows(seasons: list[int]) -> list[dict[str, Any]]:
             FROM fixtures AS f
             LEFT JOIN fixture_history_details AS h
               ON h.fixture_id = f.fixture_id
+            LEFT JOIN fixture_goal_scorers AS g
+              ON g.fixture_id = f.fixture_id
             WHERE f.league_id = ?
               AND f.season IN ({placeholders})
               AND f.status = 'FT'
@@ -109,7 +119,11 @@ def _canonical_completed_rows(seasons: list[int]) -> list[dict[str, Any]]:
 
 
 def _parsed_scorers(row: dict[str, Any]) -> list[dict[str, Any]]:
-    raw = row.get("goal_scorers_json")
+    raw = None
+    if row.get("dedicated_goal_scorers_json") and bool(row.get("dedicated_score_verified")):
+        raw = row.get("dedicated_goal_scorers_json")
+    elif row.get("goal_scorers_json"):
+        raw = row.get("goal_scorers_json")
     if not raw:
         return []
     try:
@@ -542,6 +556,7 @@ def enrich_history(
             matches.append((row, matched))
 
         detail_records: list[dict[str, Any]] = []
+        scorer_records: list[dict[str, Any]] = []
         for canonical, matched in matches:
             api_id = int(matched["_api_fixture_id"])
             need_scorers = not _scorers_complete(canonical)
@@ -599,27 +614,62 @@ def enrich_history(
                         )
 
             if fetched_any_detail:
-                detail_records.append(
-                    _detail_record(
-                        canonical,
-                        matched,
-                        statistics_response,
-                        events_response,
+                detail = _detail_record(
+                    canonical,
+                    matched,
+                    statistics_response,
+                    events_response,
+                )
+                scorer_json = detail.get("goal_scorers_json")
+                parsed_scorers: list[dict[str, Any]] = []
+                if scorer_json:
+                    try:
+                        candidate = json.loads(str(scorer_json))
+                        if isinstance(candidate, list):
+                            parsed_scorers = [item for item in candidate if isinstance(item, dict)]
+                    except json.JSONDecodeError:
+                        parsed_scorers = []
+                expected_goals = int(canonical["home_goals"]) + int(canonical["away_goals"])
+                scorer_complete = (
+                    expected_goals == 0
+                    or (
+                        len(parsed_scorers) == expected_goals
+                        and sum(1 for item in parsed_scorers if item.get("side") == "home")
+                            == int(canonical["home_goals"])
+                        and sum(1 for item in parsed_scorers if item.get("side") == "away")
+                            == int(canonical["away_goals"])
                     )
                 )
+                if not scorers_only or scorer_complete:
+                    detail_records.append(detail)
+                if scorer_complete and expected_goals > 0:
+                    scorer_records.append(
+                        {
+                            "fixture_id": int(canonical["fixture_id"]),
+                            "goal_scorers_json": json.dumps(parsed_scorers, ensure_ascii=False),
+                            "source": SOURCE_NAME,
+                            "provider_event_id": str(api_id),
+                            "score_verified": True,
+                            "collected_at": utc_now_iso(),
+                        }
+                    )
 
-        saved = save_fixture_history_details(detail_records)
+        history_saved = save_fixture_history_details(detail_records)
+        scorers_saved = save_fixture_goal_scorers(scorer_records)
+        enriched = scorers_saved if scorers_only else max(history_saved, scorers_saved)
         return EnrichmentResult(
             enabled=True,
             seasons=requested,
             completed_matches_considered=len(rows),
             api_matches_found=len(matches),
-            matches_enriched=saved,
+            matches_enriched=enriched,
             requests_used=requests_used,
             quota_remaining=quota_remaining,
             warnings=warnings,
             score_mismatches=score_mismatches,
-            pending_matches=max(0, len(rows) - saved - score_mismatches),
+            pending_matches=max(0, len(rows) - scorers_saved - score_mismatches)
+                if scorers_only
+                else max(0, len(rows) - enriched - score_mismatches),
         )
     finally:
         if own_session:

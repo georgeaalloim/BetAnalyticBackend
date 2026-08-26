@@ -337,20 +337,37 @@ def _select_history_sources(row: dict[str, Any]) -> tuple[dict[str, Any], str | 
 
     scorers: list[dict[str, Any]] = []
     scorer_source: str | None = None
-    raw_scorers = row.get("h_goal_scorers_json")
-    if (
-        raw_scorers
-        and source_key(row.get("h_source")) == "api_football"
-        and bool(row.get("h_score_verified"))
-    ):
+
+    # Goal scorers are intentionally stored separately from numeric match
+    # statistics. This allows an event/timeline API to provide names while
+    # Football-Data remains the canonical numeric-statistics source.
+    dedicated_scorers = row.get("g_goal_scorers_json")
+    if dedicated_scorers and bool(row.get("g_score_verified")):
         try:
-            parsed = json.loads(str(raw_scorers))
+            parsed = json.loads(str(dedicated_scorers))
             if isinstance(parsed, list):
                 scorers = [item for item in parsed if isinstance(item, dict)]
                 if scorers:
-                    scorer_source = str(row.get("h_source") or "") or None
+                    scorer_source = str(row.get("g_source") or "") or None
         except json.JSONDecodeError:
             pass
+
+    # Backward-compatible fallback for old API-Football history snapshots.
+    if not scorers:
+        raw_scorers = row.get("h_goal_scorers_json")
+        if (
+            raw_scorers
+            and source_key(row.get("h_source")) == "api_football"
+            and bool(row.get("h_score_verified"))
+        ):
+            try:
+                parsed = json.loads(str(raw_scorers))
+                if isinstance(parsed, list):
+                    scorers = [item for item in parsed if isinstance(item, dict)]
+                    if scorers:
+                        scorer_source = str(row.get("h_source") or "") or None
+            except json.JSONDecodeError:
+                pass
 
     return (
         selected,
@@ -414,7 +431,10 @@ def _history_match_payload(row: dict[str, Any]) -> dict[str, Any]:
 def _history_row_quality(row: dict[str, Any]) -> tuple[int, int, int, int]:
     history_snapshot = _provider_snapshot(row, "h_")
     statistics_snapshot = _provider_snapshot(row, "s_")
-    scorers_present = 1 if str(row.get("h_goal_scorers_json") or "").strip() else 0
+    scorers_present = 1 if (
+        str(row.get("g_goal_scorers_json") or "").strip()
+        or str(row.get("h_goal_scorers_json") or "").strip()
+    ) else 0
     history_pairs = available_stat_pairs(history_snapshot)
     statistics_pairs = available_stat_pairs(statistics_snapshot)
     has_statistics_row = 1 if row.get("statistics_fixture_id") is not None else 0
@@ -487,6 +507,10 @@ def _build_history_payload(
                 h.home_offsides AS h_home_offsides,
                 h.away_offsides AS h_away_offsides,
                 h.goal_scorers_json AS h_goal_scorers_json,
+                g.goal_scorers_json AS g_goal_scorers_json,
+                g.source AS g_source,
+                g.score_verified AS g_score_verified,
+                g.collected_at AS g_collected_at,
                 h.source AS h_source,
                 h.collected_at AS h_collected_at,
                 h.score_verified AS h_score_verified,
@@ -513,6 +537,8 @@ def _build_history_payload(
               ON s.fixture_id = f.fixture_id
             LEFT JOIN fixture_history_details AS h
               ON h.fixture_id = f.fixture_id
+            LEFT JOIN fixture_goal_scorers AS g
+              ON g.fixture_id = f.fixture_id
             WHERE f.league_id = ?
               AND f.season IN ({placeholders})
               AND f.status = 'FT'
