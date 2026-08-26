@@ -128,8 +128,11 @@ TEAM_ALIASES: dict[str, tuple[int, str]] = {
     "βολος ν π σ": (2110, "Volos NFC"),
 }
 
+# Result separators on Fixtur.es are hyphen/en-dash/em-dash.  Do not treat
+# a colon as a score separator: otherwise a kickoff such as 19:30 is parsed
+# as a bogus 19-30 result.
 _SCORE_PATTERN = re.compile(
-    r"(?<!\d)(\d{1,2})\s*[\-–—:]\s*(\d{1,2})(?!\d)"
+    r"(?<!\d)(\d{1,2})\s*[\-–—]\s*(\d{1,2})(?!\d)"
 )
 _MATCH_SEPARATOR_PATTERN = re.compile(r"\s+[\-–—]\s+")
 _SPACE_PATTERN = re.compile(r"\s+")
@@ -334,6 +337,18 @@ def _fixture_status(
     return "LIVE", None, None
 
 
+def _is_plausible_greek_kickoff_time(kickoff_local: datetime) -> bool:
+    """Reject obvious calendar placeholder times such as 03:00 local.
+
+    Greek Super League kickoffs are not scheduled overnight.  Fixtur.es may
+    expose 03:00 when only a date is known, so that value must never be shown
+    to users as an official kickoff.
+    """
+    local = kickoff_local.astimezone(ATHENS_TZ)
+    minutes = local.hour * 60 + local.minute
+    return 10 * 60 <= minutes <= 23 * 60 + 30
+
+
 def _fixture_id(
     season: int,
     kickoff_local: datetime,
@@ -388,7 +403,9 @@ def _to_api_fixture(
             ),
             "date": kickoff_utc.isoformat(),
             "status": {"short": status},
-            "time_confirmed": not date_only,
+            "time_confirmed": (
+                not date_only and _is_plausible_greek_kickoff_time(kickoff_local)
+            ),
             "source": "Fixtur.es calendar feed",
         },
         "league": {
@@ -747,6 +764,48 @@ def _deduplicate(fixtures: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
     )
 
 
+def _candidate_team_page_urls(page_url: str, page_html: str) -> list[str]:
+    """Return Fixtur.es team pages linked from the league landing page.
+
+    Team pages keep recently completed results visible after the league page
+    rotates to the next round.  They are used only to enrich fixtures already
+    present in the league schedule, so cup/European matches cannot leak into
+    the Super League dataset.
+    """
+    soup = BeautifulSoup(page_html, "html.parser")
+    urls: list[str] = []
+    seen: set[str] = set()
+    for link in soup.find_all("a", href=True):
+        href = str(link.get("href") or "").strip()
+        if "/team/" not in href:
+            continue
+        absolute = urljoin(page_url, href)
+        parsed = urlparse(absolute)
+        if "fixtur.es" not in parsed.netloc:
+            continue
+        if absolute in seen:
+            continue
+        seen.add(absolute)
+        urls.append(absolute)
+    return urls[:20]
+
+
+def _fixture_match_key(payload: dict[str, Any]) -> tuple[int, int, int]:
+    return (
+        int(payload["league"]["season"]),
+        int(payload["teams"]["home"]["id"]),
+        int(payload["teams"]["away"]["id"]),
+    )
+
+
+def _fixture_local_date(payload: dict[str, Any]) -> date:
+    raw = str(payload["fixture"]["date"])
+    parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(ATHENS_TZ).date()
+
+
 def fetch_super_league_fixtures(
     as_of: datetime,
     landing_pages: Iterable[str] = LANDING_PAGES,
@@ -783,6 +842,9 @@ def fetch_super_league_fixtures(
         page_html = response.text
         page_fixtures: list[dict[str, Any]] = []
 
+        # The calendar is best for the full-season schedule.  The visible HTML
+        # is parsed as well because Fixtur.es publishes completed scores there
+        # and may rotate the calendar presentation after a round has finished.
         for calendar_url in _candidate_calendar_urls(response.url, page_html):
             try:
                 calendar_response = session.get(
@@ -805,12 +867,56 @@ def fetch_super_league_fixtures(
                     f"Αποτυχία ημερολογίου {calendar_url}: {error}"
                 )
 
+        html_fixtures = _parse_html_fallback(page_html, as_of)
+        page_fixtures.extend(html_fixtures)
+
+        # If the league page/calendar has the season schedule but no completed
+        # current-season scores, inspect linked team pages.  Only rows matching
+        # an existing league-schedule pair and nearby date are accepted, which
+        # prevents cup/European matches from entering the league database.
+        current_season = season_from_local_date(as_of.astimezone(ATHENS_TZ).date())
+        schedule_candidates = list(page_fixtures)
+        has_current_ft = any(
+            int(item["league"]["season"]) == current_season
+            and str(item["fixture"]["status"]["short"]).upper() == "FT"
+            for item in schedule_candidates
+        )
+        if schedule_candidates and not has_current_ft:
+            allowed: dict[tuple[int, int, int], list[date]] = {}
+            for item in schedule_candidates:
+                try:
+                    key = _fixture_match_key(item)
+                    allowed.setdefault(key, []).append(_fixture_local_date(item))
+                except Exception:
+                    continue
+
+            for team_url in _candidate_team_page_urls(response.url, page_html):
+                try:
+                    team_response = session.get(
+                        team_url, timeout=REQUEST_TIMEOUT_SECONDS
+                    )
+                    team_response.raise_for_status()
+                except requests.RequestException as error:
+                    warnings.append(f"Αποτυχία team page {team_url}: {error}")
+                    continue
+
+                for item in _parse_html_fallback(team_response.text, as_of):
+                    try:
+                        key = _fixture_match_key(item)
+                        item_date = _fixture_local_date(item)
+                    except Exception:
+                        continue
+                    dates = allowed.get(key, [])
+                    if not dates:
+                        continue
+                    if min(abs((item_date - known).days) for known in dates) > 7:
+                        continue
+                    page_fixtures.append(item)
+
         if not page_fixtures:
-            page_fixtures = _parse_html_fallback(page_html, as_of)
-            if not page_fixtures:
-                warnings.append(
-                    f"Δεν αναγνωρίστηκαν αγώνες στη σελίδα {response.url}."
-                )
+            warnings.append(
+                f"Δεν αναγνωρίστηκαν αγώνες στη σελίδα {response.url}."
+            )
 
         all_fixtures.extend(page_fixtures)
 
@@ -830,6 +936,14 @@ def fetch_super_league_fixtures(
 
 
 def replace_source_fixtures(fixtures: list[dict[str, Any]]) -> int:
+    """Refresh the synthetic schedule without erasing completed history.
+
+    Previous code deleted *all* synthetic fixtures of the active season before
+    saving the new schedule.  As soon as a provider stopped listing last
+    weekend's matches, completed FT rows disappeared from history.  We now
+    preserve FT rows and prevent a temporary NS/TBD source record from
+    downgrading an already completed fixture.
+    """
     seasons = sorted(
         {
             int(item["league"]["season"])
@@ -840,15 +954,40 @@ def replace_source_fixtures(fixtures: list[dict[str, Any]]) -> int:
         return 0
 
     placeholders = ",".join("?" for _ in seasons)
+    existing_ft_ids: set[int] = set()
     with get_connection() as connection:
+        rows = connection.execute(
+            f"""
+            SELECT fixture_id
+            FROM fixtures
+            WHERE fixture_id >= ?
+              AND season IN ({placeholders})
+              AND status = 'FT'
+            """,
+            (SYNTHETIC_FIXTURE_ID_MIN, *seasons),
+        ).fetchall()
+        existing_ft_ids = {int(row["fixture_id"]) for row in rows}
+
         connection.execute(
             f"""
             DELETE FROM fixtures
             WHERE fixture_id >= ?
               AND season IN ({placeholders})
+              AND status <> 'FT'
             """,
             (SYNTHETIC_FIXTURE_ID_MIN, *seasons),
         )
         connection.commit()
 
-    return save_fixtures(fixtures)
+    safe_fixtures: list[dict[str, Any]] = []
+    for item in fixtures:
+        fixture_id = int(item["fixture"]["id"])
+        incoming_status = str(
+            (item["fixture"].get("status") or {}).get("short") or ""
+        ).upper()
+        if fixture_id in existing_ft_ids and incoming_status != "FT":
+            continue
+        safe_fixtures.append(item)
+
+    return save_fixtures(safe_fixtures)
+

@@ -130,31 +130,49 @@ def _verified_kickoff(
     *,
     date_verified: bool,
 ) -> tuple[datetime, bool, str]:
-    """Select a safe, displayable kickoff time.
+    """Select a safe display time without hiding every real kickoff.
 
-    Two timed sources that agree remain the strongest case.  A single source
-    with an explicit time is also displayable when a second independent
-    source confirms the match date.  This avoids hiding every kickoff merely
-    because date-only datasets do not publish hours.
+    Rules:
+    - two explicit timed sources agreeing within 30 minutes => cross-checked;
+    - one explicit trusted schedule source => display it as source-confirmed;
+    - conflicting explicit times => hide the time;
+    - no explicit time => keep only the date.
+
+    The Fixtur.es parser already rejects obvious overnight placeholders such
+    as 03:00 local, so a remaining explicit Fixtur.es time is usable.
     """
-    exact = [
-        item.kickoff_local
+    if not date_verified and len({item.local_date for item in candidates}) > 1:
+        return _technical_kickoff(consensus_date, candidates), False, "conflict"
+
+    exact_items = [
+        item
         for item in candidates
         if item.local_date == consensus_date and item.time_confirmed
     ]
-    if not exact:
+    if not exact_items:
         return _technical_kickoff(consensus_date, candidates), False, "none"
 
-    timestamps = sorted(item.timestamp() for item in exact)
+    timestamps = sorted(item.kickoff_local.timestamp() for item in exact_items)
     spread_minutes = (timestamps[-1] - timestamps[0]) / 60.0
-    if spread_minutes > MAX_TIME_DIFFERENCE_MINUTES:
+    if len(exact_items) >= 2 and spread_minutes > MAX_TIME_DIFFERENCE_MINUTES:
         return _technical_kickoff(consensus_date, candidates), False, "conflict"
 
     selected = datetime.fromtimestamp(median(timestamps), tz=ATHENS_TZ)
-    if len(exact) >= 2:
+    if len(exact_items) >= 2:
         return selected, True, "cross_checked"
-    if date_verified:
-        return selected, False, "date_verified_single_time"
+
+    source = exact_items[0].source
+    trusted_single_time_sources = {
+        "Fixtur.es",
+        "Football-Data.co.uk Latest Fixtures",
+        "Football-Data.co.uk",
+        "API-Football Free",
+    }
+    if source in trusted_single_time_sources:
+        return selected, True, (
+            "date_verified_single_time" if date_verified else "single_source_time"
+        )
+
     return selected, False, "single_source"
 
 
@@ -187,8 +205,10 @@ def _verification_label(
     source_count = len({item.source for item in candidates})
     if time_verified and time_basis == "cross_checked":
         return "time_verified"
-    if time_basis == "date_verified_single_time":
+    if time_verified and time_basis == "date_verified_single_time":
         return "date_verified_single_time"
+    if time_verified and time_basis == "single_source_time":
+        return "single_source_time"
     if time_basis == "conflict":
         return "source_conflict"
     if date_verified:
@@ -205,7 +225,8 @@ def _source_text(
     sources = sorted({item.source for item in candidates})
     label = {
         "time_verified": "cross-checked date and time",
-        "date_verified_single_time": "verified date; exact time awaiting second timed source",
+        "date_verified_single_time": "verified date; explicit kickoff from one schedule source",
+        "single_source_time": "explicit kickoff from schedule source",
         "date_verified": "verified date; time pending",
         "source_conflict": "source conflict; time hidden",
         "single_source": "single source; time pending",
@@ -251,6 +272,7 @@ def _merge_group(
             "date": kickoff_utc.isoformat(),
             "status": {"short": status},
             "time_confirmed": time_verified,
+            "time_verification": time_basis,
             "source": _source_text(candidates, verification),
             "verification": verification,
             "sources": sorted({item.source for item in candidates}),
@@ -376,8 +398,9 @@ def merge_free_schedule_sources(
 
     # Stable de-duplication. Prefer a verified record over an unverified one.
     priority = {
-        "time_verified": 5,
-        "date_verified_single_time": 4,
+        "time_verified": 6,
+        "date_verified_single_time": 5,
+        "single_source_time": 4,
         "date_verified": 3,
         "source_conflict": 2,
         "single_source": 1,
@@ -391,7 +414,11 @@ def merge_free_schedule_sources(
             continue
         current_level = str(current["fixture"].get("verification") or "single_source")
         new_level = str(payload["fixture"].get("verification") or "single_source")
-        if priority.get(new_level, 0) > priority.get(current_level, 0):
+        current_status = str((current["fixture"].get("status") or {}).get("short") or "").upper()
+        new_status = str((payload["fixture"].get("status") or {}).get("short") or "").upper()
+        current_rank = (1 if current_status == "FT" else 0, priority.get(current_level, 0))
+        new_rank = (1 if new_status == "FT" else 0, priority.get(new_level, 0))
+        if new_rank > current_rank:
             by_id[fixture_id] = payload
 
     normalized = sorted(by_id.values(), key=lambda item: str(item["fixture"]["date"]))
