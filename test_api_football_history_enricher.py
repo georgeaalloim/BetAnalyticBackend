@@ -83,6 +83,57 @@ class _Session:
         return None
 
 
+class _DateFallbackSession:
+    def __init__(self) -> None:
+        self.headers: dict[str, str] = {}
+        self.calls: list[tuple[str, dict[str, Any]]] = []
+
+    def get(self, url: str, params: dict[str, Any], timeout: int) -> _Response:
+        self.calls.append((url, dict(params)))
+        if url.endswith("/fixtures/events"):
+            return _Response({
+                "errors": [],
+                "response": [{
+                    "time": {"elapsed": 82, "extra": None},
+                    "team": {"id": 100, "name": "Olympiakos Piraeus"},
+                    "player": {"id": 10, "name": "Current Scorer"},
+                    "type": "Goal",
+                    "detail": "Normal Goal",
+                }],
+            })
+        if url.endswith("/fixtures/statistics"):
+            raise AssertionError("scorers_only must not request statistics")
+        if "date" in params:
+            return _Response({
+                "errors": [],
+                "response": [{
+                    "fixture": {
+                        "id": 2026001,
+                        "date": "2026-08-22T18:00:00+03:00",
+                        "status": {"short": "FT"},
+                    },
+                    "league": {"id": 197, "season": 2026},
+                    "teams": {
+                        "home": {"id": 100, "name": "Olympiakos Piraeus"},
+                        "away": {"id": 200, "name": "Atromitos"},
+                    },
+                    "goals": {"home": 1, "away": 0},
+                }],
+            })
+        return _Response({"errors": [], "response": []})
+
+    def close(self) -> None:
+        return None
+
+
+class _StatisticsFailureSession(_Session):
+    def get(self, url: str, params: dict[str, Any], timeout: int) -> _Response:
+        if url.endswith("/fixtures/statistics"):
+            import requests
+            raise requests.HTTPError("statistics unavailable")
+        return super().get(url, params, timeout)
+
+
 class ApiFootballHistoryEnricherTests(unittest.TestCase):
     def test_enriches_stats_and_scorers_using_canonical_fixture_id(self) -> None:
         original = database.DATABASE_PATH
@@ -107,6 +158,81 @@ class ApiFootballHistoryEnricherTests(unittest.TestCase):
                 scorers = json.loads(row["goal_scorers_json"])
                 self.assertEqual(scorers[0]["player_name"], "Test Scorer")
                 self.assertEqual(scorers[0]["side"], "home")
+            finally:
+                database.DATABASE_PATH = original
+
+    def test_date_fallback_backfills_current_scorer_when_season_query_is_empty(self) -> None:
+        original = database.DATABASE_PATH
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database.DATABASE_PATH = Path(temp_dir) / "test.db"
+            try:
+                initialize_database()
+                save_fixtures([{
+                    "fixture": {
+                        "id": 7001,
+                        "date": "2026-08-22T15:00:00Z",
+                        "status": {"short": "FT"},
+                        "time_confirmed": True,
+                        "source": "test",
+                    },
+                    "league": {"id": 197, "season": 2026},
+                    "teams": {
+                        "home": {"id": 553, "name": "Olympiakos Piraeus"},
+                        "away": {"id": 12260, "name": "Atromitos"},
+                    },
+                    "goals": {"home": 1, "away": 0},
+                }])
+                session = _DateFallbackSession()
+                result = enrich_history(
+                    seasons=(2026,),
+                    api_key="test",
+                    session=session,
+                    scorers_only=True,
+                    date_fallback_days=None,
+                )
+                self.assertEqual(result.api_matches_found, 1)
+                self.assertEqual(result.matches_enriched, 1)
+                self.assertTrue(any("date" in params for _url, params in session.calls))
+                self.assertFalse(any(url.endswith("/fixtures/statistics") for url, _params in session.calls))
+                with get_connection() as connection:
+                    row = connection.execute(
+                        "SELECT * FROM fixture_history_details WHERE fixture_id = 7001"
+                    ).fetchone()
+                self.assertIsNotNone(row)
+                scorers = json.loads(row["goal_scorers_json"])
+                self.assertEqual(scorers[0]["player_name"], "Current Scorer")
+                self.assertEqual(scorers[0]["side"], "home")
+            finally:
+                database.DATABASE_PATH = original
+
+    def test_scorer_is_saved_even_when_statistics_endpoint_fails(self) -> None:
+        original = database.DATABASE_PATH
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database.DATABASE_PATH = Path(temp_dir) / "test.db"
+            try:
+                initialize_database()
+                save_fixtures([{
+                    "fixture": {"id": 555, "date": "2025-09-01T17:00:00Z", "status": {"short": "FT"}, "time_confirmed": True, "source": "test"},
+                    "league": {"id": 197, "season": 2025},
+                    "teams": {"home": {"id": 619, "name": "PAOK"}, "away": {"id": 957, "name": "Levadiakos"}},
+                    "goals": {"home": 1, "away": 0},
+                }])
+                result = enrich_history(
+                    seasons=(2025,),
+                    api_key="test",
+                    session=_StatisticsFailureSession(),
+                    date_fallback_days=None,
+                )
+                self.assertEqual(result.matches_enriched, 1)
+                with get_connection() as connection:
+                    row = connection.execute(
+                        "SELECT * FROM fixture_history_details WHERE fixture_id = 555"
+                    ).fetchone()
+                self.assertIsNotNone(row)
+                scorers = json.loads(row["goal_scorers_json"])
+                self.assertEqual(scorers[0]["player_name"], "Test Scorer")
+                self.assertEqual(row["available_stat_pairs"], 0)
+                self.assertTrue(any("statistics" in warning for warning in result.warnings))
             finally:
                 database.DATABASE_PATH = original
 

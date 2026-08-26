@@ -94,6 +94,83 @@ class HistoryFeedTests(unittest.TestCase):
             finally:
                 database.DATABASE_PATH = original
 
+    def test_scorer_only_api_snapshot_is_combined_with_football_data_stats_in_feed(self) -> None:
+        original = database.DATABASE_PATH
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database.DATABASE_PATH = Path(temp_dir) / "test.db"
+            try:
+                initialize_database()
+                save_fixtures([{
+                    "fixture": {
+                        "id": 7001,
+                        "date": "2026-08-22T15:00:00Z",
+                        "status": {"short": "FT"},
+                        "time_confirmed": True,
+                        "source": "test",
+                    },
+                    "league": {"id": 197, "season": 2026},
+                    "teams": {
+                        "home": {"id": 553, "name": "Olympiakos Piraeus"},
+                        "away": {"id": 12260, "name": "Atromitos"},
+                    },
+                    "goals": {"home": 1, "away": 0},
+                }])
+                save_fixture_statistics([{
+                    "fixture_id": 7001,
+                    "league_id": 197,
+                    "season": 2026,
+                    "fixture_date": "2026-08-22T15:00:00Z",
+                    "home_team_id": 553,
+                    "home_team_name": "Olympiakos Piraeus",
+                    "away_team_id": 12260,
+                    "away_team_name": "Atromitos",
+                    "home_corners": 14, "away_corners": 4,
+                    "home_yellow_cards": 3, "away_yellow_cards": 6,
+                    "home_red_cards": 1, "away_red_cards": 0,
+                    "home_total_shots": 26, "away_total_shots": 8,
+                    "home_shots_on_target": 10, "away_shots_on_target": 1,
+                    "home_fouls": 14, "away_fouls": 14,
+                    "home_offsides": None, "away_offsides": None,
+                    "source": "Football-Data.co.uk CSV",
+                    "collected_at": "2026-08-23T00:00:00Z",
+                }])
+                save_fixture_history_details([{
+                    "fixture_id": 7001,
+                    "provider_fixture_id": 2026001,
+                    "goal_scorers_json": '[{"player_name":"Current Scorer","side":"home","minute":82}]',
+                    "score_verified": True,
+                    "available_stat_pairs": 0,
+                    "data_quality": "partial",
+                    "source": "API-Football Free fixture details",
+                    "collected_at": "2026-08-26T09:00:00Z",
+                }])
+
+                output = Path(temp_dir) / "out"
+                generated = generate_static_feed(
+                    output_dir=output,
+                    league_id=197,
+                    league_name="Super League 1",
+                    seasons=(2026,),
+                    as_of=datetime(2026, 8, 26, tzinfo=timezone.utc),
+                    lookahead_days=45,
+                    upcoming_statuses=("NS", "TBD"),
+                    feed_public_url="feed.json",
+                    sync_summary={},
+                )
+                import json
+                feed = json.loads(generated.feed_path.read_text(encoding="utf-8"))
+                match = feed["history"]["seasons"][0]["matches"][0]
+                self.assertEqual(match["statistics_source"], "Football-Data.co.uk CSV")
+                self.assertEqual(match["statistics"]["total_shots"], {"home": 26, "away": 8})
+                self.assertTrue(match["goal_scorers"]["available"])
+                self.assertEqual(
+                    match["goal_scorers"]["items"][0]["player_name"],
+                    "Current Scorer",
+                )
+                self.assertEqual(match["goal_scorers"]["items"][0]["minute"], 82)
+            finally:
+                database.DATABASE_PATH = original
+
     def test_duplicate_provider_copy_is_shown_once_in_history(self) -> None:
         original = database.DATABASE_PATH
         with tempfile.TemporaryDirectory() as temp_dir:

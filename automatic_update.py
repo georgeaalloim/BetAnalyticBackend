@@ -289,11 +289,14 @@ def main() -> int:
             **statistics_summary,
         }
 
+    active_history_season = season_from_local_date(as_of.astimezone(ATHENS_TZ).date())
     history_enrichment = enrich_history(
-        seasons=(as_of.year - 1, as_of.year),
+        seasons=(active_history_season,),
         api_key=os.getenv("API_FOOTBALL_KEY"),
-        recent_days=4,
+        recent_days=45,
         max_detail_batches=1,
+        scorers_only=True,
+        date_fallback_days=45,
     )
     sync_summary["history_enrichment"] = {
         "source": "API-Football Free fixture details",
@@ -307,7 +310,7 @@ def main() -> int:
         "warnings": history_enrichment.warnings,
         "score_mismatches": history_enrichment.score_mismatches,
         "pending_matches": history_enrichment.pending_matches,
-        "mode": "recent completed matches only; explicit statistics/events endpoints; one-provider snapshots",
+        "mode": "active-season scorer backfill first; API-Football events; date fallback for recent free-plan matches",
     }
 
     canonical_audit = audit_and_fix(apply_fixes=True)
