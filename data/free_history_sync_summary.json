@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "generated_at": "2026-08-26T04:18:41Z",
+  "generated_at": "2026-08-26T07:27:01Z",
   "seasons": [
     2023,
     2024,
@@ -10,12 +10,12 @@
   "fixtures_in_feed": 29,
   "ready_predictions": 29,
   "unavailable_predictions": 0,
-  "feed_sha256": "9ea7a259d830cc46f07214a5a25896fd7b594731342a257b417c22cc15de2935",
+  "feed_sha256": "c722f82eaecedabef0cce97a3c3898aceafac6b18e859f7c5673e706ef47f157",
   "feed_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/feed.json",
   "manifest_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/manifest.json",
   "sync_summary": {
     "fixtures": {
-      "source": "Free cross-checked schedule: Fixtur.es + OpenFootball CC0 + Football-Data.co.uk + optional API-Football Free",
+      "source": "Free cross-checked schedule: Fixtur.es + OpenFootball CC0 + Football-Data.co.uk + Football-Data latest fixtures + optional API-Football Free",
       "source_key": "free_cross_checked_schedule",
       "status": "ok",
       "received": 183,
@@ -31,6 +31,7 @@
         "Fixtur.es": 182,
         "OpenFootball CC0": 0,
         "Football-Data.co.uk": 6,
+        "Football-Data.co.uk Latest Fixtures": 0,
         "API-Football Free": 0
       },
       "fixtur_es_pages_checked": [
@@ -45,6 +46,8 @@
       ],
       "openfootball_seasons_loaded": [],
       "openfootball_urls_loaded": [],
+      "football_data_latest_fixtures_url": "https://www.football-data.co.uk/matches/resources/fixtures.csv",
+      "football_data_latest_fixtures_rows": 0,
       "api_football_free_enabled": true,
       "api_football_free_seasons_requested": [
         2026,
@@ -57,6 +60,7 @@
         "Αποτυχία σελίδας https://www.icx.fixtur.es/en/super-league-greece: HTTPSConnectionPool(host='www.icx.fixtur.es', port=443): Max retries exceeded with url: /en/super-league-greece (Caused by SSLError(SSLCertVerificationError(1, \"[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'www.icx.fixtur.es'. (_ssl.c:1010)\")))",
         "Δεν έχει δημοσιευτεί ακόμη OpenFootball αρχείο για 2026.",
         "Δεν έχει δημοσιευτεί ακόμη OpenFootball αρχείο για 2027.",
+        "Αποτυχία latest Football-Data fixtures: Το latest fixtures CSV δεν περιέχει: AwayTeam, Date, Div, HomeTeam, Time",
         "Αποτυχία API-Football Free για 2026: API errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
         "Αποτυχία API-Football Free για 2027: API errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
         "Διαφωνία δωρεάν πηγών για AEK Athens FC - Iraklis 1908; η ώρα αποκρύφτηκε.",
@@ -65,7 +69,7 @@
         "Διαφωνία δωρεάν πηγών για OFI - Volos NFC; η ώρα αποκρύφτηκε.",
         "Διαφωνία δωρεάν πηγών για Panetolikos - Asteras Tripolis; η ώρα αποκρύφτηκε."
       ],
-      "safety_rule": "Η ώρα εμφανίζεται όταν δύο πηγές συμφωνούν στην ώρα ή όταν δύο ανεξάρτητες πηγές επιβεβαιώνουν την ημερομηνία και μία από αυτές δίνει ρητή ώρα. Αν υπάρχουν αντικρουόμενες ώρες, η εφαρμογή εμφανίζει «Ώρα δεν έχει οριστεί»."
+      "safety_rule": "Η ακριβής ώρα εμφανίζεται μόνο όταν τουλάχιστον δύο ανεξάρτητες πηγές με ρητή ώρα συμφωνούν εντός 30 λεπτών. Η δεύτερη πηγή περιλαμβάνει το δωρεάν latest fixtures CSV του Football-Data.co.uk. Αλλιώς η εφαρμογή εμφανίζει «Ώρα υπό επιβεβαίωση»."
     },
     "detailed_statistics": {
       "source": "Football-Data.co.uk CSV (free; no API key)",
@@ -141,6 +145,6 @@
       "future_detailed_season_detection": true,
       "description": "Κάθε run διασταυρώνει δωρεάν το πρόγραμμα, χρησιμοποιώντας το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει τα δωρεάν CSV αποτελεσμάτων/στατιστικών. Τα αναλυτικά ιστορικά στοιχεία αποθηκεύονται ως ενιαίο snapshot παρόχου χωρίς ανάμειξη πεδίων. Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό και χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό χρονικό cutoff."
     },
-    "finished_at": "2026-08-26T04:18:47Z"
+    "finished_at": "2026-08-26T07:27:05Z"
   }
 }

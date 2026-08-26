@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "source": "Canonical single-provider snapshots",
-  "updated_at": "2026-08-26T04:18:46Z",
+  "updated_at": "2026-08-26T07:27:05Z",
   "fixtures_count": 715,
   "available_statistics_count": 714,
   "unavailable_statistics_count": 1,
@@ -34,7 +34,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1430850455,
@@ -64,7 +64,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1834486616,
@@ -94,7 +94,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1721181280,
@@ -124,7 +124,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1780053742,
@@ -154,7 +154,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1749462727,
@@ -184,7 +184,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1338839625,
@@ -214,7 +214,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1521827823,
@@ -244,7 +244,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1356160128,
@@ -274,7 +274,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1501655860,
@@ -304,7 +304,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1508880397,
@@ -334,7 +334,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1503107195,
@@ -364,7 +364,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1301251286,
@@ -394,7 +394,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1434582071,
@@ -424,7 +424,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1364825153,
@@ -454,7 +454,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1506060879,
@@ -484,7 +484,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1861717889,
@@ -514,7 +514,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1932120642,
@@ -544,7 +544,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1809461467,
@@ -574,7 +574,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1283849625,
@@ -604,7 +604,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1359799325,
@@ -634,7 +634,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1208090195,
@@ -664,7 +664,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1244350561,
@@ -694,7 +694,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1924453835,
@@ -724,7 +724,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1234126575,
@@ -754,7 +754,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1753526738,
@@ -784,7 +784,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1213944689,
@@ -814,7 +814,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1971130780,
@@ -844,7 +844,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1867979531,
@@ -874,7 +874,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1300061024,
@@ -904,7 +904,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1411066033,
@@ -934,7 +934,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1552933423,
@@ -964,7 +964,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1692809912,
@@ -994,7 +994,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1273103999,
@@ -1024,7 +1024,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1527417498,
@@ -1054,7 +1054,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1217065376,
@@ -1084,7 +1084,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1349092491,
@@ -1114,7 +1114,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1909346230,
@@ -1144,7 +1144,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1973942704,
@@ -1174,7 +1174,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1351883581,
@@ -1204,7 +1204,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1340917685,
@@ -1234,7 +1234,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1392814342,
@@ -1264,7 +1264,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1491082967,
@@ -1294,7 +1294,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1821912081,
@@ -1324,7 +1324,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1244139333,
@@ -1354,7 +1354,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1228912036,
@@ -1384,7 +1384,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1398261447,
@@ -1414,7 +1414,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1228267890,
@@ -1444,7 +1444,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1352916648,
@@ -1474,7 +1474,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1565779484,
@@ -1504,7 +1504,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1315237983,
@@ -1534,7 +1534,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1310274586,
@@ -1564,7 +1564,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1865373146,
@@ -1594,7 +1594,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1544694948,
@@ -1624,7 +1624,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1735504448,
@@ -1654,7 +1654,7 @@
       "statistics_available": false,
       "unavailable_reason": "Το CSV δεν περιείχε πλήρη κόρνερ και κίτρινες κάρτες.",
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1713840727,
@@ -1684,7 +1684,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1842366902,
@@ -1714,7 +1714,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1297041555,
@@ -1744,7 +1744,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1946135186,
@@ -1774,7 +1774,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1813283358,
@@ -1804,7 +1804,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1667855972,
@@ -1834,7 +1834,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1944640032,
@@ -1864,7 +1864,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1640547348,
@@ -1894,7 +1894,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1815160803,
@@ -1924,7 +1924,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1523646824,
@@ -1954,7 +1954,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1888004545,
@@ -1984,7 +1984,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1414520119,
@@ -2014,7 +2014,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1456380782,
@@ -2044,7 +2044,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1240027525,
@@ -2074,7 +2074,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1664245354,
@@ -2104,7 +2104,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1636811676,
@@ -2134,7 +2134,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1417598243,
@@ -2164,7 +2164,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1690547701,
@@ -2194,7 +2194,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1627788403,
@@ -2224,7 +2224,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1581415006,
@@ -2254,7 +2254,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1664745605,
@@ -2284,7 +2284,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1770011830,
@@ -2314,7 +2314,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1784427649,
@@ -2344,7 +2344,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1605501504,
@@ -2374,7 +2374,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1778078450,
@@ -2404,7 +2404,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1975392217,
@@ -2434,7 +2434,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1938380746,
@@ -2464,7 +2464,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1288296529,
@@ -2494,7 +2494,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1571167298,
@@ -2524,7 +2524,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1927277849,
@@ -2554,7 +2554,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1686882455,
@@ -2584,7 +2584,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1210585110,
@@ -2614,7 +2614,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1615086022,
@@ -2644,7 +2644,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1364702342,
@@ -2674,7 +2674,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1418102408,
@@ -2704,7 +2704,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1575703476,
@@ -2734,7 +2734,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1852585034,
@@ -2764,7 +2764,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1356752718,
@@ -2794,7 +2794,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1997801155,
@@ -2824,7 +2824,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1558000296,
@@ -2854,7 +2854,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1497489660,
@@ -2884,7 +2884,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1702518187,
@@ -2914,7 +2914,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1503629776,
@@ -2944,7 +2944,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1991403389,
@@ -2974,7 +2974,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1254001335,
@@ -3004,7 +3004,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1615520754,
@@ -3034,7 +3034,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1761069829,
@@ -3064,7 +3064,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1337483586,
@@ -3094,7 +3094,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1448742560,
@@ -3124,7 +3124,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1446755155,
@@ -3154,7 +3154,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1321892931,
@@ -3184,7 +3184,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1398040474,
@@ -3214,7 +3214,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1592032761,
@@ -3244,7 +3244,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1734294534,
@@ -3274,7 +3274,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1905832809,
@@ -3304,7 +3304,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1971237721,
@@ -3334,7 +3334,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1363510224,
@@ -3364,7 +3364,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1332685180,
@@ -3394,7 +3394,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1422963709,
@@ -3424,7 +3424,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1334837283,
@@ -3454,7 +3454,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1393620696,
@@ -3484,7 +3484,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1427531936,
@@ -3514,7 +3514,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1311601313,
@@ -3544,7 +3544,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1661495562,
@@ -3574,7 +3574,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1672651608,
@@ -3604,7 +3604,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1676822220,
@@ -3634,7 +3634,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1527531280,
@@ -3664,7 +3664,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1690734788,
@@ -3694,7 +3694,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1791206730,
@@ -3724,7 +3724,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1208399978,
@@ -3754,7 +3754,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1374601782,
@@ -3784,7 +3784,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1351437788,
@@ -3814,7 +3814,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1345226365,
@@ -3844,7 +3844,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1652010177,
@@ -3874,7 +3874,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1338944794,
@@ -3904,7 +3904,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1647570442,
@@ -3934,7 +3934,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1940749440,
@@ -3964,7 +3964,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1839038201,
@@ -3994,7 +3994,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1237269372,
@@ -4024,7 +4024,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1930193486,
@@ -4054,7 +4054,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1251784302,
@@ -4084,7 +4084,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1350820229,
@@ -4114,7 +4114,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1576571955,
@@ -4144,7 +4144,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1825656074,
@@ -4174,7 +4174,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1609901935,
@@ -4204,7 +4204,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1366619464,
@@ -4234,7 +4234,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1915847114,
@@ -4264,7 +4264,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1378200749,
@@ -4294,7 +4294,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1437912411,
@@ -4324,7 +4324,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1851105067,
@@ -4354,7 +4354,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1216973305,
@@ -4384,7 +4384,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1721251930,
@@ -4414,7 +4414,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1546875709,
@@ -4444,7 +4444,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1701393247,
@@ -4474,7 +4474,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1566092026,
@@ -4504,7 +4504,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1823180529,
@@ -4534,7 +4534,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1476243506,
@@ -4564,7 +4564,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1408365370,
@@ -4594,7 +4594,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1433511687,
@@ -4624,7 +4624,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1587251374,
@@ -4654,7 +4654,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1932100984,
@@ -4684,7 +4684,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1660575048,
@@ -4714,7 +4714,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1919075301,
@@ -4744,7 +4744,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1555021261,
@@ -4774,7 +4774,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1442960042,
@@ -4804,7 +4804,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1527762514,
@@ -4834,7 +4834,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1840987070,
@@ -4864,7 +4864,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1404137516,
@@ -4894,7 +4894,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1381651351,
@@ -4924,7 +4924,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1393559505,
@@ -4954,7 +4954,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1955999900,
@@ -4984,7 +4984,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1388435215,
@@ -5014,7 +5014,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1616973078,
@@ -5044,7 +5044,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1594094586,
@@ -5074,7 +5074,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1905606500,
@@ -5104,7 +5104,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1353307267,
@@ -5134,7 +5134,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1876812131,
@@ -5164,7 +5164,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1576454380,
@@ -5194,7 +5194,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1433547211,
@@ -5224,7 +5224,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1446942787,
@@ -5254,7 +5254,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1391716287,
@@ -5284,7 +5284,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1433563349,
@@ -5314,7 +5314,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1615925953,
@@ -5344,7 +5344,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1636141545,
@@ -5374,7 +5374,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1674712813,
@@ -5404,7 +5404,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1881474904,
@@ -5434,7 +5434,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1899066703,
@@ -5464,7 +5464,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1257234831,
@@ -5494,7 +5494,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1232891872,
@@ -5524,7 +5524,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1229957510,
@@ -5554,7 +5554,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1421375186,
@@ -5584,7 +5584,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1996998253,
@@ -5614,7 +5614,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1200096724,
@@ -5644,7 +5644,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:01Z"
     },
     {
       "fixture_id": 1765357887,
@@ -5674,7 +5674,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1430597268,
@@ -5704,7 +5704,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1703655336,
@@ -5734,7 +5734,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1918719645,
@@ -5764,7 +5764,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1309662030,
@@ -5794,7 +5794,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1815122696,
@@ -5824,7 +5824,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1773464082,
@@ -5854,7 +5854,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1943823710,
@@ -5884,7 +5884,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1253307109,
@@ -5914,7 +5914,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1796861952,
@@ -5944,7 +5944,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1960095049,
@@ -5974,7 +5974,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1301821636,
@@ -6004,7 +6004,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1238562284,
@@ -6034,7 +6034,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1973425823,
@@ -6064,7 +6064,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1872832708,
@@ -6094,7 +6094,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1577009841,
@@ -6124,7 +6124,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1437982627,
@@ -6154,7 +6154,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1838296868,
@@ -6184,7 +6184,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1390888104,
@@ -6214,7 +6214,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1927066239,
@@ -6244,7 +6244,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1601000920,
@@ -6274,7 +6274,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1972464986,
@@ -6304,7 +6304,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1766561227,
@@ -6334,7 +6334,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1340196541,
@@ -6364,7 +6364,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1767126578,
@@ -6394,7 +6394,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1489899390,
@@ -6424,7 +6424,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1534935042,
@@ -6454,7 +6454,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1759052173,
@@ -6484,7 +6484,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1842538305,
@@ -6514,7 +6514,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1266047476,
@@ -6544,7 +6544,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1894299353,
@@ -6574,7 +6574,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1320493623,
@@ -6604,7 +6604,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1246804000,
@@ -6634,7 +6634,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1352228444,
@@ -6664,7 +6664,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1321352909,
@@ -6694,7 +6694,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1429767821,
@@ -6724,7 +6724,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1560553776,
@@ -6754,7 +6754,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1959274709,
@@ -6784,7 +6784,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1229915717,
@@ -6814,7 +6814,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1247898477,
@@ -6844,7 +6844,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1671351939,
@@ -6874,7 +6874,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1211150576,
@@ -6904,7 +6904,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1400644025,
@@ -6934,7 +6934,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1723877714,
@@ -6964,7 +6964,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1882007803,
@@ -6994,7 +6994,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1707535220,
@@ -7024,7 +7024,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1814073690,
@@ -7054,7 +7054,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1581787826,
@@ -7084,7 +7084,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1604252273,
@@ -7114,7 +7114,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1405201746,
@@ -7144,7 +7144,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1425392722,
@@ -7174,7 +7174,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1487673361,
@@ -7204,7 +7204,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:42Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1428772643,
@@ -7234,7 +7234,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1971666175,
@@ -7264,7 +7264,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1230193704,
@@ -7294,7 +7294,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1448508422,
@@ -7324,7 +7324,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1463643660,
@@ -7354,7 +7354,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1875466586,
@@ -7384,7 +7384,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1765010392,
@@ -7414,7 +7414,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1326444532,
@@ -7444,7 +7444,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1602186772,
@@ -7474,7 +7474,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1660276413,
@@ -7504,7 +7504,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1431871868,
@@ -7534,7 +7534,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1752492506,
@@ -7564,7 +7564,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1473756268,
@@ -7594,7 +7594,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1207327494,
@@ -7624,7 +7624,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1274313839,
@@ -7654,7 +7654,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1506635114,
@@ -7684,7 +7684,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1662890890,
@@ -7714,7 +7714,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1704351668,
@@ -7744,7 +7744,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1973681440,
@@ -7774,7 +7774,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1977585989,
@@ -7804,7 +7804,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1529356399,
@@ -7834,7 +7834,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1365767686,
@@ -7864,7 +7864,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1460564309,
@@ -7894,7 +7894,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1260505032,
@@ -7924,7 +7924,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1451023240,
@@ -7954,7 +7954,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1447766576,
@@ -7984,7 +7984,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1785625009,
@@ -8014,7 +8014,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1402603907,
@@ -8044,7 +8044,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1967906329,
@@ -8074,7 +8074,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1300173595,
@@ -8104,7 +8104,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1739804360,
@@ -8134,7 +8134,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1209037966,
@@ -8164,7 +8164,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1570860338,
@@ -8194,7 +8194,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1938255377,
@@ -8224,7 +8224,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1385246847,
@@ -8254,7 +8254,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1314493249,
@@ -8284,7 +8284,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1394138515,
@@ -8314,7 +8314,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1766878717,
@@ -8344,7 +8344,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1466664564,
@@ -8374,7 +8374,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1878085244,
@@ -8404,7 +8404,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1450007585,
@@ -8434,7 +8434,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1731242858,
@@ -8464,7 +8464,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1539290821,
@@ -8494,7 +8494,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1911418978,
@@ -8524,7 +8524,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1568313524,
@@ -8554,7 +8554,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1429990609,
@@ -8584,7 +8584,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1453684373,
@@ -8614,7 +8614,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1934197919,
@@ -8644,7 +8644,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1961595597,
@@ -8674,7 +8674,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1370054099,
@@ -8704,7 +8704,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1408609397,
@@ -8734,7 +8734,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1326143904,
@@ -8764,7 +8764,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1748375447,
@@ -8794,7 +8794,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1322486726,
@@ -8824,7 +8824,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1657847138,
@@ -8854,7 +8854,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1597873016,
@@ -8884,7 +8884,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1750384781,
@@ -8914,7 +8914,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1605048189,
@@ -8944,7 +8944,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1894212809,
@@ -8974,7 +8974,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1334909290,
@@ -9004,7 +9004,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1856868555,
@@ -9034,7 +9034,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1592187670,
@@ -9064,7 +9064,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1270476861,
@@ -9094,7 +9094,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1869480688,
@@ -9124,7 +9124,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1601053368,
@@ -9154,7 +9154,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1269563101,
@@ -9184,7 +9184,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1292222962,
@@ -9214,7 +9214,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1372700999,
@@ -9244,7 +9244,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1725409325,
@@ -9274,7 +9274,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1367396642,
@@ -9304,7 +9304,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1712553474,
@@ -9334,7 +9334,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1786821842,
@@ -9364,7 +9364,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1624162919,
@@ -9394,7 +9394,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1774097512,
@@ -9424,7 +9424,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1695429461,
@@ -9454,7 +9454,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1321984147,
@@ -9484,7 +9484,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1272048400,
@@ -9514,7 +9514,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1306849582,
@@ -9544,7 +9544,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1453974782,
@@ -9574,7 +9574,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1335862456,
@@ -9604,7 +9604,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1884013725,
@@ -9634,7 +9634,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1205257489,
@@ -9664,7 +9664,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1796262663,
@@ -9694,7 +9694,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1521041837,
@@ -9724,7 +9724,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1516215304,
@@ -9754,7 +9754,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1485144615,
@@ -9784,7 +9784,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1413542082,
@@ -9814,7 +9814,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1234307596,
@@ -9844,7 +9844,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1291633493,
@@ -9874,7 +9874,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1501998110,
@@ -9904,7 +9904,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1484556719,
@@ -9934,7 +9934,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1931224212,
@@ -9964,7 +9964,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1845763750,
@@ -9994,7 +9994,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1615889579,
@@ -10024,7 +10024,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1615264191,
@@ -10054,7 +10054,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1941223507,
@@ -10084,7 +10084,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1708711544,
@@ -10114,7 +10114,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1301331337,
@@ -10144,7 +10144,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1535240298,
@@ -10174,7 +10174,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1556583006,
@@ -10204,7 +10204,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1244361232,
@@ -10234,7 +10234,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1851429522,
@@ -10264,7 +10264,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1975411344,
@@ -10294,7 +10294,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1219933189,
@@ -10324,7 +10324,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1419403233,
@@ -10354,7 +10354,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1643568928,
@@ -10384,7 +10384,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1937308729,
@@ -10414,7 +10414,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1829084715,
@@ -10444,7 +10444,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1610500755,
@@ -10474,7 +10474,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1450240760,
@@ -10504,7 +10504,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1847009275,
@@ -10534,7 +10534,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1233456048,
@@ -10564,7 +10564,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1711114465,
@@ -10594,7 +10594,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1839266598,
@@ -10624,7 +10624,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1808997402,
@@ -10654,7 +10654,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1760688098,
@@ -10684,7 +10684,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1474091975,
@@ -10714,7 +10714,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1262290427,
@@ -10744,7 +10744,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1609028437,
@@ -10774,7 +10774,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1239976828,
@@ -10804,7 +10804,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1352133454,
@@ -10834,7 +10834,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1281335248,
@@ -10864,7 +10864,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1464960689,
@@ -10894,7 +10894,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1670866968,
@@ -10924,7 +10924,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1377201010,
@@ -10954,7 +10954,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1641650791,
@@ -10984,7 +10984,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1348696754,
@@ -11014,7 +11014,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1314386522,
@@ -11044,7 +11044,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1300793220,
@@ -11074,7 +11074,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1954376720,
@@ -11104,7 +11104,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1458631326,
@@ -11134,7 +11134,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1264455515,
@@ -11164,7 +11164,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1822650614,
@@ -11194,7 +11194,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1573618635,
@@ -11224,7 +11224,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1659634544,
@@ -11254,7 +11254,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1765919266,
@@ -11284,7 +11284,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1809577611,
@@ -11314,7 +11314,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1865760709,
@@ -11344,7 +11344,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1551553445,
@@ -11374,7 +11374,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1366935571,
@@ -11404,7 +11404,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1346676029,
@@ -11434,7 +11434,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1871414579,
@@ -11464,7 +11464,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1378629413,
@@ -11494,7 +11494,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1665125458,
@@ -11524,7 +11524,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1705993189,
@@ -11554,7 +11554,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1815900818,
@@ -11584,7 +11584,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1369268843,
@@ -11614,7 +11614,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1515721205,
@@ -11644,7 +11644,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1329150375,
@@ -11674,7 +11674,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1367690807,
@@ -11704,7 +11704,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1727575815,
@@ -11734,7 +11734,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1923363757,
@@ -11764,7 +11764,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1648950865,
@@ -11794,7 +11794,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1670687411,
@@ -11824,7 +11824,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1200527743,
@@ -11854,7 +11854,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1491872435,
@@ -11884,7 +11884,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1548353309,
@@ -11914,7 +11914,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1778054053,
@@ -11944,7 +11944,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1778357484,
@@ -11974,7 +11974,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1676827688,
@@ -12004,7 +12004,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1467042974,
@@ -12034,7 +12034,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1486624084,
@@ -12064,7 +12064,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1739088818,
@@ -12094,7 +12094,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1811496423,
@@ -12124,7 +12124,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1362243719,
@@ -12154,7 +12154,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1562736056,
@@ -12184,7 +12184,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1442970108,
@@ -12214,7 +12214,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1461077362,
@@ -12244,7 +12244,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1761567610,
@@ -12274,7 +12274,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1897400899,
@@ -12304,7 +12304,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1506604587,
@@ -12334,7 +12334,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1264865816,
@@ -12364,7 +12364,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1661476896,
@@ -12394,7 +12394,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1803259097,
@@ -12424,7 +12424,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1616363909,
@@ -12454,7 +12454,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1226706266,
@@ -12484,7 +12484,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1327107049,
@@ -12514,7 +12514,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1363356974,
@@ -12544,7 +12544,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1533024508,
@@ -12574,7 +12574,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1637739724,
@@ -12604,7 +12604,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1814310744,
@@ -12634,7 +12634,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1948062983,
@@ -12664,7 +12664,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1411351816,
@@ -12694,7 +12694,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1895460963,
@@ -12724,7 +12724,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1818513127,
@@ -12754,7 +12754,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1734565480,
@@ -12784,7 +12784,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1846429825,
@@ -12814,7 +12814,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1251684633,
@@ -12844,7 +12844,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1312035088,
@@ -12874,7 +12874,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1509581011,
@@ -12904,7 +12904,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1963871262,
@@ -12934,7 +12934,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1685020637,
@@ -12964,7 +12964,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1492905240,
@@ -12994,7 +12994,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1792678333,
@@ -13024,7 +13024,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1823725941,
@@ -13054,7 +13054,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1842121320,
@@ -13084,7 +13084,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1384009210,
@@ -13114,7 +13114,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1613325795,
@@ -13144,7 +13144,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1569335678,
@@ -13174,7 +13174,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1992993993,
@@ -13204,7 +13204,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1814907127,
@@ -13234,7 +13234,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1703583198,
@@ -13264,7 +13264,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1665942710,
@@ -13294,7 +13294,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1215369063,
@@ -13324,7 +13324,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1764906133,
@@ -13354,7 +13354,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1204944541,
@@ -13384,7 +13384,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1206975950,
@@ -13414,7 +13414,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1400404388,
@@ -13444,7 +13444,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1212948649,
@@ -13474,7 +13474,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1833316487,
@@ -13504,7 +13504,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1561274715,
@@ -13534,7 +13534,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1749737521,
@@ -13564,7 +13564,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1515711479,
@@ -13594,7 +13594,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1274738648,
@@ -13624,7 +13624,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1406799144,
@@ -13654,7 +13654,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1499929062,
@@ -13684,7 +13684,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1527635343,
@@ -13714,7 +13714,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1418221034,
@@ -13744,7 +13744,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1852438189,
@@ -13774,7 +13774,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1841897999,
@@ -13804,7 +13804,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1387262943,
@@ -13834,7 +13834,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1683809845,
@@ -13864,7 +13864,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1541417324,
@@ -13894,7 +13894,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1867312799,
@@ -13924,7 +13924,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1658188275,
@@ -13954,7 +13954,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1474565250,
@@ -13984,7 +13984,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1534861331,
@@ -14014,7 +14014,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1834178098,
@@ -14044,7 +14044,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1720152663,
@@ -14074,7 +14074,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1970428029,
@@ -14104,7 +14104,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1257724132,
@@ -14134,7 +14134,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1540202916,
@@ -14164,7 +14164,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1632077729,
@@ -14194,7 +14194,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1399957648,
@@ -14224,7 +14224,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1427800415,
@@ -14254,7 +14254,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1235452844,
@@ -14284,7 +14284,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1591799751,
@@ -14314,7 +14314,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1292202472,
@@ -14344,7 +14344,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1331257008,
@@ -14374,7 +14374,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1627218829,
@@ -14404,7 +14404,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1485702984,
@@ -14434,7 +14434,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1724370660,
@@ -14464,7 +14464,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1790740720,
@@ -14494,7 +14494,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1884120671,
@@ -14524,7 +14524,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1611827857,
@@ -14554,7 +14554,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1544173349,
@@ -14584,7 +14584,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1229676239,
@@ -14614,7 +14614,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1336775122,
@@ -14644,7 +14644,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1873750682,
@@ -14674,7 +14674,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1246230834,
@@ -14704,7 +14704,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1876460079,
@@ -14734,7 +14734,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1490208770,
@@ -14764,7 +14764,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1295657684,
@@ -14794,7 +14794,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1505262657,
@@ -14824,7 +14824,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1623029044,
@@ -14854,7 +14854,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1703093702,
@@ -14884,7 +14884,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1382655904,
@@ -14914,7 +14914,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1312534907,
@@ -14944,7 +14944,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1384128707,
@@ -14974,7 +14974,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1669785878,
@@ -15004,7 +15004,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1255234627,
@@ -15034,7 +15034,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1600824874,
@@ -15064,7 +15064,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1781273040,
@@ -15094,7 +15094,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1680287822,
@@ -15124,7 +15124,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1794220363,
@@ -15154,7 +15154,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1585767059,
@@ -15184,7 +15184,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1981469220,
@@ -15214,7 +15214,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1405661326,
@@ -15244,7 +15244,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1441552388,
@@ -15274,7 +15274,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1353536093,
@@ -15304,7 +15304,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1321823347,
@@ -15334,7 +15334,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1812287782,
@@ -15364,7 +15364,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1858694699,
@@ -15394,7 +15394,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1701643562,
@@ -15424,7 +15424,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1405798330,
@@ -15454,7 +15454,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1799868001,
@@ -15484,7 +15484,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1232593558,
@@ -15514,7 +15514,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1436461700,
@@ -15544,7 +15544,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1392089363,
@@ -15574,7 +15574,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1810517278,
@@ -15604,7 +15604,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1347407118,
@@ -15634,7 +15634,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1641861107,
@@ -15664,7 +15664,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1297995322,
@@ -15694,7 +15694,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1301724993,
@@ -15724,7 +15724,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1903443383,
@@ -15754,7 +15754,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1381202161,
@@ -15784,7 +15784,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1281573357,
@@ -15814,7 +15814,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1670699106,
@@ -15844,7 +15844,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1486142443,
@@ -15874,7 +15874,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1495477888,
@@ -15904,7 +15904,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1445985841,
@@ -15934,7 +15934,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1706561726,
@@ -15964,7 +15964,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1310304665,
@@ -15994,7 +15994,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1658328436,
@@ -16024,7 +16024,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1668592268,
@@ -16054,7 +16054,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1627393163,
@@ -16084,7 +16084,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1421921098,
@@ -16114,7 +16114,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1606961485,
@@ -16144,7 +16144,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1845595219,
@@ -16174,7 +16174,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1545754886,
@@ -16204,7 +16204,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1919332548,
@@ -16234,7 +16234,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1471786470,
@@ -16264,7 +16264,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1653916043,
@@ -16294,7 +16294,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1847275958,
@@ -16324,7 +16324,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1537897276,
@@ -16354,7 +16354,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1653660761,
@@ -16384,7 +16384,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1483614186,
@@ -16414,7 +16414,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1874233362,
@@ -16444,7 +16444,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1287940677,
@@ -16474,7 +16474,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1282248397,
@@ -16504,7 +16504,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1534853892,
@@ -16534,7 +16534,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1815825560,
@@ -16564,7 +16564,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1333679889,
@@ -16594,7 +16594,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1425387457,
@@ -16624,7 +16624,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1942655278,
@@ -16654,7 +16654,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1761824485,
@@ -16684,7 +16684,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1228121349,
@@ -16714,7 +16714,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1218415963,
@@ -16744,7 +16744,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1285142214,
@@ -16774,7 +16774,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1566519541,
@@ -16804,7 +16804,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1966733485,
@@ -16834,7 +16834,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1536575363,
@@ -16864,7 +16864,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1885974237,
@@ -16894,7 +16894,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1802376992,
@@ -16924,7 +16924,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1910105691,
@@ -16954,7 +16954,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1282631147,
@@ -16984,7 +16984,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1807073033,
@@ -17014,7 +17014,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1599627515,
@@ -17044,7 +17044,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1515640925,
@@ -17074,7 +17074,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1617000192,
@@ -17104,7 +17104,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1306002108,
@@ -17134,7 +17134,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1785576619,
@@ -17164,7 +17164,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1790340141,
@@ -17194,7 +17194,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1592752831,
@@ -17224,7 +17224,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1596615408,
@@ -17254,7 +17254,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1900041139,
@@ -17284,7 +17284,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1754912350,
@@ -17314,7 +17314,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1629348454,
@@ -17344,7 +17344,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1711674380,
@@ -17374,7 +17374,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1967478506,
@@ -17404,7 +17404,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1914454462,
@@ -17434,7 +17434,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1526735864,
@@ -17464,7 +17464,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1600539196,
@@ -17494,7 +17494,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1246285364,
@@ -17524,7 +17524,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1517734201,
@@ -17554,7 +17554,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1414010775,
@@ -17584,7 +17584,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1860253844,
@@ -17614,7 +17614,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1683884253,
@@ -17644,7 +17644,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1649900620,
@@ -17674,7 +17674,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1317955761,
@@ -17704,7 +17704,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1576533959,
@@ -17734,7 +17734,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1766548640,
@@ -17764,7 +17764,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1924300559,
@@ -17794,7 +17794,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1578424303,
@@ -17824,7 +17824,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1307827690,
@@ -17854,7 +17854,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1208443187,
@@ -17884,7 +17884,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1601291432,
@@ -17914,7 +17914,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1985678182,
@@ -17944,7 +17944,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1570856257,
@@ -17974,7 +17974,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1554193182,
@@ -18004,7 +18004,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1703552118,
@@ -18034,7 +18034,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1724538495,
@@ -18064,7 +18064,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1661342286,
@@ -18094,7 +18094,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1788311755,
@@ -18124,7 +18124,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1586526609,
@@ -18154,7 +18154,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1307820001,
@@ -18184,7 +18184,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1202551872,
@@ -18214,7 +18214,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1781329566,
@@ -18244,7 +18244,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1893167203,
@@ -18274,7 +18274,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1883186886,
@@ -18304,7 +18304,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1676687139,
@@ -18334,7 +18334,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1202716565,
@@ -18364,7 +18364,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1726629493,
@@ -18394,7 +18394,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1391623983,
@@ -18424,7 +18424,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1357805459,
@@ -18454,7 +18454,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1597132143,
@@ -18484,7 +18484,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1974470462,
@@ -18514,7 +18514,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1350449518,
@@ -18544,7 +18544,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1406877038,
@@ -18574,7 +18574,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1537725653,
@@ -18604,7 +18604,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1290739862,
@@ -18634,7 +18634,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1678930742,
@@ -18664,7 +18664,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1367241619,
@@ -18694,7 +18694,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1667734072,
@@ -18724,7 +18724,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1634512445,
@@ -18754,7 +18754,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1782813817,
@@ -18784,7 +18784,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1243952345,
@@ -18814,7 +18814,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1403660464,
@@ -18844,7 +18844,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1629857862,
@@ -18874,7 +18874,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1615517035,
@@ -18904,7 +18904,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1550094270,
@@ -18934,7 +18934,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1934401455,
@@ -18964,7 +18964,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1880633628,
@@ -18994,7 +18994,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1373239367,
@@ -19024,7 +19024,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1985271977,
@@ -19054,7 +19054,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1350570778,
@@ -19084,7 +19084,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1304708613,
@@ -19114,7 +19114,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1931501610,
@@ -19144,7 +19144,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1207885534,
@@ -19174,7 +19174,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1566849794,
@@ -19204,7 +19204,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1861278878,
@@ -19234,7 +19234,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1245020071,
@@ -19264,7 +19264,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1914984622,
@@ -19294,7 +19294,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1597895152,
@@ -19324,7 +19324,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1276087230,
@@ -19354,7 +19354,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1797908767,
@@ -19384,7 +19384,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1570103930,
@@ -19414,7 +19414,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1554457732,
@@ -19444,7 +19444,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1258131420,
@@ -19474,7 +19474,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1317300727,
@@ -19504,7 +19504,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1540899170,
@@ -19534,7 +19534,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1600094423,
@@ -19564,7 +19564,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1632406366,
@@ -19594,7 +19594,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1731738213,
@@ -19624,7 +19624,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1933816909,
@@ -19654,7 +19654,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1239815668,
@@ -19684,7 +19684,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1465612119,
@@ -19714,7 +19714,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1599336195,
@@ -19744,7 +19744,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1351675970,
@@ -19774,7 +19774,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1708911550,
@@ -19804,7 +19804,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1805212273,
@@ -19834,7 +19834,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1338935412,
@@ -19864,7 +19864,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1878879178,
@@ -19894,7 +19894,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1592711608,
@@ -19924,7 +19924,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1648891930,
@@ -19954,7 +19954,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1347849857,
@@ -19984,7 +19984,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1769141527,
@@ -20014,7 +20014,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1823099735,
@@ -20044,7 +20044,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1884625681,
@@ -20074,7 +20074,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1309911898,
@@ -20104,7 +20104,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1216326900,
@@ -20134,7 +20134,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1865352360,
@@ -20164,7 +20164,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1522287576,
@@ -20194,7 +20194,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1344066551,
@@ -20224,7 +20224,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1890726012,
@@ -20254,7 +20254,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1709076098,
@@ -20284,7 +20284,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1270527438,
@@ -20314,7 +20314,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1868064010,
@@ -20344,7 +20344,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1887319387,
@@ -20374,7 +20374,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1962276695,
@@ -20404,7 +20404,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1496318518,
@@ -20434,7 +20434,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1676290478,
@@ -20464,7 +20464,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1767444472,
@@ -20494,7 +20494,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1403775923,
@@ -20524,7 +20524,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1798510520,
@@ -20554,7 +20554,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1924007318,
@@ -20584,7 +20584,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1867776107,
@@ -20614,7 +20614,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1940461860,
@@ -20644,7 +20644,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1206349402,
@@ -20674,7 +20674,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1544955641,
@@ -20704,7 +20704,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1682047084,
@@ -20734,7 +20734,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1721323440,
@@ -20764,7 +20764,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1239024892,
@@ -20794,7 +20794,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1527905895,
@@ -20824,7 +20824,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1829186097,
@@ -20854,7 +20854,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1245082032,
@@ -20884,7 +20884,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1425190094,
@@ -20914,7 +20914,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1511343519,
@@ -20944,7 +20944,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1771255028,
@@ -20974,7 +20974,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1499700316,
@@ -21004,7 +21004,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1509279170,
@@ -21034,7 +21034,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1801918732,
@@ -21064,7 +21064,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1328609271,
@@ -21094,7 +21094,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1722486861,
@@ -21124,7 +21124,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1263651456,
@@ -21154,7 +21154,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1394033747,
@@ -21184,7 +21184,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1710982860,
@@ -21214,7 +21214,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1226289943,
@@ -21244,7 +21244,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1435770257,
@@ -21274,7 +21274,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1539336956,
@@ -21304,7 +21304,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1692063933,
@@ -21334,7 +21334,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1752339958,
@@ -21364,7 +21364,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1583090805,
@@ -21394,7 +21394,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1829444554,
@@ -21424,7 +21424,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     },
     {
       "fixture_id": 1665830979,
@@ -21454,7 +21454,7 @@
       "statistics_available": true,
       "unavailable_reason": null,
       "source": "Football-Data.co.uk",
-      "collected_at": "2026-08-26T04:18:43Z"
+      "collected_at": "2026-08-26T07:27:02Z"
     }
   ]
 }
