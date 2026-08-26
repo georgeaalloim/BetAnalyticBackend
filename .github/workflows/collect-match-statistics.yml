@@ -63,7 +63,8 @@ jobs:
       - name: Complete missing statistics and goal scorers
         run: |
           python api_football_history_enricher.py \
-            --seasons 2025,2026 \
+            --seasons auto \
+            --date-fallback-days 45 \
             --summary-output data/history_enrichment_summary.json
 
       - name: Audit and clean mixed-provider records
