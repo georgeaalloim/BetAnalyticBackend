@@ -126,7 +126,14 @@ jobs:
               if "slgr" in lowered or "super league official" in lowered:
                   raise SystemExit("Forbidden Super League scraping source found.")
               if fixture.get("kickoff_time_confirmed"):
+                  # Keep this validator aligned with free_schedule_source._source_text().
+                  # Current labels plus two legacy labels are accepted so an already
+                  # confirmed kickoff stored in SQLite does not fail publication only
+                  # because the human-readable source wording changed.
                   valid_time_labels = (
+                      "cross-checked date and time",
+                      "verified date; explicit kickoff from one schedule source",
+                      "explicit kickoff from schedule source",
                       "verified date and time",
                       "verified date; time reported by one source",
                   )
