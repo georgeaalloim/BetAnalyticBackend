@@ -1,16 +1,16 @@
 {
   "status": "ok",
-  "generated_at": "2026-08-26T07:27:01Z",
+  "generated_at": "2026-08-26T08:06:29Z",
   "seasons": [
     2023,
     2024,
     2025,
     2026
   ],
-  "fixtures_in_feed": 29,
-  "ready_predictions": 29,
+  "fixtures_in_feed": 28,
+  "ready_predictions": 28,
   "unavailable_predictions": 0,
-  "feed_sha256": "c722f82eaecedabef0cce97a3c3898aceafac6b18e859f7c5673e706ef47f157",
+  "feed_sha256": "8ed3986715e24d60b51bed91551f7b792e752adbe73943567079b49add781502",
   "feed_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/feed.json",
   "manifest_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/manifest.json",
   "sync_summary": {
@@ -25,7 +25,8 @@
       ],
       "verification_counts": {
         "source_conflict": 5,
-        "single_source": 178
+        "single_source_time": 10,
+        "single_source": 168
       },
       "source_counts": {
         "Fixtur.es": 182,
@@ -69,7 +70,7 @@
         "Διαφωνία δωρεάν πηγών για OFI - Volos NFC; η ώρα αποκρύφτηκε.",
         "Διαφωνία δωρεάν πηγών για Panetolikos - Asteras Tripolis; η ώρα αποκρύφτηκε."
       ],
-      "safety_rule": "Η ακριβής ώρα εμφανίζεται μόνο όταν τουλάχιστον δύο ανεξάρτητες πηγές με ρητή ώρα συμφωνούν εντός 30 λεπτών. Η δεύτερη πηγή περιλαμβάνει το δωρεάν latest fixtures CSV του Football-Data.co.uk. Αλλιώς η εφαρμογή εμφανίζει «Ώρα υπό επιβεβαίωση»."
+      "safety_rule": "Η ακριβής ώρα εμφανίζεται όταν υπάρχει ρητή και εύλογη ώρα από Fixtur.es ή Football-Data. Όταν υπάρχουν δύο timed πηγές πρέπει να συμφωνούν εντός 30 λεπτών· σε διαφωνία η ώρα κρύβεται. Προφανείς placeholder ώρες όπως 03:00 δεν εμφανίζονται."
     },
     "detailed_statistics": {
       "source": "Football-Data.co.uk CSV (free; no API key)",
@@ -145,6 +146,6 @@
       "future_detailed_season_detection": true,
       "description": "Κάθε run διασταυρώνει δωρεάν το πρόγραμμα, χρησιμοποιώντας το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει τα δωρεάν CSV αποτελεσμάτων/στατιστικών. Τα αναλυτικά ιστορικά στοιχεία αποθηκεύονται ως ενιαίο snapshot παρόχου χωρίς ανάμειξη πεδίων. Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό και χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό χρονικό cutoff."
     },
-    "finished_at": "2026-08-26T07:27:05Z"
+    "finished_at": "2026-08-26T08:06:37Z"
   }
 }
