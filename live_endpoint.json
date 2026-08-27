@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "primary_live_url": "https://betanalytic-backup-scheduler.geo-alimonos.workers.dev/live",
+  "fallback_live_url": "https://georgeaalloim.github.io/BetAnalyticBackend/live.json"
+}
