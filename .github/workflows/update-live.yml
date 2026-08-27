@@ -3,9 +3,9 @@ name: Refresh BetAnalytic LIVE
 on:
   workflow_dispatch:
   schedule:
-    # GitHub Actions: ελάχιστο επίσημο schedule ανά 5 λεπτά.
-    # Off-minute cadence για μικρότερη πιθανότητα καθυστέρησης αιχμής.
-    - cron: "3-58/5 * * * *"
+    # LIVE refresh κάθε 5 λεπτά (ελάχιστο επίσημο interval του GitHub Actions).
+    # Ρητή λίστα off-minute τιμών για να αποφεύγουμε το :00 και τυχόν ασάφεια parser.
+    - cron: "2,7,12,17,22,27,32,37,42,47,52,57 * * * *"
 
 permissions:
   contents: read
