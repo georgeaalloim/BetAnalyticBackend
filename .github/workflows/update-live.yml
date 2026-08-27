@@ -1,0 +1,109 @@
+name: Refresh BetAnalytic LIVE
+
+on:
+  workflow_dispatch:
+  schedule:
+    # GitHub Actions: ελάχιστο επίσημο schedule ανά 5 λεπτά.
+    # Off-minute cadence για μικρότερη πιθανότητα καθυστέρησης αιχμής.
+    - cron: "3-58/5 * * * *"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: betanalytic-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+
+    env:
+      # Προαιρετικό. Χωρίς secret χρησιμοποιείται το documented free v1 key 123.
+      THESPORTSDB_KEY: ${{ secrets.THESPORTSDB_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-automation.txt
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-automation.txt
+
+      - name: Download currently published static site
+        run: |
+          mkdir -p live_output
+          BASE="https://georgeaalloim.github.io/BetAnalyticBackend"
+          BUST="$(date +%s)"
+          curl --fail --silent --show-error --location --retry 3 \
+            "$BASE/feed.json?v=$BUST" -o live_output/feed.json
+          curl --fail --silent --show-error --location --retry 3 \
+            "$BASE/manifest.json?v=$BUST" -o live_output/manifest.json
+          curl --fail --silent --show-error --location --retry 2 \
+            "$BASE/live.json?v=$BUST" -o live_output/previous-live.json || true
+
+      - name: Refresh LIVE data from free v1 lookup endpoints
+        run: |
+          python live_refresh.py \
+            --feed-file live_output/feed.json \
+            --output-dir live_output \
+            --previous-live-file live_output/previous-live.json
+          rm -f live_output/previous-live.json
+
+      - name: Create landing page
+        run: |
+          cat > live_output/index.html <<'HTML'
+          <!doctype html>
+          <html lang="el">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>BetAnalytic Data</title>
+          </head>
+          <body>
+            <h1>BetAnalytic</h1>
+            <p>Το δωρεάν αυτόματο feed λειτουργεί.</p>
+            <p><a href="manifest.json">manifest.json</a></p>
+            <p><a href="feed.json">feed.json</a></p>
+            <p><a href="live.json">live.json</a></p>
+          </body>
+          </html>
+          HTML
+
+      - name: Validate JSON
+        run: |
+          python -m json.tool live_output/feed.json > /dev/null
+          python -m json.tool live_output/manifest.json > /dev/null
+          python -m json.tool live_output/live.json > /dev/null
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: live_output
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

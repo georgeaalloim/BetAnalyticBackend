@@ -3,8 +3,9 @@ name: Update and publish BetAnalytic data
 on:
   workflow_dispatch:
   schedule:
-    # Ανά δύο ώρες, στο λεπτό 17. Το cron χρησιμοποιεί UTC.
-    - cron: "17 */2 * * *"
+    # Κάθε ώρα, στο λεπτό 43. Το cron χρησιμοποιεί UTC.
+    # Πιο συχνό schedule ώστε ένα καθυστερημένο/χαμένο GitHub cron να μην αφήνει το feed παλιό για πολλές ώρες.
+    - cron: "43 * * * *"
   workflow_run:
     workflows:
       - Sync free match history
@@ -61,6 +62,15 @@ jobs:
           python automatic_update.py \
             --output-dir automation_output \
             --skip-upload
+
+      - name: Preserve the latest LIVE snapshot
+        run: |
+          BASE="https://georgeaalloim.github.io/BetAnalyticBackend"
+          BUST="$(date +%s)"
+          if ! curl --fail --silent --show-error --location --retry 2 \
+            "$BASE/live.json?v=$BUST" -o automation_output/live.json; then
+            python -c 'import json; from datetime import datetime, timezone; from pathlib import Path; Path("automation_output/live.json").write_text(json.dumps({"schema_version":1,"generated_at":datetime.now(timezone.utc).isoformat().replace("+00:00","Z"),"refresh_interval_seconds":300,"source":{"name":"TheSportsDB API v1","mode":"free v1 event lookup + timeline + event statistics","paid_subscription_required":False,"premium_livescore_endpoint_used":False},"candidates_considered":0,"matches_count":0,"requests_used":0,"matches":[],"warnings":["No previous LIVE snapshot was available during full feed publish."]}, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")'
+          fi
 
       - name: Audit canonical statistics snapshots
         run: |
@@ -219,6 +229,7 @@ jobs:
               <p>Το δωρεάν αυτόματο feed λειτουργεί.</p>
               <p><a href="manifest.json">manifest.json</a></p>
               <p><a href="feed.json">feed.json</a></p>
+              <p><a href="live.json">live.json</a></p>
           </body>
           </html>
           """
@@ -229,6 +240,7 @@ jobs:
         run: |
           python -m json.tool automation_output/manifest.json > /dev/null
           python -m json.tool automation_output/feed.json > /dev/null
+          python -m json.tool automation_output/live.json > /dev/null
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
