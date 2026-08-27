@@ -1,16 +1,16 @@
 {
   "status": "ok",
-  "generated_at": "2026-08-27T07:39:50Z",
+  "generated_at": "2026-08-27T12:43:25Z",
   "seasons": [
     2023,
     2024,
     2025,
     2026
   ],
-  "fixtures_in_feed": 35,
-  "ready_predictions": 35,
+  "fixtures_in_feed": 36,
+  "ready_predictions": 36,
   "unavailable_predictions": 0,
-  "feed_sha256": "30247eab6755cf4ac4d66089dd7f536ec2a97a5405b7ac33b126ac74ea369225",
+  "feed_sha256": "51d9ba42dc64c7f19499e5b7bfc93ba7b7c4fe000418d76892eeab36c6e6298f",
   "feed_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/feed.json",
   "manifest_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/manifest.json",
   "sync_summary": {
@@ -25,8 +25,8 @@
       ],
       "verification_counts": {
         "source_conflict": 6,
-        "single_source_time": 8,
-        "single_source": 168
+        "single_source_time": 22,
+        "single_source": 154
       },
       "source_counts": {
         "Fixtur.es": 182,
@@ -168,6 +168,6 @@
       "future_detailed_season_detection": true,
       "description": "Κάθε run διασταυρώνει δωρεάν το πρόγραμμα, χρησιμοποιώντας το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει τα δωρεάν CSV αποτελεσμάτων/στατιστικών. Τα αναλυτικά ιστορικά στοιχεία αποθηκεύονται ως ενιαίο snapshot παρόχου χωρίς ανάμειξη πεδίων. Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό. Για κάθε νέο FT με γκολ γίνεται αυτόματη αναζήτηση scorer timeline στο TheSportsDB, αυστηρός έλεγχος ότι οι σκόρερ συμφωνούν ακριβώς με το τελικό σκορ και αυτόματο retry σε επόμενο run αν η πηγή είναι ακόμη ελλιπής. Το API-Football χρησιμοποιείται ως προαιρετικό fallback. Οι ολοκληρωμένοι αγώνες χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό χρονικό cutoff."
     },
-    "finished_at": "2026-08-27T07:39:57Z"
+    "finished_at": "2026-08-27T12:43:29Z"
   }
 }
