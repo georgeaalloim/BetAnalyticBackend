@@ -372,6 +372,109 @@ def _prediction_lambdas(candidate: dict[str, Any]) -> tuple[float, float]:
     return 1.35, 1.15
 
 
+def _stat_pair(
+    statistics: dict[str, dict[str, float | int | None]],
+    key: str,
+) -> tuple[float | None, float | None]:
+    values = statistics.get(key)
+    if not isinstance(values, dict):
+        return None, None
+    return _as_float(values.get("home")), _as_float(values.get("away"))
+
+
+def _share_signal(home: float | None, away: float | None, smoothing: float) -> tuple[float, bool]:
+    """Return a bounded -1..+1 home-vs-away signal.
+
+    Smoothing stops tiny samples (for example 1 shot vs 0 in minute 3) from
+    moving the model too aggressively. Missing pairs contribute nothing.
+    """
+    if home is None or away is None:
+        return 0.0, False
+    denominator = abs(home) + abs(away) + max(0.0, float(smoothing))
+    if denominator <= 0.0:
+        return 0.0, True
+    return _clamp((home - away) / denominator, -1.0, 1.0), True
+
+
+def _possession_signal(home: float | None, away: float | None) -> tuple[float, bool]:
+    if home is None or away is None:
+        return 0.0, False
+    # A 75/25 split becomes +1.0. Smaller differences remain proportional.
+    return _clamp((home - away) / 50.0, -1.0, 1.0), True
+
+
+def _live_dominance(
+    statistics: dict[str, dict[str, float | int | None]],
+    *,
+    minute: float,
+) -> dict[str, Any]:
+    """Build a conservative live-dominance signal from available free stats.
+
+    Weighting deliberately favours chance quality over noisier indicators:
+    shots on target > total shots > corners > possession. Red cards are not
+    folded into this pressure number; they are applied separately because a
+    sending-off has a much larger structural effect than normal match pressure.
+    """
+    home_sot, away_sot = _stat_pair(statistics, "shots_on_target")
+    home_shots, away_shots = _stat_pair(statistics, "shots")
+    home_corners, away_corners = _stat_pair(statistics, "corners")
+    home_poss, away_poss = _stat_pair(statistics, "possession")
+
+    sot_signal, sot_ok = _share_signal(home_sot, away_sot, 2.0)
+    shots_signal, shots_ok = _share_signal(home_shots, away_shots, 5.0)
+    corners_signal, corners_ok = _share_signal(home_corners, away_corners, 3.0)
+    possession_signal, possession_ok = _possession_signal(home_poss, away_poss)
+
+    # Strongest to weakest indicator. The sum is intentionally below 0.60 so
+    # live data can move the pre-match prior without completely replacing it.
+    weighted = {
+        "shots_on_target": 0.24 * sot_signal,
+        "shots": 0.14 * shots_signal,
+        "corners": 0.09 * corners_signal,
+        "possession": 0.07 * possession_signal,
+    }
+    available = {
+        "shots_on_target": sot_ok,
+        "shots": shots_ok,
+        "corners": corners_ok,
+        "possession": possession_ok,
+    }
+
+    raw_pressure = sum(weighted.values())
+
+    # Early in the match a small sample is noisy. By minute 25 the evidence is
+    # fully trusted; before then it is smoothly damped rather than ignored.
+    evidence_scale = _clamp(max(0.35, minute / 25.0), 0.35, 1.0)
+    pressure = _clamp(raw_pressure * evidence_scale, -0.42, 0.42)
+
+    # Present a stable 0..100 dominance index for diagnostics/future UI use.
+    home_index = _clamp(50.0 + pressure * 80.0, 10.0, 90.0)
+    away_index = 100.0 - home_index
+    abs_pressure = abs(pressure)
+    if abs_pressure < 0.04:
+        leader = "balanced"
+        strength = "balanced"
+    else:
+        leader = "home" if pressure > 0 else "away"
+        if abs_pressure < 0.10:
+            strength = "slight"
+        elif abs_pressure < 0.20:
+            strength = "clear"
+        else:
+            strength = "strong"
+
+    return {
+        "pressure": pressure,
+        "leader": leader,
+        "strength": strength,
+        "home_index_percent": round(home_index, 1),
+        "away_index_percent": round(away_index, 1),
+        "evidence_scale": round(evidence_scale, 3),
+        "available_inputs": [key for key, ok in available.items() if ok],
+        "components": {key: round(value, 4) for key, value in weighted.items()},
+    }
+
+
 def build_live_prediction(
     candidate: dict[str, Any],
     *,
@@ -380,29 +483,43 @@ def build_live_prediction(
     minute: int | None,
     statistics: dict[str, dict[str, float | int | None]],
 ) -> dict[str, Any]:
-    """Small transparent in-play update built on BetAnalytic pre-match xG.
+    """Transparent in-play update built on BetAnalytic pre-match xG.
 
-    It is intentionally conservative: pre-match expected goals are time-scaled
-    for the remaining minutes and only mildly adjusted by live pressure and red
-    cards when those free statistics are available.
+    Version 0.2 combines the pre-match expected-goal prior with current score,
+    remaining time and a bounded live-dominance signal. Dominance uses shots on
+    target, total shots, corners and possession when available. Red cards are
+    applied separately with a larger effect. Missing free-source statistics are
+    simply ignored, preserving the previous safe fallback behaviour.
     """
     base_home, base_away = _prediction_lambdas(candidate)
     clock = _clamp(float(minute if minute is not None else 45), 0.0, 95.0)
     remaining_fraction = _clamp((95.0 - clock) / 95.0, 0.015, 1.0)
 
-    sot = statistics.get("shots_on_target", {})
-    corners = statistics.get("corners", {})
-    red = statistics.get("red_cards", {})
-    home_sot = float(sot.get("home") or 0.0)
-    away_sot = float(sot.get("away") or 0.0)
-    home_corners = float(corners.get("home") or 0.0)
-    away_corners = float(corners.get("away") or 0.0)
-    home_red = float(red.get("home") or 0.0)
-    away_red = float(red.get("away") or 0.0)
+    dominance = _live_dominance(statistics, minute=clock)
+    pressure = float(dominance["pressure"])
 
-    pressure = _clamp(0.055 * (home_sot - away_sot) + 0.018 * (home_corners - away_corners), -0.35, 0.35)
-    home_multiplier = _clamp(1.0 + pressure - 0.32 * home_red + 0.18 * away_red, 0.35, 1.75)
-    away_multiplier = _clamp(1.0 - pressure - 0.32 * away_red + 0.18 * home_red, 0.35, 1.75)
+    home_red_raw, away_red_raw = _stat_pair(statistics, "red_cards")
+    home_red = float(home_red_raw or 0.0)
+    away_red = float(away_red_raw or 0.0)
+
+    # Game-state adjustment: a trailing side normally takes more attacking risk,
+    # while a leading side is slightly more conservative. This is deliberately
+    # smaller than the live-pressure and red-card effects.
+    score_gap = float(home_score - away_score)
+    home_state = _clamp(-0.055 * score_gap, -0.16, 0.16)
+    away_state = -home_state
+
+    # Red cards are structural, so they are stronger than normal pressure.
+    home_multiplier = _clamp(
+        1.0 + pressure + home_state - 0.34 * home_red + 0.20 * away_red,
+        0.30,
+        1.85,
+    )
+    away_multiplier = _clamp(
+        1.0 - pressure + away_state - 0.34 * away_red + 0.20 * home_red,
+        0.30,
+        1.85,
+    )
 
     rem_home = max(0.01, base_home * remaining_fraction * home_multiplier)
     rem_away = max(0.01, base_away * remaining_fraction * away_multiplier)
@@ -433,9 +550,28 @@ def build_live_prediction(
     next_away = any_more * rem_away / goal_hazard if goal_hazard > 0 else 0.0
 
     return {
-        "model": "BetAnalytic Live Update v0.1",
-        "method": "pre-match expected goals + remaining time + available live pressure/cards",
+        "model": "BetAnalytic Live Update v0.2",
+        "method": (
+            "pre-match expected goals + current score + remaining time + "
+            "live dominance (shots on target/shots/corners/possession) + red cards"
+        ),
         "minute_used": int(round(clock)),
+        "live_dominance": {
+            "leader": dominance["leader"],
+            "strength": dominance["strength"],
+            "home_index_percent": dominance["home_index_percent"],
+            "away_index_percent": dominance["away_index_percent"],
+            "available_inputs": dominance["available_inputs"],
+            "components": dominance["components"],
+        },
+        "adjustments": {
+            "home_multiplier": round(home_multiplier, 3),
+            "away_multiplier": round(away_multiplier, 3),
+            "home_red_cards": int(home_red),
+            "away_red_cards": int(away_red),
+            "score_state_home": round(home_state, 3),
+            "score_state_away": round(away_state, 3),
+        },
         "remaining_expected_goals": {
             "home": round(rem_home, 3),
             "away": round(rem_away, 3),
@@ -454,7 +590,6 @@ def build_live_prediction(
         },
         "disclaimer": "Ζωντανή εκτίμηση του BetAnalytic, όχι αποδόσεις bookmaker.",
     }
-
 
 def _score_from_timeline(events: list[dict[str, Any]]) -> tuple[int, int]:
     return (

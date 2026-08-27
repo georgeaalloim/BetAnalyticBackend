@@ -145,6 +145,70 @@ class LiveMatchServiceTests(unittest.TestCase):
         next_goal = prediction["next_goal_percent"]
         self.assertAlmostEqual(100.0, next_goal["home"] + next_goal["away"] + next_goal["no_more_goal"], delta=0.2)
 
+    def test_live_prediction_uses_total_shots_and_possession_for_dominance(self) -> None:
+        neutral_candidate = dict(CANDIDATE)
+        neutral_candidate["prediction"] = {"expected_goals": {"home": 1.2, "away": 1.2}}
+        prediction = build_live_prediction(
+            neutral_candidate,
+            home_score=0,
+            away_score=0,
+            minute=60,
+            statistics={
+                "shots_on_target": {"home": 3, "away": 3},
+                "shots": {"home": 16, "away": 6},
+                "corners": {"home": 4, "away": 4},
+                "possession": {"home": 66, "away": 34},
+                "red_cards": {"home": 0, "away": 0},
+            },
+        )
+        result = prediction["result_probabilities_percent"]
+        dominance = prediction["live_dominance"]
+        self.assertEqual("home", dominance["leader"])
+        self.assertGreater(dominance["home_index_percent"], 50.0)
+        self.assertGreater(result["home_win"], result["away_win"])
+        self.assertIn("shots", dominance["available_inputs"])
+        self.assertIn("possession", dominance["available_inputs"])
+
+    def test_live_prediction_red_card_has_strong_separate_effect(self) -> None:
+        neutral_candidate = dict(CANDIDATE)
+        neutral_candidate["prediction"] = {"expected_goals": {"home": 1.3, "away": 1.3}}
+        common = {
+            "shots_on_target": {"home": 4, "away": 4},
+            "shots": {"home": 10, "away": 10},
+            "corners": {"home": 4, "away": 4},
+            "possession": {"home": 50, "away": 50},
+        }
+        even = build_live_prediction(
+            neutral_candidate, home_score=0, away_score=0, minute=55,
+            statistics={**common, "red_cards": {"home": 0, "away": 0}},
+        )
+        home_red = build_live_prediction(
+            neutral_candidate, home_score=0, away_score=0, minute=55,
+            statistics={**common, "red_cards": {"home": 1, "away": 0}},
+        )
+        self.assertLess(
+            home_red["result_probabilities_percent"]["home_win"],
+            even["result_probabilities_percent"]["home_win"],
+        )
+        self.assertGreater(
+            home_red["result_probabilities_percent"]["away_win"],
+            even["result_probabilities_percent"]["away_win"],
+        )
+
+    def test_live_prediction_missing_optional_stats_remains_safe(self) -> None:
+        prediction = build_live_prediction(
+            CANDIDATE,
+            home_score=1,
+            away_score=1,
+            minute=50,
+            statistics={"red_cards": {"home": 0, "away": 0}},
+        )
+        self.assertEqual([], prediction["live_dominance"]["available_inputs"])
+        result = prediction["result_probabilities_percent"]
+        self.assertAlmostEqual(
+            100.0, result["home_win"] + result["draw"] + result["away_win"], delta=0.2
+        )
+
 
     def test_refresh_live_match_builds_score_stats_events_and_prediction(self) -> None:
         session = _Session()
