@@ -299,6 +299,53 @@ def _load_upcoming_fixtures(
 
 
 
+def _load_live_candidate_fixtures(
+    league_id: int,
+    seasons: Iterable[int],
+    as_of: datetime,
+    before_hours: int = 4,
+    after_hours: int = 6,
+) -> list[dict[str, Any]]:
+    """Keep a narrow confirmed-kickoff catalog around now for LIVE refresh.
+
+    This is separate from the normal upcoming list. A fixture therefore remains
+    discoverable by the lightweight LIVE workflow after kickoff, while the old
+    Android schedule semantics remain unchanged.
+    """
+    season_values = tuple(sorted(set(int(season) for season in seasons)))
+    if not season_values:
+        return []
+    placeholders = ",".join("?" for _ in season_values)
+    with get_connection() as connection:
+        rows = connection.execute(
+            f"""
+            SELECT *
+            FROM fixtures
+            WHERE league_id = ?
+              AND season IN ({placeholders})
+            ORDER BY fixture_date ASC
+            """,
+            (league_id, *season_values),
+        ).fetchall()
+
+    lower = as_of - timedelta(hours=max(1, int(before_hours)))
+    upper = as_of + timedelta(hours=max(1, int(after_hours)))
+    blocked = {"FT", "AET", "AP", "AW", "PST", "POST", "CANC", "CANCELLED", "ABD"}
+    selected: list[tuple[datetime, dict[str, Any]]] = []
+    for row in rows:
+        fixture = dict(row)
+        if not bool(fixture.get("kickoff_time_confirmed")):
+            continue
+        if str(fixture.get("status") or "").upper() in blocked:
+            continue
+        fixture_datetime = _safe_parse_fixture_date(fixture)
+        if fixture_datetime is None or not (lower <= fixture_datetime <= upper):
+            continue
+        selected.append((fixture_datetime, fixture))
+    selected.sort(key=lambda item: item[0])
+    return [fixture for _, fixture in selected]
+
+
 def _history_stat_pair(row: dict[str, Any], home_field: str, away_field: str) -> dict[str, int | None]:
     return {
         "home": int(row[home_field]) if row.get(home_field) is not None else None,
@@ -795,6 +842,11 @@ def generate_static_feed(
         lookahead_days=lookahead_days,
         upcoming_statuses=upcoming_statuses,
     )
+    live_candidate_fixtures = _load_live_candidate_fixtures(
+        league_id=league_id,
+        seasons=normalized_seasons,
+        as_of=as_of,
+    )
 
     goal_context_by_season: dict[int, dict[str, Any] | None] = {}
     goal_error_by_season: dict[int, str | None] = {}
@@ -804,7 +856,10 @@ def generate_static_feed(
     corners_error_by_season: dict[int, str | None] = {}
     validation_by_season: dict[str, Any] = {}
 
-    target_seasons = sorted({int(fixture["season"]) for fixture in upcoming_fixtures})
+    target_seasons = sorted({
+        int(fixture["season"])
+        for fixture in [*upcoming_fixtures, *live_candidate_fixtures]
+    })
     for season in target_seasons:
         candidates = _load_training_candidates(league_id, season)
         training_fixtures = select_training_fixtures(candidates, cutoff=as_of)
@@ -837,18 +892,22 @@ def generate_static_feed(
             "corners": walk_forward_backtest(training_statistics, market="corners"),
         }
 
-    fixture_payloads = [
-        _fixture_payload(
+    def build_fixture_payload(fixture: dict[str, Any]) -> dict[str, Any]:
+        season = int(fixture["season"])
+        return _fixture_payload(
             fixture=fixture,
             as_of=as_of,
-            goal_context=goal_context_by_season.get(int(fixture["season"])),
-            goal_context_error=goal_error_by_season.get(int(fixture["season"])),
-            training_fixtures=training_by_season.get(int(fixture["season"]), []),
-            corners_context=corners_context_by_season.get(int(fixture["season"])),
-            corners_context_error=corners_error_by_season.get(int(fixture["season"])),
-            training_statistics=stats_by_season.get(int(fixture["season"]), []),
+            goal_context=goal_context_by_season.get(season),
+            goal_context_error=goal_error_by_season.get(season),
+            training_fixtures=training_by_season.get(season, []),
+            corners_context=corners_context_by_season.get(season),
+            corners_context_error=corners_error_by_season.get(season),
+            training_statistics=stats_by_season.get(season, []),
         )
-        for fixture in upcoming_fixtures
+
+    fixture_payloads = [build_fixture_payload(fixture) for fixture in upcoming_fixtures]
+    live_candidate_payloads = [
+        build_fixture_payload(fixture) for fixture in live_candidate_fixtures
     ]
 
     seasons_payload: list[dict[str, Any]] = []
@@ -896,6 +955,7 @@ def generate_static_feed(
         "ready_predictions": ready_count,
         "unavailable_predictions": unavailable_count,
         "seasons": seasons_payload,
+        "live_candidates": live_candidate_payloads,
         "history": history_payload,
     }
 
@@ -917,6 +977,8 @@ def generate_static_feed(
             item["matches_count"] for item in history_payload["seasons"]
         ),
         "history_default_season": history_payload["default_season"],
+        "live_candidates_count": len(live_candidate_payloads),
+        "live_url": "live.json",
     }
     _atomic_write_json(manifest_path, manifest_payload)
     return GeneratedFeed(
