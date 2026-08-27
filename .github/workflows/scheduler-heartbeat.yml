@@ -1,0 +1,17 @@
+name: BetAnalytic Scheduler Heartbeat
+
+on:
+  schedule:
+    # Diagnostic only: every 5 minutes. No workflow_dispatch on purpose.
+    - cron: "1,6,11,16,21,26,31,36,41,46,51,56 * * * *"
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Confirm GitHub scheduler fired
+        run: |
+          echo "BetAnalytic scheduler heartbeat"
+          echo "Event: $GITHUB_EVENT_NAME"
+          date -u
