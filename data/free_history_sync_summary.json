@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "generated_at": "2026-08-27T12:43:25Z",
+  "generated_at": "2026-08-28T03:43:22Z",
   "seasons": [
     2023,
     2024,
@@ -10,7 +10,7 @@
   "fixtures_in_feed": 36,
   "ready_predictions": 36,
   "unavailable_predictions": 0,
-  "feed_sha256": "51d9ba42dc64c7f19499e5b7bfc93ba7b7c4fe000418d76892eeab36c6e6298f",
+  "feed_sha256": "d4dfd1debc676e702347d53fa372dd71e5d75aadd6ca4728f1ec4f9c8f99de9f",
   "feed_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/feed.json",
   "manifest_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/manifest.json",
   "sync_summary": {
@@ -141,7 +141,7 @@
       "quota_remaining": null,
       "warnings": [
         "Αποτυχία λίστας API-Football για 2026: API-Football errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "Αποτυχία API-Football date fallback για 2026-08-23: API-Football errors: {'plan': 'Free plans do not have access to this date, try from 2026-08-26 to 2026-08-28.'}"
+        "Αποτυχία API-Football date fallback για 2026-08-23: API-Football errors: {'plan': 'Free plans do not have access to this date, try from 2026-08-27 to 2026-08-29.'}"
       ],
       "score_mismatches": 0,
       "pending_matches": 1,
@@ -168,6 +168,6 @@
       "future_detailed_season_detection": true,
       "description": "Κάθε run διασταυρώνει δωρεάν το πρόγραμμα, χρησιμοποιώντας το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει τα δωρεάν CSV αποτελεσμάτων/στατιστικών. Τα αναλυτικά ιστορικά στοιχεία αποθηκεύονται ως ενιαίο snapshot παρόχου χωρίς ανάμειξη πεδίων. Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό. Για κάθε νέο FT με γκολ γίνεται αυτόματη αναζήτηση scorer timeline στο TheSportsDB, αυστηρός έλεγχος ότι οι σκόρερ συμφωνούν ακριβώς με το τελικό σκορ και αυτόματο retry σε επόμενο run αν η πηγή είναι ακόμη ελλιπής. Το API-Football χρησιμοποιείται ως προαιρετικό fallback. Οι ολοκληρωμένοι αγώνες χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό χρονικό cutoff."
     },
-    "finished_at": "2026-08-27T12:43:29Z"
+    "finished_at": "2026-08-28T03:43:27Z"
   }
 }

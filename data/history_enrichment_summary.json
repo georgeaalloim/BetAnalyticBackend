@@ -14,8 +14,8 @@
   "warnings": [
     "Αποτυχία λίστας API-Football για 2025: API-Football errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
     "Αποτυχία λίστας API-Football για 2026: API-Football errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-    "Αποτυχία API-Football date fallback για 2026-08-23: API-Football errors: {'plan': 'Free plans do not have access to this date, try from 2026-08-26 to 2026-08-28.'}",
-    "Αποτυχία API-Football date fallback για 2026-08-22: API-Football errors: {'plan': 'Free plans do not have access to this date, try from 2026-08-26 to 2026-08-28.'}"
+    "Αποτυχία API-Football date fallback για 2026-08-23: API-Football errors: {'plan': 'Free plans do not have access to this date, try from 2026-08-27 to 2026-08-29.'}",
+    "Αποτυχία API-Football date fallback για 2026-08-22: API-Football errors: {'plan': 'Free plans do not have access to this date, try from 2026-08-27 to 2026-08-29.'}"
   ],
-  "finished_at": "2026-08-27T12:43:31Z"
+  "finished_at": "2026-08-28T03:43:29Z"
 }
