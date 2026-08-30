@@ -1,16 +1,16 @@
 {
   "status": "ok",
-  "generated_at": "2026-08-29T10:24:27Z",
+  "generated_at": "2026-08-30T03:43:27Z",
   "seasons": [
     2023,
     2024,
     2025,
     2026
   ],
-  "fixtures_in_feed": 36,
-  "ready_predictions": 36,
+  "fixtures_in_feed": 34,
+  "ready_predictions": 34,
   "unavailable_predictions": 0,
-  "feed_sha256": "4f57628c2d41a75db5aefb8621901227b780c3f883d4c57be45b75e212552153",
+  "feed_sha256": "6fffe3c559257433f8c298e3c2062cabc73c93f072122b8c250ddf47c7445065",
   "feed_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/feed.json",
   "manifest_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/manifest.json",
   "sync_summary": {
@@ -117,13 +117,15 @@
     "automatic_goal_scorers": {
       "source": "TheSportsDB API v1",
       "enabled": true,
-      "completed_matches_considered": 1,
-      "matches_searched": 1,
-      "events_found": 0,
+      "completed_matches_considered": 3,
+      "matches_searched": 3,
+      "events_found": 1,
       "matches_saved": 0,
-      "requests_used": 2,
-      "pending_matches": 1,
+      "requests_used": 6,
+      "pending_matches": 3,
       "warnings": [
+        "Pending scorers: το timeline είναι ελλιπές/ασύμφωνο για Panetolikos - Kalamata (βρέθηκαν 0, αναμένονται 2).",
+        "Pending scorers: δεν βρέθηκε event για Volos NFC - Iraklis 1908 (2026-08-29).",
         "Pending scorers: δεν βρέθηκε event για PAOK - Levadeiakos (2026-08-23)."
       ],
       "mode": "automatic FT -> event search -> timeline -> exact score validation -> save; pending rows retry next run"
@@ -134,17 +136,18 @@
       "seasons": [
         2026
       ],
-      "completed_matches_considered": 1,
+      "completed_matches_considered": 3,
       "api_matches_found": 0,
       "matches_enriched": 0,
       "requests_used": 0,
       "quota_remaining": null,
       "warnings": [
         "Αποτυχία λίστας API-Football για 2026: API-Football errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "Αποτυχία API-Football date fallback για 2026-08-23: API-Football errors: {'plan': 'Free plans do not have access to this date, try from 2026-08-28 to 2026-08-30.'}"
+        "Αποτυχία API-Football date fallback για 2026-08-29: API-Football errors: {'season': 'The Season field is required.'}",
+        "Αποτυχία API-Football date fallback για 2026-08-23: API-Football errors: {'plan': 'Free plans do not have access to this date, try from 2026-08-29 to 2026-08-31.'}"
       ],
       "score_mismatches": 0,
-      "pending_matches": 1,
+      "pending_matches": 3,
       "mode": "fallback only for scorer rows still missing after TheSportsDB; recent-date fallback when available"
     },
     "canonical_statistics_audit": {
@@ -168,6 +171,6 @@
       "future_detailed_season_detection": true,
       "description": "Κάθε run διασταυρώνει δωρεάν το πρόγραμμα, χρησιμοποιώντας το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει τα δωρεάν CSV αποτελεσμάτων/στατιστικών. Τα αναλυτικά ιστορικά στοιχεία αποθηκεύονται ως ενιαίο snapshot παρόχου χωρίς ανάμειξη πεδίων. Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό. Για κάθε νέο FT με γκολ γίνεται αυτόματη αναζήτηση scorer timeline στο TheSportsDB, αυστηρός έλεγχος ότι οι σκόρερ συμφωνούν ακριβώς με το τελικό σκορ και αυτόματο retry σε επόμενο run αν η πηγή είναι ακόμη ελλιπής. Το API-Football χρησιμοποιείται ως προαιρετικό fallback. Οι ολοκληρωμένοι αγώνες χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό χρονικό cutoff."
     },
-    "finished_at": "2026-08-29T10:24:32Z"
+    "finished_at": "2026-08-30T03:43:33Z"
   }
 }
