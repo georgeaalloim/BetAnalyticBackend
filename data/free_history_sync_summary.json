@@ -1,177 +1,32 @@
 {
   "status": "ok",
-  "generated_at": "2026-08-31T07:13:23Z",
-  "seasons": [
-    2023,
-    2024,
-    2025,
-    2026
-  ],
-  "fixtures_in_feed": 30,
-  "ready_predictions": 30,
-  "unavailable_predictions": 0,
-  "feed_sha256": "7de0ade5a32d4661d32aafd88afc90fe8a487f912f7c4775b4828dd23c8e76b6",
-  "feed_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/feed.json",
-  "manifest_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/manifest.json",
-  "sync_summary": {
-    "fixtures": {
-      "source": "Free cross-checked schedule: Fixtur.es + OpenFootball CC0 + Football-Data.co.uk + Football-Data latest fixtures + optional API-Football Free",
-      "source_key": "free_cross_checked_schedule",
-      "status": "ok",
-      "received": 182,
-      "processed": 182,
-      "source_seasons": [
-        2026
-      ],
-      "verification_counts": {
-        "source_conflict": 6,
-        "single_source_time": 22,
-        "single_source": 154
-      },
-      "source_counts": {
-        "Fixtur.es": 182,
-        "OpenFootball CC0": 0,
-        "Football-Data.co.uk": 6,
-        "Football-Data.co.uk Latest Fixtures": 0,
-        "API-Football Free": 0
-      },
-      "fixtur_es_pages_checked": [
-        "https://fixtur.es/en/matches/super-league-greece"
-      ],
-      "fixtur_es_calendars_used": [
-        "https://ics.fixtur.es/v2/league/super-league-greece.ics"
-      ],
-      "openfootball_seasons_requested": [
-        2026,
-        2027
-      ],
-      "openfootball_seasons_loaded": [],
-      "openfootball_urls_loaded": [],
-      "football_data_latest_fixtures_url": "https://www.football-data.co.uk/matches/resources/fixtures.csv",
-      "football_data_latest_fixtures_rows": 0,
-      "api_football_free_enabled": false,
-      "api_football_free_seasons_requested": [
-        2026,
-        2027
-      ],
-      "api_football_free_seasons_loaded": [],
-      "api_football_free_requests_used": 0,
-      "api_football_free_quota_remaining": null,
-      "warnings": [
-        "Αποτυχία σελίδας https://www.icx.fixtur.es/en/super-league-greece: HTTPSConnectionPool(host='www.icx.fixtur.es', port=443): Max retries exceeded with url: /en/super-league-greece (Caused by SSLError(SSLCertVerificationError(1, \"[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'www.icx.fixtur.es'. (_ssl.c:1010)\")))",
-        "Δεν έχει δημοσιευτεί ακόμη OpenFootball αρχείο για 2026.",
-        "Δεν έχει δημοσιευτεί ακόμη OpenFootball αρχείο για 2027.",
-        "Αποτυχία latest Football-Data fixtures: Το latest fixtures CSV δεν περιέχει: AwayTeam, Date, Div, HomeTeam, Time",
-        "Δεν έχει οριστεί προαιρετικό API_FOOTBALL_KEY. Η διασταύρωση συνεχίζεται με τις πηγές χωρίς κλειδί.",
-        "Διαφωνία δωρεάν πηγών για AEK Athens FC - Iraklis 1908; η ώρα αποκρύφτηκε.",
-        "Διαφωνία δωρεάν πηγών για Kalamata - Aris Thessalonikis; η ώρα αποκρύφτηκε.",
-        "Διαφωνία δωρεάν πηγών για Olympiakos Piraeus - Atromitos; η ώρα αποκρύφτηκε.",
-        "Διαφωνία δωρεάν πηγών για OFI - Volos NFC; η ώρα αποκρύφτηκε.",
-        "Διαφωνία δωρεάν πηγών για PAOK - Levadiakos; η ώρα αποκρύφτηκε.",
-        "Διαφωνία δωρεάν πηγών για Panetolikos - Asteras Tripolis; η ώρα αποκρύφτηκε."
-      ],
-      "safety_rule": "Η ακριβής ώρα εμφανίζεται όταν υπάρχει ρητή και εύλογη ώρα από Fixtur.es ή Football-Data. Όταν υπάρχουν δύο timed πηγές πρέπει να συμφωνούν εντός 30 λεπτών· σε διαφωνία η ώρα κρύβεται. Προφανείς placeholder ώρες όπως 03:00 δεν εμφανίζονται."
-    },
-    "detailed_statistics": {
-      "source": "Football-Data.co.uk CSV (free; no API key)",
-      "status": "ok",
-      "seasons_requested": [
-        2023,
-        2024,
-        2025,
-        2026
-      ],
-      "seasons_loaded": [
-        2023,
-        2024,
-        2025,
-        2026
-      ],
-      "urls_loaded": [
-        "https://www.football-data.co.uk/mmz4281/2324/G1.csv",
-        "https://www.football-data.co.uk/mmz4281/2425/G1.csv",
-        "https://www.football-data.co.uk/mmz4281/2526/G1.csv",
-        "https://www.football-data.co.uk/mmz4281/2627/G1.csv"
-      ],
-      "csv_rows_loaded": 715,
-      "csv_rows_with_complete_corners_and_cards": 714,
-      "matched_existing_fixtures": 715,
-      "inserted_new_fixtures": 0,
-      "fixtures_saved": 715,
-      "warnings": [],
-      "records_before_merge": 716,
-      "records_received": 715,
-      "records_after_merge": 716,
-      "records_with_complete_statistics": 715,
-      "records_saved_to_sqlite": 715
-    },
-    "scorer_backfill": {
-      "source": "BetAnalytic verified backfill",
-      "entries": 6,
-      "matched": 6,
-      "saved": 6,
-      "pending": 0,
-      "warnings": []
-    },
-    "automatic_goal_scorers": {
-      "source": "TheSportsDB API v1",
-      "enabled": true,
-      "completed_matches_considered": 7,
-      "matches_searched": 7,
-      "events_found": 4,
-      "matches_saved": 0,
-      "requests_used": 16,
-      "pending_matches": 7,
-      "warnings": [
-        "Pending scorers: το timeline είναι ελλιπές/ασύμφωνο για Asteras Tripolis - Olympiakos Piraeus (βρέθηκαν 0, αναμένονται 1).",
-        "Pending scorers: το timeline είναι ελλιπές/ασύμφωνο για Kifisia - AEK Athens FC (βρέθηκαν 0, αναμένονται 2).",
-        "Pending scorers: το timeline είναι ελλιπές/ασύμφωνο για Atromitos - PAOK (βρέθηκαν 0, αναμένονται 3).",
-        "Pending scorers: δεν βρέθηκε event για Aris Thessalonikis - OFI (2026-08-30).",
-        "Pending scorers: το timeline είναι ελλιπές/ασύμφωνο για Panetolikos - Kalamata (βρέθηκαν 0, αναμένονται 2).",
-        "Pending scorers: δεν βρέθηκε event για Volos NFC - Iraklis 1908 (2026-08-29).",
-        "Pending scorers: δεν βρέθηκε event για PAOK - Levadeiakos (2026-08-23)."
-      ],
-      "mode": "automatic FT -> event search -> timeline -> exact score validation -> save; pending rows retry next run"
-    },
-    "history_enrichment": {
-      "source": "API-Football scorer fallback",
-      "enabled": false,
-      "seasons": [
-        2026
-      ],
-      "completed_matches_considered": 0,
-      "api_matches_found": 0,
-      "matches_enriched": 0,
-      "requests_used": 0,
-      "quota_remaining": null,
-      "warnings": [
-        "Δεν έχει οριστεί το δωρεάν API_FOOTBALL_KEY."
-      ],
-      "score_mismatches": 0,
-      "pending_matches": 0,
-      "mode": "fallback only for scorer rows still missing after TheSportsDB; recent-date fallback when available"
-    },
-    "canonical_statistics_audit": {
-      "mixed_dataset_records_removed": 0,
-      "mixed_sqlite_statistics_removed": 0,
-      "noncanonical_history_removed": 0,
-      "invalid_history_removed": 0,
-      "history_score_mismatches": 0,
-      "remaining_statistics_records": 715,
-      "remaining_history_records": 0,
-      "rule": "No field-level merge across providers; each numeric statistics block comes from one snapshot."
-    },
-    "automatic_mode": {
-      "enabled": true,
-      "paid_api_required": false,
-      "api_secret_required": false,
-      "optional_free_api_supported": true,
-      "optional_free_api_enabled": false,
-      "superleague_scraping": false,
-      "manual_schedule_overrides": false,
-      "future_detailed_season_detection": true,
-      "description": "Κάθε run διασταυρώνει δωρεάν το πρόγραμμα, χρησιμοποιώντας το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει τα δωρεάν CSV αποτελεσμάτων/στατιστικών. Τα αναλυτικά ιστορικά στοιχεία αποθηκεύονται ως ενιαίο snapshot παρόχου χωρίς ανάμειξη πεδίων. Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό. Για κάθε νέο FT με γκολ γίνεται αυτόματη αναζήτηση scorer timeline στο TheSportsDB, αυστηρός έλεγχος ότι οι σκόρερ συμφωνούν ακριβώς με το τελικό σκορ και αυτόματο retry σε επόμενο run αν η πηγή είναι ακόμη ελλιπής. Το API-Football χρησιμοποιείται ως προαιρετικό fallback. Οι ολοκληρωμένοι αγώνες χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό χρονικό cutoff."
-    },
-    "finished_at": "2026-08-31T07:13:28Z"
+  "generated_at": "2026-08-31T07:33:19.979666Z",
+  "recent_result_sync": {
+    "checked": 0,
+    "updated": 0,
+    "thesportsdb_matches": 0,
+    "api_football_matches": 0,
+    "scorer_sets_saved": 0,
+    "requests_used": 0,
+    "updated_fixture_ids": [],
+    "warnings": []
+  },
+  "recent_history_enrichment": {
+    "enabled": true,
+    "seasons": [
+      2026
+    ],
+    "completed_matches_considered": 6,
+    "api_matches_found": 0,
+    "matches_enriched": 0,
+    "requests_used": 0,
+    "quota_remaining": null,
+    "warnings": [
+      "Αποτυχία λίστας API-Football για 2026: API-Football errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+      "Αποτυχία API-Football date fallback για 2026-08-30: API-Football errors: {'season': 'The Season field is required.'}",
+      "Αποτυχία API-Football date fallback για 2026-08-29: API-Football errors: {'plan': 'Free plans do not have access to this date, try from 2026-08-30 to 2026-09-01.'}"
+    ],
+    "score_mismatches": 0,
+    "pending_matches": 6
   }
 }
