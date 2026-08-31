@@ -50,17 +50,12 @@ jobs:
         run: |
           mkdir -p data automation_output
 
-          # IMPORTANT:
-          # automatic_update_with_recent_results.py writes more than one JSON
-          # object to stdout (the normal update summary + the recent-history
-          # summary). stdout is therefore a LOG, not a JSON document.
+          # The wrapper prints more than one JSON object, so stdout is a log.
           python automatic_update_with_recent_results.py \
             --output-dir automation_output \
             --skip-upload \
             | tee /tmp/free_history_sync.log
 
-          # Build ONE valid JSON summary from the dedicated JSON files written
-          # by the wrapper, instead of saving concatenated stdout as .json.
           python - <<'PY'
           import json
           from datetime import datetime, timezone
@@ -94,10 +89,70 @@ jobs:
 
       - name: Complete missing statistics and goal scorers
         run: |
-          python api_football_history_enricher.py \
-            --seasons auto \
-            --date-fallback-days 45 \
-            --summary-output data/history_enrichment_summary.json
+          # API-Football's recent-date endpoint currently requires season together
+          # with date. The backend fallback historically sent only league+date,
+          # causing: "The Season field is required."
+          #
+          # Keep the backend logic unchanged here, but use a Session that injects
+          # the correct Greek-league season only for date-fallback /fixtures calls.
+          python - <<'PY'
+          import json
+          import os
+          from dataclasses import asdict
+          from datetime import date, datetime
+          from pathlib import Path
+
+          import requests
+
+          from api_football_history_enricher import enrich_history
+          from fixtur_es_source import season_from_local_date
+          from zoneinfo import ZoneInfo
+
+          ATHENS_TZ = ZoneInfo("Europe/Athens")
+
+          class DateFallbackSeasonSession(requests.Session):
+              def get(self, url, **kwargs):
+                  params = dict(kwargs.get("params") or {})
+                  if (
+                      url.rstrip("/").endswith("/fixtures")
+                      and params.get("date")
+                      and params.get("season") is None
+                  ):
+                      try:
+                          local_match_date = date.fromisoformat(str(params["date"]))
+                          params["season"] = season_from_local_date(local_match_date)
+                      except ValueError:
+                          pass
+                  kwargs["params"] = params
+                  return super().get(url, **kwargs)
+
+          current_season = season_from_local_date(
+              datetime.now(ATHENS_TZ).date()
+          )
+
+          session = DateFallbackSeasonSession()
+          try:
+              result = enrich_history(
+                  seasons=(current_season - 1, current_season),
+                  api_key=os.getenv("API_FOOTBALL_KEY"),
+                  session=session,
+                  date_fallback_days=45,
+              )
+          finally:
+              session.close()
+
+          payload = asdict(result)
+          output = Path("data/history_enrichment_summary.json")
+          output.parent.mkdir(parents=True, exist_ok=True)
+          output.write_text(
+              json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(payload, ensure_ascii=False, indent=2))
+
+          # Do not mark the workflow failed just because an older date is outside
+          # the free-plan window. Recent accessible matches should still be saved.
+          PY
 
       - name: Audit and clean mixed-provider records
         run: |
@@ -146,17 +201,23 @@ jobs:
               stats_count = connection.execute(
                   "SELECT COUNT(*) FROM fixture_statistics"
               ).fetchone()[0]
+              history_details_count = connection.execute(
+                  "SELECT COUNT(*) FROM fixture_history_details"
+              ).fetchone()[0]
           finally:
               connection.close()
 
           if fixture_count <= 0:
               raise SystemExit("The database contains no fixtures.")
+
           print(
               "SQLite validation OK:",
               fixture_count,
               "fixtures,",
               stats_count,
-              "statistics",
+              "canonical statistics,",
+              history_details_count,
+              "API history detail snapshots",
           )
           PY
 
