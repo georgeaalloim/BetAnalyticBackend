@@ -1,18 +1,16 @@
 {
-  "enabled": true,
+  "enabled": false,
   "seasons": [
     2026
   ],
-  "completed_matches_considered": 6,
+  "completed_matches_considered": 0,
   "api_matches_found": 0,
   "matches_enriched": 0,
   "requests_used": 0,
   "quota_remaining": null,
   "warnings": [
-    "Αποτυχία λίστας API-Football για 2026: API-Football errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-    "Αποτυχία API-Football date fallback για 2026-08-30: API-Football errors: {'season': 'The Season field is required.'}",
-    "Αποτυχία API-Football date fallback για 2026-08-29: API-Football errors: {'plan': 'Free plans do not have access to this date, try from 2026-08-30 to 2026-09-01.'}"
+    "Δεν έχει οριστεί το δωρεάν API_FOOTBALL_KEY."
   ],
   "score_mismatches": 0,
-  "pending_matches": 6
+  "pending_matches": 0
 }
