@@ -7,7 +7,7 @@ on:
     - cron: "*/5 * * * *"
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -29,6 +29,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -54,6 +57,61 @@ jobs:
           curl --fail --silent --show-error --location --retry 2 \
             "$BASE/live.json?v=$BUST" -o live_output/previous-live.json || true
 
+      - name: Promote a finished LIVE match to History immediately
+        id: promote_ft
+        run: |
+          python recent_result_sync.py \
+            --recent-hours 18 \
+            --summary-output live_output/recent_result_sync_summary.json
+
+          UPDATED="$(python - <<'PY'
+          import json
+          from pathlib import Path
+          payload = json.loads(
+              Path("live_output/recent_result_sync_summary.json").read_text(encoding="utf-8")
+          )
+          print(int(payload.get("updated") or 0))
+          PY
+          )"
+
+          if [ "$UPDATED" -gt 0 ]; then
+            echo "A match reached FT. Rebuilding History immediately."
+            python automatic_update_with_recent_results.py \
+              --output-dir live_output \
+              --skip-sync \
+              --skip-detailed-stats \
+              --skip-upload
+            echo "promoted=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No new FT transition in this LIVE cycle."
+            echo "promoted=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Persist immediately promoted FT match
+        if: steps.promote_ft.outputs.promoted == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- \
+            betanalytic.db \
+            data/recent_result_sync_summary.json \
+            data/recent_history_enrichment_summary.json
+
+          if git diff --cached --quiet; then
+            echo "No persistent FT/history diff."
+          else
+            git commit -m "Promote finished LIVE match to history"
+            for attempt in 1 2 3; do
+              if git pull --rebase origin main && git push origin HEAD:main; then
+                break
+              fi
+              if [ "$attempt" -eq 3 ]; then
+                exit 1
+              fi
+              sleep $((attempt * 5))
+            done
+          fi
+
       - name: Refresh LIVE data
         run: |
           python live_refresh.py \
@@ -61,6 +119,7 @@ jobs:
             --output-dir live_output \
             --previous-live-file live_output/previous-live.json
           rm -f live_output/previous-live.json
+          rm -f live_output/recent_result_sync_summary.json
 
       - name: Create landing page
         run: |

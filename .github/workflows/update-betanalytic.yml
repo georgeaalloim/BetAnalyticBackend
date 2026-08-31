@@ -13,7 +13,7 @@ on:
       - completed
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -39,6 +39,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -100,6 +103,57 @@ jobs:
         run: |
           python audit_canonical_statistics.py \
             --report data/canonical_statistics_audit.json
+
+      - name: Persist newly finished matches and recent history details
+        run: |
+          SHOULD_COMMIT="$(python - <<'PY'
+          import json
+          from pathlib import Path
+
+          def load(path):
+              try:
+                  return json.loads(Path(path).read_text(encoding="utf-8"))
+              except Exception:
+                  return {}
+
+          recent = load("data/recent_result_sync_summary.json")
+          history = load("data/recent_history_enrichment_summary.json")
+          changed = (
+              int(recent.get("updated") or 0) > 0
+              or int(recent.get("scorer_sets_saved") or 0) > 0
+              or int(history.get("matches_enriched") or 0) > 0
+          )
+          print("yes" if changed else "no")
+          PY
+          )"
+
+          if [ "$SHOULD_COMMIT" != "yes" ]; then
+            echo "No newly finished/history-enriched match to persist."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- \
+            betanalytic.db \
+            data/recent_result_sync_summary.json \
+            data/recent_history_enrichment_summary.json \
+            data/canonical_statistics_audit.json
+
+          if git diff --cached --quiet; then
+            echo "No persistent DB/history diff."
+            exit 0
+          fi
+
+          git commit -m "Persist recent completed match history"
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "History persistence push attempt ${attempt} failed; retrying."
+            sleep $((attempt * 5))
+          done
+          exit 1
 
       - name: Validate generated feed semantics
         run: |
