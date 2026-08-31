@@ -49,10 +49,48 @@ jobs:
       - name: Update completed matches and free CSV statistics
         run: |
           mkdir -p data automation_output
+
+          # IMPORTANT:
+          # automatic_update_with_recent_results.py writes more than one JSON
+          # object to stdout (the normal update summary + the recent-history
+          # summary). stdout is therefore a LOG, not a JSON document.
           python automatic_update_with_recent_results.py \
             --output-dir automation_output \
             --skip-upload \
-            | tee data/free_history_sync_summary.json
+            | tee /tmp/free_history_sync.log
+
+          # Build ONE valid JSON summary from the dedicated JSON files written
+          # by the wrapper, instead of saving concatenated stdout as .json.
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          def load_object(path_string):
+              path = Path(path_string)
+              if not path.exists():
+                  return {}
+              value = json.loads(path.read_text(encoding="utf-8"))
+              if not isinstance(value, dict):
+                  raise SystemExit(f"{path} must contain one JSON object.")
+              return value
+
+          payload = {
+              "status": "ok",
+              "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+              "recent_result_sync": load_object(
+                  "data/recent_result_sync_summary.json"
+              ),
+              "recent_history_enrichment": load_object(
+                  "data/recent_history_enrichment_summary.json"
+              ),
+          }
+
+          Path("data/free_history_sync_summary.json").write_text(
+              json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          PY
 
       - name: Complete missing statistics and goal scorers
         run: |
@@ -68,11 +106,35 @@ jobs:
 
       - name: Validate persisted files
         run: |
-          python -m json.tool data/fixture_statistics.json > /dev/null
-          python -m json.tool data/free_history_sync_summary.json > /dev/null
-          python -m json.tool data/recent_result_sync_summary.json > /dev/null
-          python -m json.tool data/history_enrichment_summary.json > /dev/null
-          python -m json.tool data/canonical_statistics_audit.json > /dev/null
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          files = [
+              "data/fixture_statistics.json",
+              "data/free_history_sync_summary.json",
+              "data/recent_result_sync_summary.json",
+              "data/recent_history_enrichment_summary.json",
+              "data/history_enrichment_summary.json",
+              "data/canonical_statistics_audit.json",
+          ]
+
+          for filename in files:
+              path = Path(filename)
+              if not path.exists():
+                  raise SystemExit(f"Missing JSON file: {filename}")
+              try:
+                  value = json.loads(path.read_text(encoding="utf-8"))
+              except json.JSONDecodeError as error:
+                  raise SystemExit(
+                      f"Invalid JSON in {filename}: "
+                      f"line {error.lineno}, column {error.colno}: {error.msg}"
+                  ) from error
+              if not isinstance(value, dict):
+                  raise SystemExit(f"{filename} must contain one JSON object.")
+              print(f"JSON OK: {filename}")
+          PY
+
           python - <<'PY'
           import sqlite3
 
@@ -107,6 +169,7 @@ jobs:
             data/fixture_statistics.json \
             data/free_history_sync_summary.json \
             data/recent_result_sync_summary.json \
+            data/recent_history_enrichment_summary.json \
             data/history_enrichment_summary.json \
             data/canonical_statistics_audit.json
 
@@ -136,6 +199,7 @@ jobs:
           path: |
             data/free_history_sync_summary.json
             data/recent_result_sync_summary.json
+            data/recent_history_enrichment_summary.json
             data/history_enrichment_summary.json
             data/canonical_statistics_audit.json
           if-no-files-found: error
