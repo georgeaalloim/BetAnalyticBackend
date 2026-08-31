@@ -3,7 +3,7 @@ name: Refresh BetAnalytic LIVE
 on:
   workflow_dispatch:
   schedule:
-    # Κάθε 5 λεπτά. Η αλλαγή του cron επανενεργοποιεί και το GitHub schedule.
+    # GitHub native plan A. Cloudflare remains the external backup trigger.
     - cron: "*/5 * * * *"
 
 permissions:
@@ -21,8 +21,10 @@ jobs:
     timeout-minutes: 8
 
     env:
-      # Προαιρετικό. Χωρίς secret χρησιμοποιείται το documented free v1 key 123.
       THESPORTSDB_KEY: ${{ secrets.THESPORTSDB_KEY }}
+      # Used only as a narrow current-date fallback when TheSportsDB misses
+      # a candidate that should already be in play.
+      API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
 
     steps:
       - name: Checkout repository
@@ -52,7 +54,7 @@ jobs:
           curl --fail --silent --show-error --location --retry 2 \
             "$BASE/live.json?v=$BUST" -o live_output/previous-live.json || true
 
-      - name: Refresh LIVE data from free v1 lookup endpoints
+      - name: Refresh LIVE data
         run: |
           python live_refresh.py \
             --feed-file live_output/feed.json \

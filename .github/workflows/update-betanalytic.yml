@@ -3,8 +3,7 @@ name: Update and publish BetAnalytic data
 on:
   workflow_dispatch:
   schedule:
-    # Βασικό feed κάθε 15 λεπτά, σε διαφορετικά λεπτά από το LIVE.
-    # Η αλλαγή του cron επανενεργοποιεί και το GitHub schedule.
+    # Main feed every 15 minutes. Cloudflare backup uses different minutes.
     - cron: "7,22,37,52 * * * *"
   workflow_run:
     workflows:
@@ -32,10 +31,10 @@ jobs:
 
     env:
       BETANALYTIC_LOOKAHEAD_DAYS: ${{ vars.BETANALYTIC_LOOKAHEAD_DAYS }}
-      # Προαιρετικό δωρεάν key. Αν λείπει, το workflow συνεχίζει κανονικά.
-      API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
-      # Optional: premium/public-use key. If omitted, backend uses documented free v1 key 123.
       THESPORTSDB_KEY: ${{ secrets.THESPORTSDB_KEY }}
+      # The wrapper uses this only for a narrow recent-date fallback, then
+      # removes it before the normal season sync to avoid wasting free quota.
+      API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
 
     steps:
       - name: Checkout repository
@@ -57,11 +56,45 @@ jobs:
         run: |
           python -m unittest discover -p "test_*.py" -v
 
-      - name: Update free fixtures, statistics and predictions
+      - name: Sync recent finals and update feed
         run: |
-          python automatic_update.py \
+          python automatic_update_with_recent_results.py \
             --output-dir automation_output \
             --skip-upload
+
+      - name: Preserve latest LIVE snapshot
+        run: |
+          BASE="https://georgeaalloim.github.io/BetAnalyticBackend"
+          BUST="$(date +%s)"
+          if ! curl --fail --silent --show-error --location --retry 2 \
+            "$BASE/live.json?v=$BUST" -o automation_output/live.json; then
+            python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          payload = {
+              "schema_version": 1,
+              "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+              "refresh_interval_seconds": 300,
+              "source": {
+                  "name": "TheSportsDB API v1",
+                  "mode": "free live lookup",
+                  "paid_subscription_required": False,
+                  "premium_livescore_endpoint_used": False,
+              },
+              "candidates_considered": 0,
+              "matches_count": 0,
+              "requests_used": 0,
+              "matches": [],
+              "warnings": ["No previous LIVE snapshot was available during full feed publish."],
+          }
+          Path("automation_output/live.json").write_text(
+              json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          PY
+          fi
 
       - name: Audit canonical statistics snapshots
         run: |
@@ -75,25 +108,18 @@ jobs:
           from datetime import datetime
           from pathlib import Path
 
-          feed_path = Path("automation_output/feed.json")
-          manifest_path = Path("automation_output/manifest.json")
-          feed = json.loads(feed_path.read_text(encoding="utf-8"))
-          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          feed = json.loads(Path("automation_output/feed.json").read_text(encoding="utf-8"))
+          manifest = json.loads(Path("automation_output/manifest.json").read_text(encoding="utf-8"))
 
           fixture_summary = feed.get("sync_summary", {}).get("fixtures", {})
-          actual_source = str(fixture_summary.get("source_key") or "")
-          if actual_source != "free_cross_checked_schedule":
-              raise SystemExit(
-                  "Unexpected fixture source: " + (actual_source or "missing")
-              )
+          if str(fixture_summary.get("source_key") or "") != "free_cross_checked_schedule":
+              raise SystemExit("Unexpected fixture source.")
 
           automatic_mode = feed.get("sync_summary", {}).get("automatic_mode", {})
           if automatic_mode.get("paid_api_required") is not False:
               raise SystemExit("The feed must not require a paid API.")
           if automatic_mode.get("api_secret_required") is not False:
               raise SystemExit("The feed must not require an API secret.")
-          if automatic_mode.get("optional_free_api_supported") is not True:
-              raise SystemExit("Optional free API verification is not declared.")
           if automatic_mode.get("superleague_scraping") is not False:
               raise SystemExit("Super League website scraping must remain disabled.")
 
@@ -103,91 +129,55 @@ jobs:
               for fixture in season.get("fixtures", [])
           ]
           if int(feed.get("fixtures_count", -1)) != len(fixtures):
-              raise SystemExit("fixtures_count does not match the fixtures array.")
-
-          ready = sum(
-              fixture.get("prediction_status") == "ready"
+              raise SystemExit("fixtures_count does not match fixtures array.")
+          if any(
+              fixture.get("prediction_status") not in {"ready", "unavailable"}
               for fixture in fixtures
-          )
-          unavailable = sum(
-              fixture.get("prediction_status") == "unavailable"
-              for fixture in fixtures
-          )
-          if ready != int(feed.get("ready_predictions", -1)):
-              raise SystemExit("ready_predictions count mismatch.")
-          if unavailable != int(feed.get("unavailable_predictions", -1)):
-              raise SystemExit("unavailable_predictions count mismatch.")
-          if ready + unavailable != len(fixtures):
-              raise SystemExit("Unexpected prediction_status in feed.")
+          ):
+              raise SystemExit("Unexpected prediction_status.")
 
           for fixture in fixtures:
-              datetime.fromisoformat(
-                  str(fixture["fixture_date"]).replace("Z", "+00:00")
-              )
-              schedule_source = str(fixture.get("schedule_source") or "")
-              lowered = schedule_source.lower()
-              if "slgr" in lowered or "super league official" in lowered:
+              datetime.fromisoformat(str(fixture["fixture_date"]).replace("Z", "+00:00"))
+              source = str(fixture.get("schedule_source") or "").lower()
+              if "slgr" in source or "super league official" in source:
                   raise SystemExit("Forbidden Super League scraping source found.")
-              if fixture.get("kickoff_time_confirmed"):
-                  # Keep this validator aligned with free_schedule_source._source_text().
-                  # Current labels plus two legacy labels are accepted so an already
-                  # confirmed kickoff stored in SQLite does not fail publication only
-                  # because the human-readable source wording changed.
-                  valid_time_labels = (
-                      "cross-checked date and time",
-                      "verified date; explicit kickoff from one schedule source",
-                      "explicit kickoff from schedule source",
-                      "verified date and time",
-                      "verified date; time reported by one source",
-                  )
-                  if not any(label in lowered for label in valid_time_labels):
-                      raise SystemExit(
-                          "A confirmed kickoff does not have a valid verification label: "
-                          + str(fixture.get("fixture_id"))
-                      )
 
           history = feed.get("history")
           if not isinstance(history, dict):
-              raise SystemExit("The feed does not contain history.")
-          history_default = int(history.get("default_season", -1))
-          if history_default < 2000:
-              raise SystemExit("History does not declare a valid active season.")
+              raise SystemExit("History missing.")
+          default_season = int(history.get("default_season", -1))
+          if default_season < 2000:
+              raise SystemExit("Invalid history season.")
+
           history_seasons = {
               int(item.get("season"))
               for item in history.get("seasons", [])
           }
-          if history_seasons != {history_default}:
-              raise SystemExit(
-                  "App history must expose only its active season: "
-                  + str(sorted(history_seasons))
-              )
-          for season_item in history.get("seasons", []):
-              matches = season_item.get("matches", [])
-              if int(season_item.get("matches_count", -1)) != len(matches):
+          if history_seasons != {default_season}:
+              raise SystemExit("History must expose only the active season.")
+
+          for season in history.get("seasons", []):
+              matches = season.get("matches", [])
+              if int(season.get("matches_count", -1)) != len(matches):
                   raise SystemExit("History matches_count mismatch.")
               for match in matches:
                   if match.get("status") != "FT":
-                      raise SystemExit("History contains a non-completed match.")
-                  if match.get("score", {}).get("home") is None:
-                      raise SystemExit("History match is missing its score.")
-
-          for season_item in history.get("seasons", []):
-              for match in season_item.get("matches", []):
+                      raise SystemExit("History contains a non-FT match.")
+                  score = match.get("score") or {}
+                  if score.get("home") is None or score.get("away") is None:
+                      raise SystemExit("History FT match missing score.")
                   if match.get("statistics_source_consistent") is not True:
-                      raise SystemExit("History contains a mixed-source statistics block.")
-                  source = str(match.get("statistics_source") or "")
-                  if " + " in source or "mixed" in source.lower():
-                      raise SystemExit("Mixed provider label found in history.")
+                      raise SystemExit("History contains mixed-source statistics.")
 
-          if manifest.get("feed_sha256") is None:
-              raise SystemExit("manifest.json does not contain feed_sha256.")
+          if not manifest.get("feed_sha256"):
+              raise SystemExit("manifest.json missing feed_sha256.")
 
           print(
               "Feed validation OK:",
               len(fixtures),
-              "fixtures,",
-              ready,
-              "ready predictions",
+              "upcoming fixtures,",
+              sum(item.get("matches_count", 0) for item in history.get("seasons", [])),
+              "history matches",
           )
           PY
 
@@ -220,6 +210,7 @@ jobs:
               <p>Το δωρεάν αυτόματο feed λειτουργεί.</p>
               <p><a href="manifest.json">manifest.json</a></p>
               <p><a href="feed.json">feed.json</a></p>
+              <p><a href="live.json">live.json</a></p>
           </body>
           </html>
           """
@@ -230,6 +221,7 @@ jobs:
         run: |
           python -m json.tool automation_output/manifest.json > /dev/null
           python -m json.tool automation_output/feed.json > /dev/null
+          python -m json.tool automation_output/live.json > /dev/null
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

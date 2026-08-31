@@ -3,7 +3,8 @@ name: Sync free match history
 on:
   workflow_dispatch:
   schedule:
-    # Καθημερινά στις 03:37 UTC. Χρησιμοποιεί δωρεάν API key, χωρίς πληρωμένο πλάνο.
+    # Daily persistence/backfill. The public feed itself gets recent FT results
+    # every 15 minutes from update-betanalytic.yml.
     - cron: "37 3 * * *"
 
 permissions:
@@ -20,7 +21,6 @@ jobs:
 
     env:
       API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
-      # Optional: premium/public-use key. If omitted, backend uses documented free v1 key 123.
       THESPORTSDB_KEY: ${{ secrets.THESPORTSDB_KEY }}
 
     steps:
@@ -46,18 +46,10 @@ jobs:
         run: |
           python -m unittest discover -p "test_*.py" -v
 
-      - name: Show optional scorer fallback status
-        run: |
-          if [ -z "$API_FOOTBALL_KEY" ]; then
-            echo "API_FOOTBALL_KEY not set: continuing with automatic TheSportsDB scorer collection."
-          else
-            echo "API-Football fallback enabled."
-          fi
-
       - name: Update completed matches and free CSV statistics
         run: |
           mkdir -p data automation_output
-          python automatic_update.py \
+          python automatic_update_with_recent_results.py \
             --output-dir automation_output \
             --skip-upload \
             | tee data/free_history_sync_summary.json
@@ -78,6 +70,7 @@ jobs:
         run: |
           python -m json.tool data/fixture_statistics.json > /dev/null
           python -m json.tool data/free_history_sync_summary.json > /dev/null
+          python -m json.tool data/recent_result_sync_summary.json > /dev/null
           python -m json.tool data/history_enrichment_summary.json > /dev/null
           python -m json.tool data/canonical_statistics_audit.json > /dev/null
           python - <<'PY'
@@ -96,7 +89,13 @@ jobs:
 
           if fixture_count <= 0:
               raise SystemExit("The database contains no fixtures.")
-          print("SQLite validation OK:", fixture_count, "fixtures,", stats_count, "statistics")
+          print(
+              "SQLite validation OK:",
+              fixture_count,
+              "fixtures,",
+              stats_count,
+              "statistics",
+          )
           PY
 
       - name: Commit free history updates
@@ -107,6 +106,7 @@ jobs:
             betanalytic.db \
             data/fixture_statistics.json \
             data/free_history_sync_summary.json \
+            data/recent_result_sync_summary.json \
             data/history_enrichment_summary.json \
             data/canonical_statistics_audit.json
 
@@ -135,6 +135,7 @@ jobs:
           name: free-history-sync-summary
           path: |
             data/free_history_sync_summary.json
+            data/recent_result_sync_summary.json
             data/history_enrichment_summary.json
             data/canonical_statistics_audit.json
           if-no-files-found: error
