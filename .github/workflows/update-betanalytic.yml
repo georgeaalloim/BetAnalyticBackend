@@ -3,7 +3,8 @@ name: Update and publish BetAnalytic data
 on:
   workflow_dispatch:
   schedule:
-    # Main feed every 15 minutes. Cloudflare backup uses different minutes.
+    # Main feed every 15 minutes. Every run re-reads Football-Data.co.uk,
+    # so recent FT statistics are retried automatically until published.
     - cron: "7,22,37,52 * * * *"
   workflow_run:
     workflows:
@@ -32,9 +33,9 @@ jobs:
     env:
       BETANALYTIC_LOOKAHEAD_DAYS: ${{ vars.BETANALYTIC_LOOKAHEAD_DAYS }}
       THESPORTSDB_KEY: ${{ secrets.THESPORTSDB_KEY }}
-      # The wrapper uses this only for a narrow recent-date fallback, then
-      # removes it before the normal season sync to avoid wasting free quota.
-      API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+      # API_FOOTBALL_KEY is intentionally NOT exposed here.
+      # The current free plan blocks the active seasons, so scheduled refreshes
+      # use TheSportsDB for recent FT/scorers and Football-Data.co.uk for stats.
 
     steps:
       - name: Checkout repository
@@ -59,7 +60,7 @@ jobs:
         run: |
           python -m unittest discover -p "test_*.py" -v
 
-      - name: Sync recent finals and update feed
+      - name: Sync recent finals and retry free detailed statistics
         run: |
           python automatic_update_with_recent_results.py \
             --output-dir automation_output \

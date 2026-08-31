@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   schedule:
     # Daily persistence/backfill. The public feed itself gets recent FT results
-    # every 15 minutes from update-betanalytic.yml.
+    # and retries Football-Data.co.uk statistics every 15 minutes.
     - cron: "37 3 * * *"
 
 permissions:
@@ -20,8 +20,9 @@ jobs:
     timeout-minutes: 30
 
     env:
-      API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
       THESPORTSDB_KEY: ${{ secrets.THESPORTSDB_KEY }}
+      # API_FOOTBALL_KEY is intentionally NOT exposed to this scheduled job.
+      # The free plan currently blocks the active Greek league seasons.
 
     steps:
       - name: Checkout main branch
@@ -50,7 +51,7 @@ jobs:
         run: |
           mkdir -p data automation_output
 
-          # The wrapper prints more than one JSON object, so stdout is a log.
+          # This retries Football-Data.co.uk and uses TheSportsDB for recent FT/scorers.
           python automatic_update_with_recent_results.py \
             --output-dir automation_output \
             --skip-upload \
@@ -87,61 +88,35 @@ jobs:
           )
           PY
 
-      - name: Complete missing statistics and goal scorers
+      - name: Record API-Football fallback as disabled
         run: |
-          # API-Football's recent-date endpoint currently requires season together
-          # with date. The backend fallback historically sent only league+date,
-          # causing: "The Season field is required."
-          #
-          # Keep the backend logic unchanged here, but use a Session that injects
-          # the correct Greek-league season only for date-fallback /fixtures calls.
           python - <<'PY'
           import json
-          import os
-          from dataclasses import asdict
-          from datetime import date, datetime
+          from datetime import datetime
           from pathlib import Path
-
-          import requests
-
-          from api_football_history_enricher import enrich_history
-          from fixtur_es_source import season_from_local_date
           from zoneinfo import ZoneInfo
 
-          ATHENS_TZ = ZoneInfo("Europe/Athens")
-
-          class DateFallbackSeasonSession(requests.Session):
-              def get(self, url, **kwargs):
-                  params = dict(kwargs.get("params") or {})
-                  if (
-                      url.rstrip("/").endswith("/fixtures")
-                      and params.get("date")
-                      and params.get("season") is None
-                  ):
-                      try:
-                          local_match_date = date.fromisoformat(str(params["date"]))
-                          params["season"] = season_from_local_date(local_match_date)
-                      except ValueError:
-                          pass
-                  kwargs["params"] = params
-                  return super().get(url, **kwargs)
+          from fixtur_es_source import season_from_local_date
 
           current_season = season_from_local_date(
-              datetime.now(ATHENS_TZ).date()
+              datetime.now(ZoneInfo("Europe/Athens")).date()
           )
-
-          session = DateFallbackSeasonSession()
-          try:
-              result = enrich_history(
-                  seasons=(current_season - 1, current_season),
-                  api_key=os.getenv("API_FOOTBALL_KEY"),
-                  session=session,
-                  date_fallback_days=45,
-              )
-          finally:
-              session.close()
-
-          payload = asdict(result)
+          payload = {
+              "enabled": False,
+              "seasons": [current_season - 1, current_season],
+              "completed_matches_considered": 0,
+              "api_matches_found": 0,
+              "matches_enriched": 0,
+              "requests_used": 0,
+              "quota_remaining": None,
+              "warnings": [
+                  "Το scheduled API-Football fallback είναι απενεργοποιημένο επειδή "
+                  "το Free plan δεν δίνει πρόσβαση στις ενεργές σεζόν. "
+                  "Τα αναλυτικά στατιστικά επαναδοκιμάζονται από Football-Data.co.uk."
+              ],
+              "score_mismatches": 0,
+              "pending_matches": 0,
+          }
           output = Path("data/history_enrichment_summary.json")
           output.parent.mkdir(parents=True, exist_ok=True)
           output.write_text(
@@ -149,9 +124,6 @@ jobs:
               encoding="utf-8",
           )
           print(json.dumps(payload, ensure_ascii=False, indent=2))
-
-          # Do not mark the workflow failed just because an older date is outside
-          # the free-plan window. Recent accessible matches should still be saved.
           PY
 
       - name: Audit and clean mixed-provider records
