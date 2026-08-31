@@ -1,16 +1,16 @@
 {
   "status": "ok",
-  "generated_at": "2026-08-30T09:27:12Z",
+  "generated_at": "2026-08-31T07:13:23Z",
   "seasons": [
     2023,
     2024,
     2025,
     2026
   ],
-  "fixtures_in_feed": 34,
-  "ready_predictions": 34,
+  "fixtures_in_feed": 30,
+  "ready_predictions": 30,
   "unavailable_predictions": 0,
-  "feed_sha256": "75c43019870b752047574a7fe159f1e90d5553a809e489024db21fcdeaa864f4",
+  "feed_sha256": "7de0ade5a32d4661d32aafd88afc90fe8a487f912f7c4775b4828dd23c8e76b6",
   "feed_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/feed.json",
   "manifest_path": "/home/runner/work/BetAnalyticBackend/BetAnalyticBackend/automation_output/manifest.json",
   "sync_summary": {
@@ -49,21 +49,20 @@
       "openfootball_urls_loaded": [],
       "football_data_latest_fixtures_url": "https://www.football-data.co.uk/matches/resources/fixtures.csv",
       "football_data_latest_fixtures_rows": 0,
-      "api_football_free_enabled": true,
+      "api_football_free_enabled": false,
       "api_football_free_seasons_requested": [
         2026,
         2027
       ],
       "api_football_free_seasons_loaded": [],
-      "api_football_free_requests_used": 2,
+      "api_football_free_requests_used": 0,
       "api_football_free_quota_remaining": null,
       "warnings": [
         "Αποτυχία σελίδας https://www.icx.fixtur.es/en/super-league-greece: HTTPSConnectionPool(host='www.icx.fixtur.es', port=443): Max retries exceeded with url: /en/super-league-greece (Caused by SSLError(SSLCertVerificationError(1, \"[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'www.icx.fixtur.es'. (_ssl.c:1010)\")))",
         "Δεν έχει δημοσιευτεί ακόμη OpenFootball αρχείο για 2026.",
         "Δεν έχει δημοσιευτεί ακόμη OpenFootball αρχείο για 2027.",
         "Αποτυχία latest Football-Data fixtures: Το latest fixtures CSV δεν περιέχει: AwayTeam, Date, Div, HomeTeam, Time",
-        "Αποτυχία API-Football Free για 2026: API errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "Αποτυχία API-Football Free για 2027: API errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+        "Δεν έχει οριστεί προαιρετικό API_FOOTBALL_KEY. Η διασταύρωση συνεχίζεται με τις πηγές χωρίς κλειδί.",
         "Διαφωνία δωρεάν πηγών για AEK Athens FC - Iraklis 1908; η ώρα αποκρύφτηκε.",
         "Διαφωνία δωρεάν πηγών για Kalamata - Aris Thessalonikis; η ώρα αποκρύφτηκε.",
         "Διαφωνία δωρεάν πηγών για Olympiakos Piraeus - Atromitos; η ώρα αποκρύφτηκε.",
@@ -117,13 +116,17 @@
     "automatic_goal_scorers": {
       "source": "TheSportsDB API v1",
       "enabled": true,
-      "completed_matches_considered": 3,
-      "matches_searched": 3,
-      "events_found": 1,
+      "completed_matches_considered": 7,
+      "matches_searched": 7,
+      "events_found": 4,
       "matches_saved": 0,
-      "requests_used": 6,
-      "pending_matches": 3,
+      "requests_used": 16,
+      "pending_matches": 7,
       "warnings": [
+        "Pending scorers: το timeline είναι ελλιπές/ασύμφωνο για Asteras Tripolis - Olympiakos Piraeus (βρέθηκαν 0, αναμένονται 1).",
+        "Pending scorers: το timeline είναι ελλιπές/ασύμφωνο για Kifisia - AEK Athens FC (βρέθηκαν 0, αναμένονται 2).",
+        "Pending scorers: το timeline είναι ελλιπές/ασύμφωνο για Atromitos - PAOK (βρέθηκαν 0, αναμένονται 3).",
+        "Pending scorers: δεν βρέθηκε event για Aris Thessalonikis - OFI (2026-08-30).",
         "Pending scorers: το timeline είναι ελλιπές/ασύμφωνο για Panetolikos - Kalamata (βρέθηκαν 0, αναμένονται 2).",
         "Pending scorers: δεν βρέθηκε event για Volos NFC - Iraklis 1908 (2026-08-29).",
         "Pending scorers: δεν βρέθηκε event για PAOK - Levadeiakos (2026-08-23)."
@@ -132,22 +135,20 @@
     },
     "history_enrichment": {
       "source": "API-Football scorer fallback",
-      "enabled": true,
+      "enabled": false,
       "seasons": [
         2026
       ],
-      "completed_matches_considered": 3,
+      "completed_matches_considered": 0,
       "api_matches_found": 0,
       "matches_enriched": 0,
       "requests_used": 0,
       "quota_remaining": null,
       "warnings": [
-        "Αποτυχία λίστας API-Football για 2026: API-Football errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
-        "Αποτυχία API-Football date fallback για 2026-08-29: API-Football errors: {'season': 'The Season field is required.'}",
-        "Αποτυχία API-Football date fallback για 2026-08-23: API-Football errors: {'plan': 'Free plans do not have access to this date, try from 2026-08-29 to 2026-08-31.'}"
+        "Δεν έχει οριστεί το δωρεάν API_FOOTBALL_KEY."
       ],
       "score_mismatches": 0,
-      "pending_matches": 3,
+      "pending_matches": 0,
       "mode": "fallback only for scorer rows still missing after TheSportsDB; recent-date fallback when available"
     },
     "canonical_statistics_audit": {
@@ -165,12 +166,12 @@
       "paid_api_required": false,
       "api_secret_required": false,
       "optional_free_api_supported": true,
-      "optional_free_api_enabled": true,
+      "optional_free_api_enabled": false,
       "superleague_scraping": false,
       "manual_schedule_overrides": false,
       "future_detailed_season_detection": true,
       "description": "Κάθε run διασταυρώνει δωρεάν το πρόγραμμα, χρησιμοποιώντας το δωρεάν API-Football μόνο ως πρόσθετο έλεγχο όταν έχει οριστεί key, κρύβει μη επιβεβαιωμένες ώρες και ξαναδιαβάζει τα δωρεάν CSV αποτελεσμάτων/στατιστικών. Τα αναλυτικά ιστορικά στοιχεία αποθηκεύονται ως ενιαίο snapshot παρόχου χωρίς ανάμειξη πεδίων. Οι νέοι ολοκληρωμένοι αγώνες προστίθενται αυτόματα στο ιστορικό. Για κάθε νέο FT με γκολ γίνεται αυτόματη αναζήτηση scorer timeline στο TheSportsDB, αυστηρός έλεγχος ότι οι σκόρερ συμφωνούν ακριβώς με το τελικό σκορ και αυτόματο retry σε επόμενο run αν η πηγή είναι ακόμη ελλιπής. Το API-Football χρησιμοποιείται ως προαιρετικό fallback. Οι ολοκληρωμένοι αγώνες χρησιμοποιούνται αυτόματα στις επόμενες προβλέψεις με αυστηρό χρονικό cutoff."
     },
-    "finished_at": "2026-08-30T09:27:19Z"
+    "finished_at": "2026-08-31T07:13:28Z"
   }
 }
