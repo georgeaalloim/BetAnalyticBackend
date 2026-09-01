@@ -6,7 +6,6 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from typing import Any
 from urllib.parse import urljoin
-from zoneinfo import ZoneInfo
 
 import requests
 from bs4 import BeautifulSoup
@@ -19,25 +18,24 @@ from time_utils import parse_iso_datetime, to_iso_z, utc_now
 SOURCE_NAME = "OFStats.com scorer fallback"
 BASE_URL = "https://ofstats.com"
 LEAGUE_ID = 197
-ATHENS_TZ = ZoneInfo("Europe/Athens")
 DEFAULT_RECENT_DAYS = 10
-DEFAULT_MAX_MATCHES = 8
+DEFAULT_MAX_MATCHES = 10
 REQUEST_TIMEOUT_SECONDS = 20
 
-# Provider-facing slugs only. BetAnalytic team names/IDs remain unchanged.
+# Provider-facing slugs only. Canonical BetAnalytic names/IDs stay unchanged.
 TEAM_SLUGS: dict[int, tuple[str, ...]] = {
-    575: ("aek-athens", "aek"),
-    1123: ("aris", "aris-thessaloniki"),
-    955: ("asteras-tripolis", "asteras-aktor"),
+    575: ("aek-athens",),
+    1123: ("aris",),
+    955: ("asteras-tripolis",),
     12260: ("atromitos",),
-    1026357653: ("iraklis-1908", "iraklis-thessaloniki", "iraklis"),
+    1026357653: ("iraklis-thessaloniki", "iraklis"),
     1068316644: ("kalamata",),
     5050: ("kifisia",),
-    957: ("levadiakos", "levadeiakos"),
-    1124: ("ofi", "ofi-crete"),
-    553: ("olympiacos-fc", "olympiacos", "olympiakos"),
+    957: ("levadiakos",),
+    1124: ("ofi",),
+    553: ("olympiacos-fc", "olympiacos"),
     617: ("panathinaikos",),
-    949: ("panetolikos", "panaitolikos"),
+    949: ("panaitolikos", "panetolikos"),
     619: ("paok",),
     2110: ("volos-nfc", "volos"),
 }
@@ -64,8 +62,8 @@ def _slugify(value: Any) -> str:
     return re.sub(r"-+", "-", text)
 
 
-def _team_slugs(team_id: int, canonical_name: str) -> tuple[str, ...]:
-    raw = [*TEAM_SLUGS.get(int(team_id), ()), _slugify(canonical_name)]
+def _team_slugs(team_id: int, name: str) -> tuple[str, ...]:
+    raw = [*TEAM_SLUGS.get(int(team_id), ()), _slugify(name)]
     out: list[str] = []
     seen: set[str] = set()
     for item in raw:
@@ -130,26 +128,32 @@ def _pending_rows(
     return selected
 
 
-def _get_text(
-    session: requests.Session,
-    url: str,
-) -> tuple[str | None, str, str | None]:
+def _get_text(session: requests.Session, url: str) -> tuple[str | None, str, str | None]:
     try:
         response = session.get(url, timeout=REQUEST_TIMEOUT_SECONDS)
         response.raise_for_status()
-        final_url = str(getattr(response, "url", url) or url)
-        return response.text, final_url, None
+        return response.text, str(getattr(response, "url", url) or url), None
     except requests.RequestException as exc:
         return None, url, str(exc)
 
 
-def _fixture_local_date(row: dict[str, Any]):
+def _fixture_datetime(row: dict[str, Any]) -> datetime | None:
     try:
-        return parse_iso_datetime(str(row.get("fixture_date") or "")).astimezone(
-            ATHENS_TZ
-        ).date()
+        return parse_iso_datetime(str(row.get("fixture_date") or ""))
     except ValueError:
         return None
+
+
+def _fixture_date_strings(row: dict[str, Any]) -> tuple[str, ...]:
+    dt = _fixture_datetime(row)
+    if dt is None:
+        return ()
+    local = dt.astimezone(timezone(timedelta(hours=3)))
+    return (
+        local.strftime("%d.%m.%Y"),
+        local.strftime("%d/%m/%Y"),
+        local.strftime("%Y-%m-%d"),
+    )
 
 
 def _page_matches_fixture(html: str, row: dict[str, Any]) -> bool:
@@ -160,13 +164,10 @@ def _page_matches_fixture(html: str, row: dict[str, Any]) -> bool:
 
     expected_home = int(row["home_goals"])
     expected_away = int(row["away_goals"])
-    if not re.search(
-        rf"(?<!\d){expected_home}\s*:\s*{expected_away}(?!\d)",
-        text,
-    ):
+    if not re.search(rf"(?<!\d){expected_home}\s*:\s*{expected_away}(?!\d)", text):
         return False
 
-    pieces = [str(item).strip() for item in soup.stripped_strings if str(item).strip()]
+    pieces = [item.strip() for item in soup.stripped_strings if item.strip()]
     home_ok = any(
         _names_match(piece, int(row["home_team_id"]), str(row["home_team_name"]))
         for piece in pieces
@@ -178,15 +179,8 @@ def _page_matches_fixture(html: str, row: dict[str, Any]) -> bool:
     if not (home_ok and away_ok):
         return False
 
-    local_date = _fixture_local_date(row)
-    if local_date is None:
-        return False
-    visible_dates = (
-        local_date.strftime("%d.%m.%Y"),
-        local_date.strftime("%d/%m/%Y"),
-        local_date.isoformat(),
-    )
-    return any(value in text for value in visible_dates)
+    dates = _fixture_date_strings(row)
+    return not dates or any(value in text for value in dates)
 
 
 def _candidate_links_from_team_page(html: str, row: dict[str, Any]) -> list[str]:
@@ -198,9 +192,9 @@ def _candidate_links_from_team_page(html: str, row: dict[str, Any]) -> list[str]
 
     for anchor in soup.find_all("a", href=True):
         href = str(anchor.get("href") or "").strip()
-        lowered = href.casefold()
-        if "/matches/" not in lowered:
+        if "/matches/" not in href:
             continue
+        lowered = href.casefold()
         if not any(slug in lowered for slug in home_slugs):
             continue
         if not any(slug in lowered for slug in away_slugs):
@@ -219,17 +213,17 @@ def _candidate_links_from_team_page(html: str, row: dict[str, Any]) -> list[str]
 
 
 def _constructed_match_urls(row: dict[str, Any]) -> list[str]:
-    local_date = _fixture_local_date(row)
-    if local_date is None:
+    dt = _fixture_datetime(row)
+    if dt is None:
         return []
+    local_date = dt.astimezone(timezone(timedelta(hours=3))).date()
     home_slugs = _team_slugs(int(row["home_team_id"]), str(row["home_team_name"]))
     away_slugs = _team_slugs(int(row["away_team_id"]), str(row["away_team_name"]))
 
     out: list[str] = []
     seen: set[str] = set()
-    # OFStats can retain the originally scheduled date in the URL after a
-    # reschedule. The page itself is still accepted only if the displayed date,
-    # teams and final score all match the BetAnalytic fixture.
+    # OFStats can keep the original scheduled date in the URL after rescheduling.
+    # Kifisia-AEK on 30/08/2026 is currently exposed under a 29/08 slug.
     for delta in (0, -1, 1, -2, 2, -3, 3):
         date_slug = (local_date + timedelta(days=delta)).isoformat()
         for home in home_slugs[:2]:
@@ -244,16 +238,13 @@ def _constructed_match_urls(row: dict[str, Any]) -> list[str]:
 
 
 _GOAL_RE = re.compile(
-    r"\bGoal!\s+(.*?)\s+"
-    r"(?:scores?|converts?|heads?|strikes?|fires?|nets?)\b"
-    r".*?\b(?:make(?:s)?\s+it|to\s+make\s+it)\s*"
-    r"(\d+)\s*[-:]\s*(\d+)",
+    r"\bGoal!\s+(.*?)\s+(?:scores?|converts?|heads?|strikes?|fires?|nets?)\b"
+    r".*?\b(?:make(?:s)?\s+it|to\s+make\s+it)\s*(\d+)\s*[-:]\s*(\d+)",
     re.IGNORECASE,
 )
 _OWN_GOAL_RE = re.compile(
     r"\bGoal!\s+Own\s+goal\s+by\s+(.*?)\b.*?"
-    r"(?:make(?:s)?\s+it|to\s+make\s+it)\s*"
-    r"(\d+)\s*[-:]\s*(\d+)",
+    r"(?:make(?:s)?\s+it|to\s+make\s+it)\s*(\d+)\s*[-:]\s*(\d+)",
     re.IGNORECASE,
 )
 _MINUTE_RE = re.compile(r"(?<!\d)(\d{1,3})(?:\s*\+\s*(\d{1,2}))?\s*['’]?")
@@ -263,23 +254,14 @@ def _parse_goal_text(text: str) -> tuple[str, int, int, str] | None:
     compact = " ".join(str(text or "").split())
     own = _OWN_GOAL_RE.search(compact)
     if own:
-        return (
-            own.group(1).strip(" .,-"),
-            int(own.group(2)),
-            int(own.group(3)),
-            "Own Goal",
-        )
+        return own.group(1).strip(" .,-"), int(own.group(2)), int(own.group(3)), "Own Goal"
 
     match = _GOAL_RE.search(compact)
     if not match:
         return None
+    player = match.group(1).strip(" .,-")
     detail = "Penalty" if "penalt" in compact.casefold() else "Goal"
-    return (
-        match.group(1).strip(" .,-"),
-        int(match.group(2)),
-        int(match.group(3)),
-        detail,
-    )
+    return player, int(match.group(2)), int(match.group(3)), detail
 
 
 def _parse_scorers(html: str, row: dict[str, Any]) -> list[dict[str, Any]]:
@@ -289,8 +271,7 @@ def _parse_scorers(html: str, row: dict[str, Any]) -> list[dict[str, Any]]:
 
     nodes = [*soup.find_all("tr"), *soup.find_all("li")]
     nodes.extend(
-        tag
-        for tag in soup.find_all(["div", "p"])
+        tag for tag in soup.find_all(["div", "p"])
         if "Goal!" in tag.get_text(" ", strip=True)
     )
 
@@ -309,34 +290,31 @@ def _parse_scorers(html: str, row: dict[str, Any]) -> list[dict[str, Any]]:
             continue
         minute_match = minute_matches[-1]
         minute = int(minute_match.group(1))
-        extra_minute = int(minute_match.group(2)) if minute_match.group(2) else None
+        extra = int(minute_match.group(2)) if minute_match.group(2) else None
 
-        key = (player.casefold(), minute, extra_minute, score_home, score_away)
+        key = (player.casefold(), minute, extra, score_home, score_away)
         if key in seen:
             continue
         seen.add(key)
-        raw_goals.append(
-            {
-                "player_name": player,
-                "minute": minute,
-                "extra_minute": extra_minute,
-                "score_home": score_home,
-                "score_away": score_away,
-                "detail": detail,
-            }
-        )
+        raw_goals.append({
+            "player_name": player,
+            "minute": minute,
+            "extra_minute": extra,
+            "score_home": score_home,
+            "score_away": score_away,
+            "detail": detail,
+        })
 
-    raw_goals.sort(
-        key=lambda item: (
-            int(item["minute"]),
-            int(item["extra_minute"] or 0),
-            int(item["score_home"]) + int(item["score_away"]),
-        )
-    )
+    raw_goals.sort(key=lambda item: (
+        int(item["minute"]),
+        int(item["extra_minute"] or 0),
+        int(item["score_home"]) + int(item["score_away"]),
+    ))
 
     previous_home = 0
     previous_away = 0
     scorers: list[dict[str, Any]] = []
+
     for item in raw_goals:
         score_home = int(item["score_home"])
         score_away = int(item["score_away"])
@@ -345,24 +323,17 @@ def _parse_scorers(html: str, row: dict[str, Any]) -> list[dict[str, Any]]:
         elif score_away == previous_away + 1 and score_home == previous_home:
             side = "away"
         else:
-            # Never guess on duplicate/out-of-order/ambiguous score progression.
             continue
 
-        scorers.append(
-            {
-                "player_name": str(item["player_name"]),
-                "side": side,
-                "team_id": int(
-                    row["home_team_id"] if side == "home" else row["away_team_id"]
-                ),
-                "team_name": str(
-                    row["home_team_name"] if side == "home" else row["away_team_name"]
-                ),
-                "minute": int(item["minute"]),
-                "extra_minute": item["extra_minute"],
-                "detail": str(item["detail"]),
-            }
-        )
+        scorers.append({
+            "player_name": str(item["player_name"]),
+            "side": side,
+            "team_id": int(row["home_team_id"] if side == "home" else row["away_team_id"]),
+            "team_name": str(row["home_team_name"] if side == "home" else row["away_team_name"]),
+            "minute": int(item["minute"]),
+            "extra_minute": item["extra_minute"],
+            "detail": str(item["detail"]),
+        })
         previous_home = score_home
         previous_away = score_away
 
@@ -381,36 +352,30 @@ def _find_match_page(
 ) -> tuple[str | None, str | None, int, list[str]]:
     requests_used = 0
     warnings: list[str] = []
+    candidates: list[str] = []
     seen: set[str] = set()
 
-    # Deterministic URLs first; the normal case is usually found in 1-3 requests.
-    for url in _constructed_match_urls(row):
-        if url in seen:
-            continue
-        seen.add(url)
-        html, final_url, error = _get_text(session, url)
-        requests_used += 1
-        if error:
-            continue
-        if html and _page_matches_fixture(html, row):
-            return html, final_url, requests_used, warnings
-
-    # Team page is only a fallback for provider slug/date changes, so it does not
-    # add extra requests to matches already found by the deterministic route.
-    discovered: list[str] = []
     for slug in _team_slugs(int(row["home_team_id"]), str(row["home_team_name"]))[:2]:
         team_url = f"{BASE_URL}/team/{slug}"
-        html, _final_url, error = _get_text(session, team_url)
+        html, _, error = _get_text(session, team_url)
         requests_used += 1
         if error:
+            warnings.append(f"OFStats team page απέτυχε ({team_url}): {error}")
             continue
         if html:
             for url in _candidate_links_from_team_page(html, row):
                 if url not in seen:
                     seen.add(url)
-                    discovered.append(url)
+                    candidates.append(url)
+        if candidates:
+            break
 
-    for url in discovered[:6]:
+    for url in _constructed_match_urls(row):
+        if url not in seen:
+            seen.add(url)
+            candidates.append(url)
+
+    for url in candidates[:16]:
         html, final_url, error = _get_text(session, url)
         requests_used += 1
         if error:
@@ -429,13 +394,11 @@ def enrich_goal_scorers_from_ofstats(
     as_of: datetime | None = None,
     session: requests.Session | None = None,
 ) -> OFStatsScorerResult:
-    """Fill only scorer rows still missing after the primary TheSportsDB pass.
+    """Fill scorer rows still missing after the primary TheSportsDB pass.
 
-    Safety rules:
-    - only FT fixtures with a final score are considered;
-    - provider page must match date, both teams and exact final score;
-    - parsed goal progression must reconstruct the exact final score;
-    - database.save_fixture_goal_scorers performs one final strict count check.
+    A scorer set is accepted only if the page matches the fixture date, both
+    teams and exact FT score, and the goal progression reconstructs that score.
+    The database layer performs the final strict scorer-count verification too.
     """
     initialize_database()
     current = as_of or utc_now()
@@ -453,13 +416,11 @@ def enrich_goal_scorers_from_ofstats(
 
     own_session = session is None
     http = session or requests.Session()
-    http.headers.update(
-        {
-            "User-Agent": "BetAnalytic/1.2 (+free scorer fallback)",
-            "Accept": "text/html,application/xhtml+xml",
-            "Accept-Language": "en-US,en;q=0.8",
-        }
-    )
+    http.headers.update({
+        "User-Agent": "BetAnalytic/1.2 (+free scorer fallback)",
+        "Accept": "text/html,application/xhtml+xml",
+        "Accept-Language": "en-US,en;q=0.8",
+    })
 
     requests_used = 0
     matches_found = 0
@@ -489,18 +450,14 @@ def enrich_goal_scorers_from_ofstats(
                 )
                 continue
 
-            saved = save_fixture_goal_scorers(
-                [
-                    {
-                        "fixture_id": int(row["fixture_id"]),
-                        "goal_scorers_json": scorers,
-                        "source": SOURCE_NAME,
-                        "provider_event_id": page_url,
-                        "score_verified": True,
-                        "collected_at": to_iso_z(current),
-                    }
-                ]
-            )
+            saved = save_fixture_goal_scorers([{
+                "fixture_id": int(row["fixture_id"]),
+                "goal_scorers_json": scorers,
+                "source": SOURCE_NAME,
+                "provider_event_id": page_url,
+                "score_verified": True,
+                "collected_at": to_iso_z(current),
+            }])
             matches_saved += int(saved)
     finally:
         if own_session:
