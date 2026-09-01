@@ -3,7 +3,7 @@ name: Refresh BetAnalytic LIVE
 on:
   workflow_dispatch:
   schedule:
-    # GitHub native plan A. Cloudflare remains the external backup trigger.
+    # GitHub native plan A. Cloudflare remains the external backup watchdog.
     - cron: "*/5 * * * *"
 
 permissions:
@@ -112,12 +112,28 @@ jobs:
             done
           fi
 
-      - name: Refresh LIVE data
+      - name: Refresh LIVE data with transient retry
         run: |
-          python live_refresh.py \
-            --feed-file live_output/feed.json \
-            --output-dir live_output \
-            --previous-live-file live_output/previous-live.json
+          SUCCESS=0
+          for attempt in 1 2 3; do
+            echo "LIVE refresh attempt ${attempt}/3"
+            if python live_refresh.py \
+              --feed-file live_output/feed.json \
+              --output-dir live_output \
+              --previous-live-file live_output/previous-live.json; then
+              SUCCESS=1
+              break
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 10))
+            fi
+          done
+
+          if [ "$SUCCESS" -ne 1 ]; then
+            echo "LIVE refresh failed after 3 attempts."
+            exit 1
+          fi
+
           rm -f live_output/previous-live.json
           rm -f live_output/recent_result_sync_summary.json
 
@@ -141,11 +157,26 @@ jobs:
           </html>
           HTML
 
-      - name: Validate JSON
+      - name: Validate LIVE JSON and freshness
         run: |
           python -m json.tool live_output/feed.json > /dev/null
           python -m json.tool live_output/manifest.json > /dev/null
           python -m json.tool live_output/live.json > /dev/null
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          payload = json.loads(Path("live_output/live.json").read_text(encoding="utf-8"))
+          generated = str(payload.get("generated_at") or "").strip()
+          if not generated:
+              raise SystemExit("live.json missing generated_at")
+          generated_at = datetime.fromisoformat(generated.replace("Z", "+00:00"))
+          age = (datetime.now(timezone.utc) - generated_at.astimezone(timezone.utc)).total_seconds()
+          if age < -120 or age > 600:
+              raise SystemExit(f"Generated LIVE snapshot is stale/invalid: age={age:.0f}s")
+          print(f"LIVE freshness OK: age={age:.0f}s, matches={payload.get('matches_count', 0)}")
+          PY
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
