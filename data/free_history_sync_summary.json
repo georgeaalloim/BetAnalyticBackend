@@ -1,16 +1,14 @@
 {
   "status": "ok",
-  "generated_at": "2026-09-01T08:53:42.115145Z",
+  "generated_at": "2026-09-01T14:06:47.191954Z",
   "recent_result_sync": {
-    "checked": 1,
-    "updated": 1,
-    "thesportsdb_matches": 1,
+    "checked": 0,
+    "updated": 0,
+    "thesportsdb_matches": 0,
     "api_football_matches": 0,
     "scorer_sets_saved": 0,
-    "requests_used": 2,
-    "updated_fixture_ids": [
-      1594750586
-    ],
+    "requests_used": 0,
+    "updated_fixture_ids": [],
     "warnings": []
   },
   "recent_history_enrichment": {
@@ -20,13 +18,31 @@
     ],
     "completed_matches_considered": 0,
     "api_matches_found": 0,
-    "matches_enriched": 0,
+    "matches_enriched": 1,
     "requests_used": 0,
     "quota_remaining": null,
     "warnings": [
       "Δεν έχει οριστεί το δωρεάν API_FOOTBALL_KEY."
     ],
     "score_mismatches": 0,
-    "pending_matches": 0
+    "pending_matches": 0,
+    "api_matches_enriched": 0,
+    "scorer_fallback": {
+      "enabled": true,
+      "completed_matches_considered": 7,
+      "matches_searched": 7,
+      "matches_found": 6,
+      "matches_saved": 1,
+      "requests_used": 40,
+      "pending_matches": 6,
+      "warnings": [
+        "Pending scorers: OFStats goal events ελλιπή/ασύμφωνα για Levadiakos - Panathinaikos (βρέθηκαν 0, αναμένονται 2).",
+        "Pending scorers: OFStats goal events ελλιπή/ασύμφωνα για Asteras Tripolis - Olympiakos Piraeus (βρέθηκαν 0, αναμένονται 1).",
+        "Pending scorers: OFStats goal events ελλιπή/ασύμφωνα για Atromitos - PAOK (βρέθηκαν 0, αναμένονται 3).",
+        "Pending scorers: OFStats goal events ελλιπή/ασύμφωνα για Aris Thessalonikis - OFI (βρέθηκαν 0, αναμένονται 3).",
+        "Pending scorers: OFStats match page δεν βρέθηκε για Panetolikos - Kalamata.",
+        "Pending scorers: OFStats goal events ελλιπή/ασύμφωνα για Volos NFC - Iraklis 1908 (βρέθηκαν 0, αναμένονται 2)."
+      ]
+    }
   }
 }
