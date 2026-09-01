@@ -12,6 +12,7 @@ from zoneinfo import ZoneInfo
 
 from api_football_history_enricher import enrich_history
 from fixtur_es_source import LEAGUE_ID, season_from_local_date
+from ofstats_scorer_fallback import enrich_goal_scorers_from_ofstats
 from recent_result_sync import sync_recent_results
 from static_feed_generator import _build_history_payload
 from time_utils import parse_iso_datetime, utc_now
@@ -72,13 +73,7 @@ def _refresh_generated_history(
     as_of,
     previous_feed: dict[str, Any],
 ) -> None:
-    """Refresh only History after recent API details are saved.
-
-    This avoids running the full fixture/model pipeline twice.  When this
-    wrapper is called from the lightweight LIVE workflow with --skip-sync,
-    the already-published source metadata is also retained so a quick FT
-    promotion cannot make the public feed look like a different data mode.
-    """
+    """Refresh only History after recent API details/scorers are saved."""
     feed_path = output_dir / "feed.json"
     manifest_path = output_dir / "manifest.json"
     feed = _read_json(feed_path)
@@ -112,7 +107,9 @@ def _refresh_generated_history(
         for item in history.get("seasons", [])
         if isinstance(item, dict)
     )
-    manifest["history_default_season"] = int(history.get("default_season") or default_season)
+    manifest["history_default_season"] = int(
+        history.get("default_season") or default_season
+    )
     _write_json(manifest_path, manifest)
 
 
@@ -129,13 +126,10 @@ def main() -> int:
         thesportsdb_key=os.getenv("THESPORTSDB_KEY"),
         api_football_key=api_football_key,
     )
-
-    recent_summary_path = Path("data/recent_result_sync_summary.json")
-    recent_summary_path.parent.mkdir(parents=True, exist_ok=True)
-    _write_json(recent_summary_path, asdict(result))
+    _write_json(Path("data/recent_result_sync_summary.json"), asdict(result))
 
     # 2) Build the normal feed without wasting API-Football quota on blocked
-    #    full-season requests.  The key is restored immediately afterwards.
+    # full-season requests. The key is restored immediately afterwards.
     previous_api_key = os.environ.pop("API_FOOTBALL_KEY", None)
     try:
         from automatic_update import main as automatic_update_main
@@ -147,11 +141,9 @@ def main() -> int:
     if return_code != 0:
         return return_code
 
-    # 3) For recent FT matches, use the free recent-date window to fetch the
-    #    full single-provider statistics snapshot + scorers.  This is the part
-    #    that was previously running in scorers-only mode, which is why new
-    #    History rows showed only the goals.
     active_season = season_from_local_date(as_of.astimezone(ATHENS_TZ).date())
+
+    # 3) Keep the existing optional recent-date API-Football enrichment.
     enrichment = enrich_history(
         seasons=(active_season,),
         api_key=api_football_key,
@@ -160,11 +152,32 @@ def main() -> int:
         scorers_only=False,
         date_fallback_days=RECENT_HISTORY_DAYS,
     )
-    history_summary_path = Path("data/recent_history_enrichment_summary.json")
-    _write_json(history_summary_path, asdict(enrichment))
 
-    # 4) The first feed was generated before step 3. Rebuild ONLY its History
-    #    section from the now-enriched DB and repair the manifest hash.
+    # 4) TheSportsDB is still the primary scorer source inside automatic_update.
+    # If its timeline is empty/stale, fill ONLY still-missing scorer rows from a
+    # second free public source. Nothing is saved unless date + teams + FT score
+    # and the complete goal progression agree exactly.
+    scorer_fallback = enrich_goal_scorers_from_ofstats(
+        season=active_season,
+        recent_days=RECENT_HISTORY_DAYS,
+        max_matches=8,
+        as_of=as_of,
+    )
+
+    # Preserve the existing summary contract. `matches_enriched` is the effective
+    # number of recent DB enrichments so the existing GitHub workflow also commits
+    # scorer-only fallback changes. Raw API count and fallback detail stay explicit.
+    history_summary = asdict(enrichment)
+    api_matches_enriched = int(history_summary.get("matches_enriched") or 0)
+    history_summary["api_matches_enriched"] = api_matches_enriched
+    history_summary["scorer_fallback"] = asdict(scorer_fallback)
+    history_summary["matches_enriched"] = (
+        api_matches_enriched + int(scorer_fallback.matches_saved)
+    )
+    _write_json(Path("data/recent_history_enrichment_summary.json"), history_summary)
+
+    # 5) Feed was generated before steps 3-4. Rebuild ONLY History so newly
+    # saved scorer rows are published immediately; predictions/stats remain intact.
     _refresh_generated_history(
         output_dir,
         as_of=as_of,
@@ -179,6 +192,11 @@ def main() -> int:
                 "recent_history_matches_enriched": enrichment.matches_enriched,
                 "recent_history_requests_used": enrichment.requests_used,
                 "recent_history_pending": enrichment.pending_matches,
+                "ofstats_scorer_matches_found": scorer_fallback.matches_found,
+                "ofstats_scorer_sets_saved": scorer_fallback.matches_saved,
+                "ofstats_scorer_requests_used": scorer_fallback.requests_used,
+                "ofstats_scorer_pending": scorer_fallback.pending_matches,
+                "ofstats_warnings": scorer_fallback.warnings,
             },
             ensure_ascii=False,
             indent=2,
