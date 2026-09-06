@@ -1,10 +1,12 @@
 {
-  "checked": 0,
+  "checked": 3,
   "updated": 0,
   "thesportsdb_matches": 0,
   "api_football_matches": 0,
   "scorer_sets_saved": 0,
-  "requests_used": 0,
+  "requests_used": 2,
   "updated_fixture_ids": [],
-  "warnings": []
+  "warnings": [
+    "API-Football date fallback 2026-09-06 απέτυχε: API-Football errors: {'access': 'Your account is suspended, check on https://dashboard.api-football.com.'}"
+  ]
 }
