@@ -50,12 +50,18 @@ jobs:
           mkdir -p live_output
           BASE="https://georgeaalloim.github.io/BetAnalyticBackend"
           BUST="$(date +%s)"
+
           curl --fail --silent --show-error --location --retry 3 \
-            "$BASE/feed.json?v=$BUST" -o live_output/feed.json
+            "$BASE/feed.json?v=$BUST" \
+            -o live_output/feed.json
+
           curl --fail --silent --show-error --location --retry 3 \
-            "$BASE/manifest.json?v=$BUST" -o live_output/manifest.json
+            "$BASE/manifest.json?v=$BUST" \
+            -o live_output/manifest.json
+
           curl --fail --silent --show-error --location --retry 2 \
-            "$BASE/live.json?v=$BUST" -o live_output/previous-live.json || true
+            "$BASE/live.json?v=$BUST" \
+            -o live_output/previous-live.json || true
 
       - name: Promote a finished LIVE match to History immediately
         id: promote_ft
@@ -67,20 +73,26 @@ jobs:
           UPDATED="$(python - <<'PY'
           import json
           from pathlib import Path
+
           payload = json.loads(
-              Path("live_output/recent_result_sync_summary.json").read_text(encoding="utf-8")
+              Path(
+                  "live_output/recent_result_sync_summary.json"
+              ).read_text(encoding="utf-8")
           )
+
           print(int(payload.get("updated") or 0))
           PY
           )"
 
           if [ "$UPDATED" -gt 0 ]; then
             echo "A match reached FT. Rebuilding History immediately."
+
             python automatic_update_with_recent_results.py \
               --output-dir live_output \
               --skip-sync \
               --skip-detailed-stats \
               --skip-upload
+
             echo "promoted=true" >> "$GITHUB_OUTPUT"
           else
             echo "No new FT transition in this LIVE cycle."
@@ -91,7 +103,9 @@ jobs:
         if: steps.promote_ft.outputs.promoted == 'true'
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add -- \
             betanalytic.db \
             data/recent_result_sync_summary.json \
@@ -101,13 +115,22 @@ jobs:
             echo "No persistent FT/history diff."
           else
             git commit -m "Promote finished LIVE match to history"
+
             for attempt in 1 2 3; do
-              if git pull --rebase origin main && git push origin HEAD:main; then
+              echo "Git sync attempt ${attempt}/3"
+
+              if git -c rebase.autoStash=true pull --rebase origin main \
+                && git push origin HEAD:main; then
+
+                echo "FT/history changes successfully persisted."
                 break
               fi
+
               if [ "$attempt" -eq 3 ]; then
+                echo "Failed to persist FT/history changes after 3 attempts."
                 exit 1
               fi
+
               sleep $((attempt * 5))
             done
           fi
@@ -115,15 +138,19 @@ jobs:
       - name: Refresh LIVE data with transient retry
         run: |
           SUCCESS=0
+
           for attempt in 1 2 3; do
             echo "LIVE refresh attempt ${attempt}/3"
+
             if python live_refresh.py \
               --feed-file live_output/feed.json \
               --output-dir live_output \
               --previous-live-file live_output/previous-live.json; then
+
               SUCCESS=1
               break
             fi
+
             if [ "$attempt" -lt 3 ]; then
               sleep $((attempt * 10))
             fi
@@ -141,19 +168,46 @@ jobs:
         run: |
           cat > live_output/index.html <<'HTML'
           <!doctype html>
+
           <html lang="el">
+
           <head>
             <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
+
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1"
+            >
+
             <title>BetAnalytic Data</title>
           </head>
+
           <body>
             <h1>BetAnalytic</h1>
-            <p>Το δωρεάν αυτόματο feed λειτουργεί.</p>
-            <p><a href="manifest.json">manifest.json</a></p>
-            <p><a href="feed.json">feed.json</a></p>
-            <p><a href="live.json">live.json</a></p>
+
+            <p>
+              Το δωρεάν αυτόματο feed λειτουργεί.
+            </p>
+
+            <p>
+              <a href="manifest.json">
+                manifest.json
+              </a>
+            </p>
+
+            <p>
+              <a href="feed.json">
+                feed.json
+              </a>
+            </p>
+
+            <p>
+              <a href="live.json">
+                live.json
+              </a>
+            </p>
           </body>
+
           </html>
           HTML
 
@@ -162,20 +216,48 @@ jobs:
           python -m json.tool live_output/feed.json > /dev/null
           python -m json.tool live_output/manifest.json > /dev/null
           python -m json.tool live_output/live.json > /dev/null
+
           python - <<'PY'
           import json
+
           from datetime import datetime, timezone
           from pathlib import Path
 
-          payload = json.loads(Path("live_output/live.json").read_text(encoding="utf-8"))
-          generated = str(payload.get("generated_at") or "").strip()
+          payload = json.loads(
+              Path("live_output/live.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+
+          generated = str(
+              payload.get("generated_at") or ""
+          ).strip()
+
           if not generated:
-              raise SystemExit("live.json missing generated_at")
-          generated_at = datetime.fromisoformat(generated.replace("Z", "+00:00"))
-          age = (datetime.now(timezone.utc) - generated_at.astimezone(timezone.utc)).total_seconds()
+              raise SystemExit(
+                  "live.json missing generated_at"
+              )
+
+          generated_at = datetime.fromisoformat(
+              generated.replace("Z", "+00:00")
+          )
+
+          age = (
+              datetime.now(timezone.utc)
+              - generated_at.astimezone(timezone.utc)
+          ).total_seconds()
+
           if age < -120 or age > 600:
-              raise SystemExit(f"Generated LIVE snapshot is stale/invalid: age={age:.0f}s")
-          print(f"LIVE freshness OK: age={age:.0f}s, matches={payload.get('matches_count', 0)}")
+              raise SystemExit(
+                  f"Generated LIVE snapshot is stale/invalid: "
+                  f"age={age:.0f}s"
+              )
+
+          print(
+              f"LIVE freshness OK: "
+              f"age={age:.0f}s, "
+              f"matches={payload.get('matches_count', 0)}"
+          )
           PY
 
       - name: Configure GitHub Pages
