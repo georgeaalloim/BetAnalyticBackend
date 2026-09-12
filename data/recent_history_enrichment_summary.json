@@ -1,16 +1,20 @@
 {
-  "enabled": false,
+  "enabled": true,
   "seasons": [
     2026
   ],
-  "completed_matches_considered": 0,
+  "completed_matches_considered": 7,
   "api_matches_found": 0,
   "matches_enriched": 0,
   "requests_used": 0,
   "quota_remaining": null,
   "warnings": [
-    "Δεν έχει οριστεί το δωρεάν API_FOOTBALL_KEY."
+    "Αποτυχία λίστας API-Football για 2026: API-Football errors: {'plan': 'Free plans do not have access to this season, try from 2022 to 2024.'}",
+    "Αποτυχία API-Football date fallback για 2026-09-12: API-Football errors: {'access': 'Your account is suspended, check on https://dashboard.api-football.com.'}",
+    "Αποτυχία API-Football date fallback για 2026-09-10: API-Football errors: {'plan': 'Free plans do not have access to this date, try from 2026-09-11 to 2026-09-13.'}",
+    "Αποτυχία API-Football date fallback για 2026-09-07: API-Football errors: {'plan': 'Free plans do not have access to this date, try from 2026-09-11 to 2026-09-13.'}",
+    "Αποτυχία API-Football date fallback για 2026-09-06: API-Football errors: {'plan': 'Free plans do not have access to this date, try from 2026-09-11 to 2026-09-13.'}"
   ],
   "score_mismatches": 0,
-  "pending_matches": 0
+  "pending_matches": 7
 }
