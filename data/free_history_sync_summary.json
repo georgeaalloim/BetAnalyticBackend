@@ -1,13 +1,13 @@
 {
   "status": "ok",
-  "generated_at": "2026-10-17T08:01:18.250329Z",
+  "generated_at": "2026-10-18T08:19:02.329106Z",
   "recent_result_sync": {
-    "checked": 0,
+    "checked": 1,
     "updated": 0,
     "thesportsdb_matches": 0,
     "api_football_matches": 0,
     "scorer_sets_saved": 0,
-    "requests_used": 0,
+    "requests_used": 1,
     "updated_fixture_ids": [],
     "warnings": []
   },
