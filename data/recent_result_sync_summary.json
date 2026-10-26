@@ -1,14 +1,15 @@
 {
-  "checked": 3,
-  "updated": 3,
-  "thesportsdb_matches": 3,
+  "checked": 4,
+  "updated": 4,
+  "thesportsdb_matches": 4,
   "api_football_matches": 0,
-  "scorer_sets_saved": 1,
-  "requests_used": 4,
+  "scorer_sets_saved": 0,
+  "requests_used": 6,
   "updated_fixture_ids": [
-    1389769143,
-    1399869753,
-    1457378574
+    1613142170,
+    1663425124,
+    1863874031,
+    1999988238
   ],
   "warnings": []
 }
