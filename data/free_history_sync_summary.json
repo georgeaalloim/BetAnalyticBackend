@@ -1,19 +1,14 @@
 {
   "status": "ok",
-  "generated_at": "2026-10-26T09:20:06.311449Z",
+  "generated_at": "2026-10-27T09:18:58.220575Z",
   "recent_result_sync": {
-    "checked": 4,
-    "updated": 4,
-    "thesportsdb_matches": 4,
+    "checked": 0,
+    "updated": 0,
+    "thesportsdb_matches": 0,
     "api_football_matches": 0,
     "scorer_sets_saved": 0,
-    "requests_used": 6,
-    "updated_fixture_ids": [
-      1613142170,
-      1663425124,
-      1863874031,
-      1999988238
-    ],
+    "requests_used": 0,
+    "updated_fixture_ids": [],
     "warnings": []
   },
   "recent_history_enrichment": {
