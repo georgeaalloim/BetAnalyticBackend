@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "generated_at": "2026-11-02T11:39:09.119082Z",
+  "generated_at": "2026-11-03T11:17:45.550204Z",
   "recent_result_sync": {
     "checked": 1,
     "updated": 1,
@@ -9,7 +9,7 @@
     "scorer_sets_saved": 0,
     "requests_used": 2,
     "updated_fixture_ids": [
-      1604772462
+      1292410331
     ],
     "warnings": []
   },
